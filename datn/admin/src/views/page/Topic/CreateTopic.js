@@ -21,7 +21,7 @@ import apiUploadFile from '../../../service/apiUploadFile';
 import apiPost from '../../../service/apiPost';
 import apiTopic from '../../../service/apiTopic';
 
-const CreatePost = () => {
+const CreateTopic = () => {
     const navigate = useNavigate(); // Sử dụng useNavigate
 
     const [posts, setPosts] = useState([]);
@@ -44,91 +44,9 @@ const CreatePost = () => {
     const [tamp, setTamp] = useState();
 
 
-    useEffect(() => {
-        apiPost.getPostNew().then((res) => {
-            try {
-                const data = res.data;
-                const postData = data.map((item) => {
-                    return {
-                        id: item.id,
-                        title: item.name,
-                        topic_id: item.slug,
-                    }
-                });
-                setPosts(postData);
-                setTamp();
-            } catch (e) {
-                console.log(e);
-            }
-        })
-    }, [tamp])
-    useEffect(() => {
-        apiTopic.getAll().then((res) => {
-            try {
-                const data = res.data;
-                const brandData = data.map((item) => {
-                    return {
-                        id: item.id,
-                        name: item.name,
-                    }
-                });
-                SetTopic(brandData);
-                console.log(brandData)
-                
-            } catch (e) {
-                console.log(e);
-            }
-        })
-    }, [])
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const image = document.querySelector("#image");
-        if (title !== '') {
-            e.preventDefault();
-            const post = {
-                title: title,
-                topic_id: topic_id,
-                type:type,
-                description: description,
-                detail: detail,
-                metakey: metakey,
-                status: status,
-                slug: slug,
-                metadesc: metadesc,
-                created_by: created_by,
-                updated_by: updated_by,
-                image: "",
-            };
-            let file = new FormData();
-            file.append("files", image.files[0]);
-            axiosInstance.enableUploadFile();
-            apiUploadFile.uploadFile(file)
-                .then(async (res) => {
-                    let filename = res.data.filename;
-                    post.image = filename;
-
-                    axiosInstance.enableJson();
-                    await apiPost.createPost(post).then((res) => {
-                        console.log(res.data)
-
-                        if (res.data != null) {
-                            alert("Thêm dữ liệu thành công !")
-                            navigate('/post/postlist/news/1/10', { replace: true }); // Sử dụng navigate
-
-                        }
-                        else {
-                            alert("Không thành công !")
-                        }
-                    })
-                })
-                .catch(e => console.log(e))
-
-        }
-        else {
-            e.preventDefault();
-            alert('Vui lòng nhập đầu đủ thông tin !')
-        }
+        
     }
 
     return (
@@ -198,4 +116,4 @@ const CreatePost = () => {
     )
 }
 
-export default CreatePost
+export default CreateTopic

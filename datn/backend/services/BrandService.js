@@ -2,11 +2,11 @@
 const { brand } = require('../models/BrandModel')
 
 const newBrand = async ({
-    brand_name, brand_image, brand_description
+    brand_name, brand_image = null, brand_description, public_image_id = null, isPublished = true
 }) => {
     try {
         const brands = await brand.create({
-            brand_name, brand_image, brand_description
+            brand_name, brand_image, brand_description, public_image_id, isPublished
         })
         return brands
 
@@ -26,7 +26,7 @@ const getListBrand = async ({ sort, isPublished = true }) => {
         return listbrand
 
     } catch (error) {
-
+        console.log(error)
     }
 }
 const getBrandById = async ({ brand_id }) => {
@@ -41,7 +41,7 @@ const getBrandById = async ({ brand_id }) => {
     }
 }
 
-const updateBrand = async ({ brand_id, brand_name, brand_description, brand_image,brand_status }) => {
+const updateBrand = async ({ brand_id, brand_name, brand_description, brand_image, brand_status }) => {
     try {
         const query = { _id: brand_id }
         const updates = {
@@ -49,7 +49,7 @@ const updateBrand = async ({ brand_id, brand_name, brand_description, brand_imag
                 brand_id: brand_id,
                 brand_name: brand_name,
                 brand_description: brand_description,
-                brand_image: brand_image,brand_status:brand_status
+                brand_image: brand_image, brand_status: brand_status
             }
         }, options = {
             returnNewDocument: true
@@ -69,12 +69,12 @@ const pulishBrand = async ({ brand_id, isPublished = false }) => {
             isPublished
         }, updateSet = {
             $set: {
-                isPublished : true
+                isPublished: true
             },
-        },options={
+        }, options = {
             upsert: true
         }
-        return await brand.updateOne(query, updateSet,options)
+        return await brand.updateOne(query, updateSet, options)
     } catch (error) {
     }
 }
@@ -86,12 +86,12 @@ const unpulishBrand = async ({ brand_id, isPublished = true }) => {
             isPublished
         }, updateSet = {
             $set: {
-                isPublished : false
+                isPublished: false
             },
-        },options={
+        }, options = {
             upsert: true
         }
-        return await brand.updateOne(query, updateSet,options)
+        return await brand.updateOne(query, updateSet, options)
     } catch (error) {
     }
 }
@@ -103,13 +103,13 @@ const deleteBrandById = async ({ brand_id, isDeleted = false }) => {
             isDeleted
         }, updateSet = {
             $set: {
-                isDeleted : true
+                isDeleted: true
             },
-        },options={
+        }, options = {
             upsert: true
         }
         console.log(updateSet)
-        return await brand.updateOne(query, updateSet,options)
+        return await brand.updateOne(query, updateSet, options)
     } catch (error) {
     }
 }
@@ -121,27 +121,27 @@ const restoreBrandById = async ({ brand_id, isDeleted = true }) => {
             isDeleted
         }, updateSet = {
             $set: {
-                isDeleted : false
-            }, 
-        },options={
+                isDeleted: false
+            },
+        }, options = {
             upsert: true
         }
         console.log(updateSet)
-        return await brand.updateOne(query, updateSet,options)
+        return await brand.updateOne(query, updateSet, options)
     } catch (error) {
 
     }
 
 }
 
-const getDeleteBrandList = async ({sort, isDeleted = true }) => {
+const getDeleteBrandList = async ({ sort, isDeleted = true }) => {
     try {
         const sortBy = sort === 'ctime' ? { _id: -1 } : { _id: 1 }
         const listbrand = await brand.find({
             isDeleted
         }).sort(sortBy)
             .lean()
-            console.log("listbrand",listbrand)
+        console.log("listbrand", listbrand)
 
         return listbrand
     } catch (error) {
@@ -149,12 +149,12 @@ const getDeleteBrandList = async ({sort, isDeleted = true }) => {
     }
 }
 
-const removeBrand =async ({brand_id })=> {
+const removeBrand = async ({ brand_id }) => {
     return await brand.deleteOne({ _id: brand_id }).lean()
 }
 
 module.exports = {
     newBrand, getListBrand, getBrandById, updateBrand,
-    deleteBrandById, getDeleteBrandList, restoreBrandById,removeBrand,
+    deleteBrandById, getDeleteBrandList, restoreBrandById, removeBrand,
     pulishBrand, unpulishBrand
 }

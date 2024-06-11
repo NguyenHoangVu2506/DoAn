@@ -8,6 +8,7 @@ export * from './topic-actions';
 export * from './blog-actions';
 export * from './brand-actions';
 export * from './slider-actions';
+export * from './upload-actions';
 
 
 
@@ -59,9 +60,11 @@ export const Action = {
   GET_BLOG_TOPIC_ID:"GET_BLOG_TOPIC_ID",
 
   ///
+  ADD_TOPIC:"ADD_TOPIC",
   GET_TOPIC:"GET_TOPIC",
   GET_TOPIC_BY_PARENT_ID:"GET_TOPIC_BY_PARENT_ID",
  
-
+//upload
+UPLOAD_IMAGE_SINGLE:"UPLOAD_IMAGE_SINGLE"
 
 };

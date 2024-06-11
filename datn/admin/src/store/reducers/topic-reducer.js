@@ -1,7 +1,8 @@
 import { Action } from '../actions'
 
 const initialState = {
-    allTopic: null
+    allTopic: null,
+    createTopic:null
 }
 
 
@@ -13,7 +14,11 @@ const TopicReducer = (state = initialState, action) => {
                 ...state,
                 allTopic: action.payload.metaData
             }
-
+        case Action.ADD_TOPIC:
+            return {
+                ...state,
+                createTopic: action.payload.metaData
+            }
         default:
             return state;
     }

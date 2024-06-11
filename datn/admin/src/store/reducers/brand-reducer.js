@@ -2,6 +2,7 @@ import { Action } from '../actions'
 
 const initialState = {
     allBrand: null,
+    createBrand:null,
 }
 
 const BrandReducer = (state = initialState, action) => {

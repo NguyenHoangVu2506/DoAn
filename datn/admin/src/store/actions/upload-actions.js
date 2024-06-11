@@ -4,12 +4,12 @@ import { PostData } from "../../utils";
 
 export const uploadSingleImage = (data) => async (dispatch) => {
     try {
-        const response = await PostData('/slider/listSlider', data);
+        const response = await PostData('/upload/uploadImageSingle', data);
         console.log('response:', response)
-        return dispatch({ type: Action.GET_SLIDER, payload: response.data });
+        return dispatch({ type: Action.UPLOAD_IMAGE_SINGLE, payload: response.data });
     } catch (err) {
         console.log(err)
-        return err.response.data
+        err.response.data
     }
 
 };
