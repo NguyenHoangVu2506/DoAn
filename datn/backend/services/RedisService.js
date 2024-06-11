@@ -45,8 +45,6 @@ const acquireLock = async (productId, quantity, cartId) => {
 
     }
 
-
-
 }
 
 const releaseLock = async keyLock => {

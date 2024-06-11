@@ -3,7 +3,8 @@ import { Action } from '../actions'
 const initialState = {
     allBlog: null,
     onBlogByTopicId: null,
-    blogDetails:null,
+    blogDetails: null,
+    createBlog:null
 }
 
 
@@ -25,7 +26,11 @@ const BlogReducer = (state = initialState, action) => {
                 ...state,
                 blogDetails: action.payload.metaData
             }
-
+        case Action.ADD_BLOG:
+            return {
+                ...state,
+                createBlog: action.payload.metaData
+            }
         default:
             return state;
     }

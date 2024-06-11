@@ -43,7 +43,7 @@ const CreateBrand = () => {
             formFile.append('folderName', 'website/brand')
             const image = await dispatch(uploadSingleImage(formFile))
             image && dispatch(BrandStore({ brand_name: name, brand_description: description, brand_image: image?.payload?.metaData?.thumb_url, public_image_id: image?.payload?.metaData?.public_id, isPublished: true }))
-            // navigate('/brand/brandlist/1/10')
+            navigate('/brand/brandlist/1/10')
 
         } catch (error) {
             console.log(error)

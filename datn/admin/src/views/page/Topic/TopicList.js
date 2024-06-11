@@ -52,10 +52,10 @@ function TopicList() {
                         <div className="row">
                             <div className="col-md-12">
                                 <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                                    <Link to="/category/createcategory">
+                                    <Link to="/post/createtopic">
                                         <CButton color="primary" className="me-md-2">
                                             <CIcon icon={cilPlus} title="Download file" />
-                                            Thêm bài viết
+                                            Thêm chủ đề
                                         </CButton>
                                     </Link>
                                 </div>

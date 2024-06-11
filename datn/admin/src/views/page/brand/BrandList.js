@@ -9,6 +9,7 @@ import { getListBrand } from '../../../store/actions';
 function BrandList() {
     const dispatch = useDispatch();
     const { allBrand } = useSelector((state) => state.brandReducer);
+
     useEffect(() => {
         if (!allBrand) {
             dispatch(getListBrand({ sort: 'ctime' }));
@@ -59,13 +60,12 @@ function BrandList() {
                                                 <td><input type="checkbox" /></td>
                                                 <td>{item._id}</td>
                                                 <td>
-                                                    {/* <img src={imageURL + item.image} alt={item.name} style={{ width: "70px" }} /> */}
+                                                    <img src={item.brand_image} alt={item.brand_name} style={{ width: "70px" }} />
                                                 </td>
                                                 <td>
                                                     <div className="name">{item.brand_name}</div>
                                                 </td>
                                                 <td>{item.brand_description}</td>
-                                                <td>
                                                 <td>
                                                     <div className="function_style">
                                                         <Link to="" className="btn btn-sm">
@@ -75,7 +75,6 @@ function BrandList() {
                                                             <CIcon icon={cilTrash} title="Delete" /> Xoá
                                                         </button>
                                                     </div>
-                                                </td>
                                                 </td>
                                             </tr>
                                         ))}

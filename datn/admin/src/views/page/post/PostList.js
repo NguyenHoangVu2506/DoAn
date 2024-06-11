@@ -51,7 +51,7 @@ function PostList() {
                         <div className="row">
                             <div className="col-md-12">
                                 <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                                    <Link to="/category/createcategory">
+                                    <Link to="/post/createpost">
                                         <CButton color="primary" className="me-md-2">
                                             <CIcon icon={cilPlus} title="Download file" />
                                             Thêm bài viết
@@ -75,7 +75,10 @@ function PostList() {
                                             <tr className="datarow" key={index}>
                                                 <td><input type="checkbox" /></td>
                                                 <td>{blog._id}</td>
-                                                <td></td> {/* Thêm hình ảnh ở đây */}
+                                                <td>
+                                                <img src={blog.blog_image} alt={blog.blog_name} style={{ width: "70px" }} />
+
+                                                    </td> {/* Thêm hình ảnh ở đây */}
                                                 <td><div className="name">{blog.blog_name}</div></td>
                                                 <td>{getTopicName(blog.topic_id)}</td> {/* Sử dụng hàm để lấy tên topic */}
                                                 <td>{blog.createdAt}</td>

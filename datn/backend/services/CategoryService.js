@@ -6,7 +6,7 @@ class CategoryService {
   static async createCategory(payload) {
     const {
       parent_id = null, category_name, category_description,
-      category_icon = null, category_image = null, category_position
+      category_icon = null, category_image = null, category_position= null
     } = payload
 
     const newCategory = await category.create({

@@ -245,12 +245,12 @@ const _nav = [
           text: 'NEW',
         },
       },
-      ////////////da
-      // {
-      //   component: CNavItem,
-      //   name: 'Menu',
-      //   to: '/icons/flags',
-      // },
+      //////////da
+      {
+        component: CNavItem,
+        name: 'Menu',
+        to: '/icons/flags',
+      },
       /////////////////
       // {
       //   component: CNavItem,

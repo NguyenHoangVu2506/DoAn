@@ -31,7 +31,7 @@ const ListTrashPost = React.lazy(() => import('./views/page/post/ListTrashPost')
 const UpdatePost = React.lazy(() => import('./views/page/post/UpdatePost'))
 ////topic
 const TopicList = React.lazy(() => import('./views/page/Topic/TopicList'))
-// const CreatePost = React.lazy(() => import('./views/page/post/CreatePost'))
+const CreateTopic = React.lazy(() => import('./views/page/Topic/CreateTopic'))
 // const ListTrashPost = React.lazy(() => import('./views/page/post/ListTrashPost'))
 // const UpdatePost = React.lazy(() => import('./views/page/post/UpdatePost'))
 
@@ -100,7 +100,7 @@ const routes = [
 // { path: '/post/updatepost/:id', name: 'UpdatePost', element: UpdatePost },
 // { path: '/post/:slug_id', name: 'DetailPost', element: DetailPost },
 // { path: '/post/list-trash/:type/:page/:limit', name: 'ListTrashPost', element: ListTrashPost },
-// { path: '/post/createpost', name: 'CreatePost', element: CreatePost },
+{ path: '/post/createtopic', name: 'CreateTopic', element: CreateTopic },
 
   ///brand
     { path: '/brand/createbrand', name: 'CreateBrand', element: CreateBrand },
