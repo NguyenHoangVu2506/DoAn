@@ -12,7 +12,7 @@ const categorySchema = new Schema({
     category_position: { type: String, default: null },
     category_image: { type: String, default: null },
     isPublished: { type: Boolean, default: true, index: true, select: false },
-    category_status: { type: Boolean, default: true, index: true, select: false }
+    isDeleted:  { type: Boolean, default: false, index: true, select: false },
 },
     {
         collection: COLLECTION_NAME,

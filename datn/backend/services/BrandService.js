@@ -134,7 +134,7 @@ const restoreBrandById = async ({ brand_id, isDeleted = true }) => {
 
 }
 
-const getDeleteBrandList = async ({sort, isDeleted = false }) => {
+const getDeleteBrandList = async ({sort, isDeleted = true }) => {
     try {
         const sortBy = sort === 'ctime' ? { _id: -1 } : { _id: 1 }
         const listbrand = await brand.find({

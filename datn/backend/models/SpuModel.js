@@ -15,6 +15,11 @@ const spuSchema = new Schema({
     product_brand: { type: String, default: null },
     product_unit: { type: String, default: null },
     product_attributes: { type: Schema.Types.Mixed, required: true },//
+    isDraft: { type: Boolean, default: true, index: true, select: false },
+    isPublished: { type: Boolean, default: false, index: true, select: false },
+    isDeleted:  { type: Boolean, default: false, index: true, select: false },
+    product_status:  { type: Boolean, default: false, index: true, select: false },
+
 
     /*{
         attribute_id: 12345,
@@ -40,10 +45,6 @@ const spuSchema = new Schema({
         }
     ]
     */
-    isDraft: { type: Boolean, default: true, index: true, select: false },
-    isPublished: { type: Boolean, default: false, index: true, select: false },
-    isDeleted: { type: Boolean, default: false },
-    product_status:  { type: Boolean, default: false, index: true, select: false },
 
 },
 

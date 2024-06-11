@@ -12,7 +12,9 @@ const addressSchema = new Schema({
     postal_code: String,
     city: String,
     country: String,
-    isDefault: { type: Boolean, default: false }
+    isDeleted:  { type: Boolean, default: false, index: true, select: false },
+    isPublished: { type: Boolean, default: true, index: true, select: false },
+
 },
     {
         timestamps: true,

@@ -20,7 +20,7 @@ const userSchema = new Schema({
     user_provider:{type: String, default: ""},
     user_role:{type: String,  default: 'customer', enum: ['admin','customer']},
     isPublished: { type: Boolean, default: true, index: true, select: false },
-    user_status:  { type: Boolean, default: false, index: true, select: false },
+    isDeleted:  { type: Boolean, default: false, index: true, select: false },
 },
     {
         timestamps: true,

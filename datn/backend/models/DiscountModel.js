@@ -19,7 +19,7 @@ const discountSchema = new Schema({
     discount_is_active: { type: Boolean, default: true },
     discount_applies_to: { type: String, required: true, enum: ['all', 'specific'] },
     discount_product_ids: { type: Array, default: [] }, // so san pham duoc ap dung
-    discount_status: { type: Boolean, default: true, index: true, select: false }
+    isDeleted:  { type: Boolean, default: false, index: true, select: false },
 
 },
     {

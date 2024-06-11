@@ -38,7 +38,7 @@ const Server = async () => {
     passport.deserializeUser(function (obj, cb) {
         cb(null, obj);
     });
-    mongoose.connect(`${process.env.MONGODB_URI}`)
+    mongoose.connect(`${process.env.MONGO_DB}`)
         .then(() => {
             console.log('Connect success!')
         })
