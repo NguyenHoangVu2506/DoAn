@@ -1,0 +1,11 @@
+@media (max-width: 767px) {
+  .card-banners {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .card-banners .card-body {
+    width: 100%;
+  }
+}
