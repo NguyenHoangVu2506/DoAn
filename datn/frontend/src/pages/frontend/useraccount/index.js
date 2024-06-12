@@ -3,6 +3,8 @@ import { toast } from 'react-toastify';
 import { onGetAddress, onInsertAddress, onLogout } from '../../../store/actions';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import "./UserOrder.css";
+
 import {
   MDBValidation,
   MDBValidationItem,
@@ -272,7 +274,66 @@ export default function UserAccount() {
                         </div>
                         <div>
                           <a href="#" class="btn btn-sm btn-outline-danger">Cancel order</a>
-                          <a href="#" class="btn btn-sm btn-primary shadow-0">Track order</a>
+                          <button type="button" className="btn btn-sm btn-outline-warning shadow-0" data-bs-toggle="modal"
+                              data-bs-target={`#exampleModal`}>
+                              <i></i> Thông tin vận chuyển
+                            </button>
+                            <div className="modal fade" id={`exampleModal`} tabIndex="-1" aria-labelledby="exampleModalLabel"
+                              aria-hidden="true">
+                              <div className="modal-dialog">
+                                <div className="modal-content">
+                                  <div className="modal-header border-bottom-0">
+                                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div className="modal-body text-start p-4">
+                                    <h5 className="modal-title text-uppercase mb-2" id="exampleModalLabel">test@gmail.com</h5>
+                                    <h4 className="mb-2" style={{ color: '#f37a27' }}>Thông tin đơn hàng</h4>
+                                    <div className="row">
+                                      <div className="col mb-0">
+                                        <p className="small text-muted mb-1">Date</p>
+                                        <p>Date: 16 December 2022</p>
+                                      </div>
+                                      <div className="col mb-3">
+                                        <p className="small text-muted mb-1">Order No.</p>
+                                        <p>06525242</p>
+                                      </div>
+                                    </div>
+                                    <hr />
+
+                                   
+                                      <div className="d-flex justify-content-between" >
+                                        <p className="fw-bold mb-0">Test(SL:5)</p>
+                                        <p className="text-muted mb-0">1.953.241đ</p>
+                                      </div>
+                                  
+                                    <hr />
+                                    <div className="d-flex justify-content-between">
+                                      <p className="fw-bold">Tổng cộng</p>
+                                      <p className="fw-bold">1.953.241đ</p>
+                                    </div>
+                                    <h4 className="mb-4" style={{ color: '#f37a27' }}>Tracking Order</h4>
+
+                                    <ul id="progressbar-1" className="progressbar">
+                                      <li className={`step0 active : ''}`} id="step1">
+                                        <span>Đã đặt hàng</span>
+                                      </li>
+                                      <li className={`step0 active : ''} text-center`} id="step2">
+                                        <span>Đang chuẩn bị hàng</span>
+                                      </li>
+                                      <li className={`step0 active : ''} text-center`} id="step3">
+                                        <span>Đang giao hàng</span>
+                                      </li>
+                                      <li className={`step0 active : ''} text-muted text-end`} id="step4">
+                                        <span>Đã nhận</span>
+                                      </li>
+                                    </ul>
+                                  </div>
+                                  <div className="modal-footer d-flex justify-content-center border-top-0 py-4">
+                                    <p>Want any help? <a href="#!" style={{ color: '#f37a27' }}>Please contact us</a></p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
                         </div>
                       </header>
                       <hr />
