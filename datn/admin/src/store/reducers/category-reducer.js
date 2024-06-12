@@ -3,7 +3,8 @@ import { Action } from '../actions'
 const initialState = {
     listCategory: null,
     current_category: null,
-    child_category:null
+    child_category: null,
+    createCategory: null,
 
 }
 
@@ -21,11 +22,16 @@ const CategoryReducer = (state = initialState, action) => {
                 ...state,
                 current_category: action.payload.metaData
             }
-            
+
         case Action.GET_CHILD_CATEGORY_BY_PARENT_ID:
             return {
                 ...state,
                 child_category: action.payload
+            }
+        case Action.ADD_CATEGORY:
+            return {
+                ...state,
+                createCategory: action.payload.metaData
             }
         default:
             return state;

@@ -77,7 +77,7 @@ export default function Cart() {
                                     </div>
 
                                     <div class="mt-3">
-                                        <a href="#" class="btn btn-success w-100 shadow-0 mb-2"> Make Purchase </a>
+                                        <a href="/checkout" class="btn btn-success w-100 shadow-0 mb-2"> Thanh toan </a>
                                         <a href="#" class="btn btn-light w-100 border mt-2"> Back to shop </a>
                                     </div>
                                 </div>

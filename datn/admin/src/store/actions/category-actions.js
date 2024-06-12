@@ -37,3 +37,19 @@ export const getChildCategoryByParentId = (data) => async (dispatch) => {
   }
 
 };
+export const CategoryStore = (data) => async (dispatch) => {
+
+  try {
+    const response = await PostData('/category', 
+      data
+    );
+    console.log('response:', response)
+    return dispatch({ type: Action.ADD_CATEGORY, payload: response.data });
+
+  } catch (err) {
+    console.log(err)
+    return err.response.data
+
+  }
+
+};

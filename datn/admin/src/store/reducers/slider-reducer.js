@@ -2,6 +2,7 @@ import { Action } from '../actions'
 
 const initialState = {
     allSlider: null,
+    createBanner:null
 }
 
 
@@ -12,6 +13,11 @@ const SliderReducer = (state = initialState, action) => {
             return {
                 ...state,
                 allSlider: action.payload.metaData
+            }
+        case Action.ADD_SLIDER:
+            return {
+                ...state,
+                createBanner: action.payload.metaData
             }
         default:
             return state;

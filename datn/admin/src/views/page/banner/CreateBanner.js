@@ -17,86 +17,41 @@ import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../../axio';
 import apiUploadFile from '../../../service/apiUploadFile';
 import apiBanner from '../../../service/apiBanner';
+import { useDispatch, useSelector } from 'react-redux';
+import { BannerStore, uploadSingleImage } from '../../../store/actions';
 
 const CreateBanner = () => {
-    const navigate = useNavigate(); // Sử dụng useNavigate để chuyển trang
-    const [categorys, setCategorys] = useState([]);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const { createBanner } = useSelector((state) => state.userReducer);
 
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [link, setLink] = useState('/');
     const [position, setPosition] = useState('slider-main');
-    const [status, setStatus] = useState(2);
-    const [image, setImage] = useState('');
-    const [created_at, setCreated_at] = useState(1714805879000);
-    const [updated_at, setUpdated_at] = useState(1714805879000);
-    const [created_by, setCreated_by] = useState(0);
-    const [updated_by, setUpdated_by] = useState(0);
-    const [tamp, setTamp] = useState();
-
-    // useEffect(() => {
-    //     apiCategory.getAll().then((res) => {
-    //         try {
-    //             const data = res.data;
-    //             const categoryData = data.map((item) => {
-    //                 return {
-    //                     id: item.id,
-    //                     name: item.name,
-    //                     slug: item.slug,
-    //                     parent: item.parent_id,
-    //                     sort_order: item.sort_order,
-    //                     status: item.status,
-    //                 }
-    //             });
-    //             setCategorys(categoryData);
-    //             setTamp();
-    //         } catch (e) {
-    //             console.log(e);
-    //         }
-    //     });
-    // }, [tamp]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (name !== '') {
-            const banner = {
-                name: name,
-                description: description,
-                status: status,
-                link: link,
-                position: position,
-                created_by: created_by,
-                updated_by: updated_by,
-                image: "",
-            };
+        try {
+            const formFile = new FormData()
 
-            if (image) {
-                let file = new FormData();
-                file.append("files", image);
-                axiosInstance.enableUploadFile();
-                try {
-                    const res = await apiUploadFile.uploadFile(file);
-                    let filename = res.data.filename;
-                    banner.image = filename;
-                } catch (e) {
-                    console.log(e);
-                    alert("Tải lên tệp thất bại!");
-                    return;
-                }
-                axiosInstance.enableJson();
+            const images = document.querySelector("#image");
+            if (images.files.length === 0) {
+                formFile.append("file", "")
             }
+            else {
+                formFile.append("file", images.files[0]);
+            }
+            formFile.append('folderName', 'website/slider')
+            const image = await dispatch(uploadSingleImage(formFile))
+            image && dispatch(BannerStore({ slider_name: name, slider_summary: description,slider_link: description, slider_image: image?.payload?.metaData?.thumb_url, slider_is_active: true }))
+            navigate('/banner/bannerlist')
 
-            await apiBanner.createBanner(banner).then((res) => {
-                if (res.data != null) {
-                    alert("Thêm dữ liệu thành công !");
-                    navigate('/banner/bannerlist', { replace: true }); // Chuyển trang khi thêm thành công
-                } else {
-                    alert("Không thành công !");
-                }
-            });
-        } else {
-            alert('Vui lòng nhập đầu đủ thông tin !');
+        } catch (error) {
+            console.log(error)
         }
+
     }
 
     return (
@@ -138,14 +93,7 @@ const CreateBanner = () => {
                             </CCol>
                             <CCol md={6}>
                                 <CFormLabel htmlFor="formFile">Hình ảnh</CFormLabel>
-                                <CFormInput type="file" id="image" onChange={(e) => setImage(e.target.files[0])} />
-                            </CCol>
-                            <CCol md={6}>
-                                <CFormLabel htmlFor="inputState">Trang thái</CFormLabel>
-                                <CFormSelect id="inputState" value={status} onChange={(e) => setStatus(e.target.value)}>
-                                    <option value="1">Xuất bản</option>
-                                    <option value="2">Chưa xuất bản</option>
-                                </CFormSelect>
+                                <CFormInput type="file" id="image"  />
                             </CCol>
                             <CCol xs={12}>
                                 <CButton color="primary" type="submit">
