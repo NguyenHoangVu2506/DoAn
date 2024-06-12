@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AllCategory, getCategoryByParentId, onAllProduct } from "../../../store/actions";
 import ProductListItem from "../../../Components/product/productListItem";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ProductItem from "../../../Components/product/productItem";
 import { getListBrand } from "../../../store/actions/brand-actions";
 
@@ -11,17 +11,16 @@ function Collections() {
   const { allProducts } = useSelector((state) => state.productReducer);
   const { all_brand } = useSelector((state) => state.brandReducer);
   const { current_category } = useSelector((state) => state.categoryReducer);
-  const {all_category}=useSelector((state)=>state.categoryReducer);
-  const [categoryParentNull, setCategoryParentNull] = useState(null)
+  const { all_category } = useSelector((state) => state.categoryReducer);
 
 
 
 
-  const [categoryCollapsed, setCategoryCollapsed] = useState(false);
+  const [categoryCollapsed, setCategoryCollapsed] = useState(0);
+  const [categoryCollapsedStatus, setCategoryCollapsedStatus] = useState(false);
   const [brandCollapsed, setBrandCollapsed] = useState(false);
   const [priceCollapsed, setPriceCollapsed] = useState(false);
   const [ratingCollapsed, setRatingCollapsed] = useState(false);
-  const [categoryItem, setCategoryItem]=useState('');
 
 
 
@@ -31,8 +30,9 @@ function Collections() {
     setBrandCollapsed(!brandCollapsed);
   };
 
-  const toggleCategoryCollapse = () => {
-    setCategoryCollapsed(!categoryCollapsed);
+  const toggleCategoryCollapse = (id) => {
+    setCategoryCollapsed(id);
+    setCategoryCollapsedStatus(!categoryCollapsedStatus)
   };
 
   const togglePriceCollapse = () => {
@@ -48,17 +48,17 @@ function Collections() {
     if (!allProducts) {
       dispatch(onAllProduct({ limit: 50, sort: 'ctime', page: 1, filter: { isPublished: true } }));
     }
-    dispatch(getListBrand({ isPublished: true }))
-    dispatch(AllCategory({ isPublished: true }))
-    dispatch(getCategoryByParentId({ parent: null }))
-
-    all_category && (!categoryParentNull && setCategoryParentNull(all_category.filter((category) => category.parent_id == null)))
-    current_category && (!categoryItem && setCategoryItem(current_category.filter((category) => category.parent_id == categoryItem._id)))
-
-
-    console.log(allProducts);
   }, [allProducts]);
 
+
+  React.useEffect(() => {
+    dispatch(getListBrand({ isPublished: true }))
+    dispatch(AllCategory())
+    dispatch(getCategoryByParentId({ parent_id: null }))
+  }, []);
+
+
+  console.log(current_category, "current_category")
 
 
   return (
@@ -83,41 +83,40 @@ function Collections() {
               {/*<!-- Collapsible wrapper -->*/}
               <div class="collapse card d-lg-block mb-5" id="navbarSupportedContent">
                 <div class="accordion" id="accordionPanelsStayOpenExample">
-                  <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingOne">
-                      {all_category && all_category.map((categoryParentNull, index) => {
-                        if (categoryParentNull.parent_id == null) {
-                          return (<button
+
+
+                  {current_category && current_category?.map((categoryParentnull, index) => {
+                    return (
+                      <div class="accordion-item" key={index}>
+                        <h2 class="accordion-header" id={categoryParentnull._id}>
+                          <button
                             className="accordion-button text-dark bg-light"
                             type="button"
-                            onClick={toggleCategoryCollapse} key={index}
-                          >{categoryParentNull.category_name}</button>)
-                        }
-                      })}
+                            onClick={() => toggleCategoryCollapse(categoryParentnull._id)}
+                          >{categoryParentnull.category_name}</button>
 
-                    </h2>
-                    <div
-                      id="panelsStayOpen-collapseOne"
-                      className={`collapse ${categoryCollapsed ? "show" : ""}`}
-                      aria-labelledby="headingOne"
-                    >
-                      <div class="accordion-body">
-                        <div className="d-flex flex-column justify-content-center align-items-center ">
-                          {current_category && current_category.map((child_category, index1) => {
-                            if (child_category.parent_id == all_category._id) {
-                              return (<li className="" style={{ textTransform: "uppercase" }}key={index1}>
-                                {child_category.category_name}
-                              </li>
-                              )
-                            }
-                          })}
-
+                        </h2>
+                        <div
+                          id={index}
+                          className={`collapse ${categoryCollapsed == categoryParentnull._id && categoryCollapsedStatus == true ? "show" : ""}`}
+                          aria-labelledby={categoryParentnull._id}
+                        >
+                          <div class="accordion-body">
+                            <div className="d-flex flex-column justify-content-start ">
+                              {all_category && all_category?.map((category) => {
+                                if (category.parent_id == categoryParentnull._id) {
+                                  return (<li className="list-unstyled" style={{ textTransform: "uppercase" }}>
+                                    {category.category_name}
+                                  </li>
+                                  )
+                                }
+                              })}
+                            </div>
+                          </div>
                         </div>
-
-
                       </div>
-                    </div>
-                  </div>
+                    )
+                  })}
 
                   <div class="accordion-item">
                     <h2 class="accordion-header" id="headingTwo">

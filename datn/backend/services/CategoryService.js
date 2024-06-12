@@ -58,5 +58,128 @@ class CategoryService {
     }
   }
 
+  static async getCategoryById({ category_id }) {
+    try {
+      const getcategory = await category.findOne({
+        _id: category_id
+      }).lean()
+      return getcategory
+
+    } catch (error) {
+
+    }
+  }
+
+  static async updateCategory({ category_id, category_name,category_icon, category_description, category_image }) {
+    try {
+      const query = { _id: category_id }
+      const updates = {
+        $set: {
+          category_id: category_id,
+          category_name: category_name,
+          category_icon:category_icon,
+          category_description: category_description,
+          category_image: category_image
+        }
+      }, options = {
+        returnNewDocument: true
+      }
+      return await category.findOneAndUpdate(query, updates, options)
+
+    } catch (error) {
+      console.log(`error`)
+
+    }
+  }
+
+  static async pulishCategory({ category_id, isPublished = false }) {
+    try {
+      const query = {
+        _id: category_id,
+        isPublished
+      }, updateSet = {
+        $set: {
+          isPublished: true
+        },
+      }, options = {
+        upsert: true
+      }
+      return await category.updateOne(query, updateSet, options)
+    } catch (error) {
+    }
+  }
+
+  static async unpulishCategory({ category_id, isPublished = true }) {
+    try {
+      const query = {
+        _id: category_id,
+        isPublished
+      }, updateSet = {
+        $set: {
+          isPublished: false
+        },
+      }, options = {
+        upsert: true
+      }
+      return await category.updateOne(query, updateSet, options)
+    } catch (error) {
+    }
+  }
+
+  static async deleteCategory({ category_id, isDeleted = false }) {
+    try {
+      const query = {
+        _id: category_id,
+        isDeleted
+      }, updateSet = {
+        $set: {
+          isDeleted: true
+        },
+      }, options = {
+        upsert: true
+      }
+      console.log(updateSet)
+      return await category.updateOne(query, updateSet, options)
+    } catch (error) {
+    }
+  }
+
+  static async restoreCategory({ category_id, isDeleted = true }) {
+    try {
+      const query = {
+        _id: category_id,
+        isDeleted
+      }, updateSet = {
+        $set: {
+          isDeleted: false
+        },
+      }, options = {
+        upsert: true
+      }
+      console.log(updateSet)
+      return await category.updateOne(query, updateSet, options)
+    } catch (error) {
+
+    }
+
+  }
+
+  static async getDeleteCategoryList ({ sort, isDeleted = true }){
+    try {
+        const sortBy = sort === 'ctime' ? { _id: -1 } : { _id: 1 }
+        const listDelCategory = await category.find({
+            isDeleted
+        }).sort(sortBy)
+            .lean()
+        console.log("listDelCategory", listDelCategory)
+        return listDelCategory
+    } catch (error) {
+    }
+}
+
+  static async removeCategory  ({ category_id })  {
+    return await category.deleteOne({ _id: category_id }).lean()
+}
+
 }
 module.exports = CategoryService

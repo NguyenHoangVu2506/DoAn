@@ -24,7 +24,7 @@ class UploadService {
         } catch (error) {
             console.log("err loading image", error)
         }
-
+ 
     }
     async uploadImageSingle({
         file, folderName = 'website/products'

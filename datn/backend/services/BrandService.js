@@ -29,6 +29,7 @@ const getListBrand = async ({ sort, isPublished = true }) => {
         console.log(error)
     }
 }
+
 const getBrandById = async ({ brand_id }) => {
     try {
         const listbrand = await brand.findOne({
@@ -41,7 +42,7 @@ const getBrandById = async ({ brand_id }) => {
     }
 }
 
-const updateBrand = async ({ brand_id, brand_name, brand_description, brand_image, brand_status }) => {
+const updateBrand = async ({ brand_id, brand_name, brand_description, brand_image }) => {
     try {
         const query = { _id: brand_id }
         const updates = {
@@ -49,7 +50,7 @@ const updateBrand = async ({ brand_id, brand_name, brand_description, brand_imag
                 brand_id: brand_id,
                 brand_name: brand_name,
                 brand_description: brand_description,
-                brand_image: brand_image, brand_status: brand_status
+                brand_image: brand_image
             }
         }, options = {
             returnNewDocument: true

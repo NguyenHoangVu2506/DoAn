@@ -10,9 +10,7 @@ const sliderSchema = new Schema({
     slider_position:{type:String, enum:["banner"],default:'banner'},
     slider_is_active:{type:Boolean, default: false},
     isDeleted:  { type: Boolean, default: false, index: true, select: false },
-
-    
-
+    isPublished: { type: Boolean, default: true, index: true, select: false },
 },
     {
         collection: COLLECTION_NAME,

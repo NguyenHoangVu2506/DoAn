@@ -65,7 +65,7 @@ class UserService {
         }
     }
 
-    async insertAddress({ user_id, phone_number, street, postal_code, city, country, isDefault }) {
+    async insertAddress({ user_id, phone_number, street, postal_code, city, country }) {
         const foundUser = await this.repository.findByUserId(user_id)
         if (!foundUser) {
             throw new errorResponse.ForbiddenRequestError("auth err")
@@ -78,10 +78,26 @@ class UserService {
                 postal_code: postal_code,
                 city: city,
                 country: country,
-                isDefault: isDefault
             })
         return createAddress
     }
+
+    async updateAddress({ user_id, address_id, phone_number, street, postal_code, city, country }) {
+        const foundUser = await this.repository.findByUserId(user_id)
+        if (!foundUser) {
+            throw new errorResponse.ForbiddenRequestError("auth err")
+        }
+        const updateAddress = await AddressService.updateAddress(
+            {
+                address_id: address_id,
+                phone_number: phone_number,
+                street: street,
+                postal_code: postal_code, city: city, country: country
+            })
+        console.log(updateAddress)
+        return updateAddress
+    }
+
 
     async getAddress({ user_id }) {
         const addressByUserId = await AddressModel.find({
@@ -90,6 +106,20 @@ class UserService {
             .lean()
         return addressByUserId
     }
+
+    async removeAddressByUser({ user_id , address_id}) {
+        const foundUser = await this.repository.findByUserId(user_id)
+        if (!foundUser) {
+            throw new errorResponse.ForbiddenRequestError("auth err")
+        }
+        const remove_addressByUserId = await AddressModel.deleteOne({
+            _id: address_id
+        })
+            .lean()
+        return remove_addressByUserId
+    }
+
+    
 
 
 
@@ -212,6 +242,7 @@ class UserService {
             tokens
         }
     }
+
 
 
 }

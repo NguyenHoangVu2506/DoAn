@@ -43,6 +43,118 @@ class TopicService {
         return Topic
     }
 
+    static async updateTopic ({ topic_id, topic_name, topic_description, topic_image }) {
+        try {
+            const query = { _id: topic_id }
+            const updates = {
+                $set: {
+                    topic_name: topic_name,
+                    topic_description: topic_description,
+                    topic_image: topic_image
+                }
+            }, options = {
+                returnNewDocument: true
+            }
+            return await topic.findOneAndUpdate(query, updates, options)
+    
+        } catch (error) {
+            console.log(`error`)
+    
+        }
+    }
+    
+    static async pulishTopic({ topic_id, isPublished = false }) {
+        try {
+            const query = {
+                _id: topic_id,
+                isPublished
+            }, updateSet = {
+                $set: {
+                    isPublished: true
+                },
+            }, options = {
+                upsert: true
+            }
+            return await topic.updateOne(query, updateSet, options)
+        } catch (error) {
+        }
+    }
+    
+    static async unpulishTopic ({ topic_id, isPublished = true }) {
+        try {
+            const query = {
+                _id: topic_id,
+                isPublished
+            }, updateSet = {
+                $set: {
+                    isPublished: false
+                },
+            }, options = {
+                upsert: true
+            }
+            return await topic.updateOne(query, updateSet, options)
+        } catch (error) {
+        }
+    }
+    
+    static async deleteTopicById ({ topic_id, isDeleted = false }) {
+        try {
+            const query = {
+                _id: topic_id,
+                isDeleted
+            }, updateSet = {
+                $set: {
+                    isDeleted: true
+                },
+            }, options = {
+                upsert: true
+            }
+            console.log(updateSet)
+            return await topic.updateOne(query, updateSet, options)
+        } catch (error) {
+        }
+    }
+    
+    static async restoreTopicById  ({ topic_id, isDeleted = true }){
+        try {
+            const query = {
+                _id: topic_id,
+                isDeleted
+            }, updateSet = {
+                $set: {
+                    isDeleted: false
+                },
+            }, options = {
+                upsert: true
+            }
+            console.log(updateSet)
+            return await topic.updateOne(query, updateSet, options)
+        } catch (error) {
+    
+        }
+    
+    }
+    
+    static async getDeleteTopicList ({ sort, isDeleted = true })  {
+        try {
+            const sortBy = sort === 'ctime' ? { _id: -1 } : { _id: 1 }
+            const listtopic = await topic.find({
+                isDeleted
+            }).sort(sortBy)
+                .lean()
+            console.log("listtopic", listtopic)
+    
+            return listtopic
+        } catch (error) {
+    
+        }
+    }
+    
+    static async removeTopic ({ topic_id }) {
+        return await topic.deleteOne({ _id: topic_id }).lean()
+    }
+    
+
 
 }
 module.exports = TopicService

@@ -7,6 +7,10 @@ const {asyncHandler} = require('../helpers/index');
 const { authentication } = require('../auth/authUtils');
 router.post('/address',asyncHandler(userController.insertAddress))
 router.post('/get_address',asyncHandler(userController.getAddress))
+router.post('/updateAddress',asyncHandler(userController.updateAddress))
+router.post('/removeAddressByUser',asyncHandler(userController.removeAddressByUser))
+
+
 
 
 router.get('/welcome', asyncHandler(userController.checkLoginEmailToken))

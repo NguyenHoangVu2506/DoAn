@@ -8,8 +8,11 @@ const pageSchema = new Schema({
     page_title:{type:String, default:''},
     page_detail:{type:String, default:''},
     page_slug: String,
+    page_link:{type:String, default:null},
     page_type:{type:String, default:''},
     page_image:{type:String, default:''},
+    public_image_id: { type: String, default: null },
+    isPublished: { type: Boolean, default: true, index: true, select: false },
     isDeleted:  { type: Boolean, default: false, index: true, select: false },
 
 

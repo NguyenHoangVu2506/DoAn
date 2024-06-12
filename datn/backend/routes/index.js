@@ -20,6 +20,10 @@ const AuthFaceRouter = require('../routes/AuthFaceRouter')
 const InfoRouter = require('../routes/InfoRouter')
 const WishlistRouter = require('../routes/WishlistRouter')
 const SliderRouter = require('../routes/SliderRouter')
+const MenuRouter = require('../routes/MenuRouter')
+const PageRouter = require('../routes/PageRouter')
+
+
 
 
 const routes = (app) => {
@@ -43,6 +47,10 @@ const routes = (app) => {
     app.use('/api/comment', CommentRouter)
     app.use('/api/info', InfoRouter)
     app.use('/api/wish_list', WishlistRouter)
+    app.use('/api/menu', MenuRouter)
+    app.use('/api/page', PageRouter)
+
+
 
     app.use('/api/specialOffer', SpecialOfferRouter)
     app.use('/api/auth/google', AuthGoogle)

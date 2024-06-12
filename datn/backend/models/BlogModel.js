@@ -8,10 +8,11 @@ const blogSchema = new Schema({
     topic_id: { type: String, default: '0' },
     blog_description: String,
     blog_image: { type: Array, default: [] },
+    public_image_id: { type: String, default: null },
     blog_slug: String,
     blog_title: String,
     blog_detail: String,
-    isDraft:{type:Boolean,default:true,index:true,select:false},
+    isDraft:{type:Boolean,default:false,index:true,select:false},
     isPublished: { type: Boolean, default: true, index: true, select: false },
     isDeleted:  { type: Boolean, default: false, index: true, select: false },
 
