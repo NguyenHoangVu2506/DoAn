@@ -9,6 +9,7 @@ import {
   cilDrop,
   cilNotes,
   cilPencil,
+  cilPeople,
   cilPuzzle,
   cilSpeedometer,
   cilStar,
@@ -57,11 +58,7 @@ const _nav = [
         name: 'Mã giảm giá',
         to: '/productsale/productsalelist',
       },
-      {
-        component: CNavItem,
-        name: 'User',
-        to: '/user/userlist/:roles',
-      },
+     
     ],
   },
   {
@@ -98,20 +95,18 @@ const _nav = [
     to: '/charts/b',
     icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
   },
-  {
-    component: CNavItem,
-    name: 'Thành viên',
-    to: '/charts',
-    icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
-  },
+  // {
+  //   component: CNavItem,
+  //   name: 'Thành viên',
+  //   to: '/charts',
+  //   icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
+  // },
   {
     component: CNavItem,
     name: 'Khách hàng',
-    to: '/charts/a',
-    icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
+    to: '/user/userlist/:roles',
+    icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
   },
-
-
   {
     component: CNavGroup,
     name: 'Giao diện',

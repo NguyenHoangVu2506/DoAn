@@ -58,7 +58,7 @@ function DetailPost() {
                     </div>
                     <div className="card-body p-2">
                         {blogDetails && (
-                            <table className="table table-bordered">
+                            <table className="table ">
                                 <thead>
                                     <tr>
                                         <th style={{ width: "30%" }}>Tên trường</th>
@@ -73,7 +73,9 @@ function DetailPost() {
 
                                     <tr>
                                         <th>Hình ảnh</th>
-                                        <td>{blogDetails.post.blog_image}</td>
+                                        <td>
+                                        <img src={blogDetails.blog_image} alt={blogDetails.blog_name} style={{ width: "70px" }} />
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th>Tiêu đề bài viết</th>

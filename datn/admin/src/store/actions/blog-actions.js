@@ -52,3 +52,30 @@ export const BlogStore = (data) => async (dispatch) => {
     }
 
 };
+export const getBlogById = (data) => async (dispatch) => {
+    try {
+      const response = await PostData('/blog/findOneBlog', data);
+      console.log('response:', response)
+      return dispatch({ type: Action.GET_BLOG_BY_ID, payload: response.data });
+    } catch (err) {
+      console.log(err)
+      return err.response.data
+    }
+  
+  };
+  export const BlogUpdate = (data) => async (dispatch) => {
+
+    try {
+      const response = await PostData('/blog/updateBlog', 
+        data
+      );
+      console.log('response:', response)
+      return dispatch({ type: Action.UPDATE_BLOG, payload: response.data });
+  
+    } catch (err) {
+      console.log(err)
+      return err.response.data
+  
+    }
+  
+  };  

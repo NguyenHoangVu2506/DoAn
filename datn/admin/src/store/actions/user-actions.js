@@ -136,3 +136,15 @@ export const onGetAddress = (data) => async (dispatch) => {
   }
 
 };
+export const GetAllUser = (data) => async (dispatch) => {
+
+  try {
+    const response = await PostData('/user/getAllUser', data);
+    return dispatch({ type: Action.GET_ALL_USER, payload: response.data });
+  } catch (err) {
+    console.log(err)
+    return err.response.data
+
+  }
+
+};

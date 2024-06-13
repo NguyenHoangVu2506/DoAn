@@ -4,7 +4,9 @@ const initialState = {
     allBlog: null,
     onBlogByTopicId: null,
     blogDetails: null,
-    createBlog:null
+    createBlog: null,
+    listBlogById:null,
+    createBlog:null,
 }
 
 
@@ -30,6 +32,17 @@ const BlogReducer = (state = initialState, action) => {
             return {
                 ...state,
                 createBlog: action.payload.metaData
+            }
+        case Action.UPDATE_BLOG:
+            return {
+                ...state,
+                updateBlog: action.payload.metaData
+            }
+
+        case Action.GET_BLOG_BY_ID:
+            return {
+                ...state,
+                listBlogById: action.payload.metaData
             }
         default:
             return state;

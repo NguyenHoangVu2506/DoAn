@@ -33,7 +33,7 @@ const UpdatePost = React.lazy(() => import('./views/page/post/UpdatePost'))
 const TopicList = React.lazy(() => import('./views/page/Topic/TopicList'))
 const CreateTopic = React.lazy(() => import('./views/page/Topic/CreateTopic'))
 // const ListTrashPost = React.lazy(() => import('./views/page/post/ListTrashPost'))
-// const UpdatePost = React.lazy(() => import('./views/page/post/UpdatePost'))
+const UpdateTopic = React.lazy(() => import('./views/page/Topic/UpdateTopic'))
 
 ///brand
 const CreateBrand = React.lazy(() => import('./views/page/brand/CreateBrand'))
@@ -108,10 +108,10 @@ const routes = [
   { path: '/post/createpost', name: 'CreatePost', element: CreatePost },
 ////////////topic
 { path: '/topic/topiclist', name: 'TopicList', element: TopicList },
-// { path: '/post/updatepost/:id', name: 'UpdatePost', element: UpdatePost },
+{ path: '/topic/updatetopic/:id', name: 'UpdateTopic', element: UpdateTopic },
 // { path: '/post/:slug_id', name: 'DetailPost', element: DetailPost },
 // { path: '/post/list-trash/:type/:page/:limit', name: 'ListTrashPost', element: ListTrashPost },
-{ path: '/post/createtopic', name: 'CreateTopic', element: CreateTopic },
+{ path: '/topic/createtopic', name: 'CreateTopic', element: CreateTopic },
 
   ///brand
     { path: '/brand/createbrand', name: 'CreateBrand', element: CreateBrand },

@@ -14,7 +14,7 @@ export * from './upload-actions';
 
 export const Action = {
 
-  /////
+  /////user
   ERROR: "ERROR",
   LOGIN: "LOGIN",
   LOGOUT: "LOGOUT",
@@ -24,6 +24,7 @@ export const Action = {
   PROFILE: "PROFILE",
   ADD_ADDRESS: "ADD_ADDRESS",
   GET_ADDRESS: "GET_ADDRESS",
+  GET_ALL_USER:"GET_ALL_USER",
 
   /////
   ALL_PRODUCTS: "ALL_PRODUCTS",
@@ -64,11 +65,16 @@ export const Action = {
   GET_BLOG_DETAILS: "GET_BLOG_DETAILS",
   GET_BLOG_TOPIC_ID: "GET_BLOG_TOPIC_ID",
   ADD_BLOG: "ADD_BLOG",
+  UPDATE_BLOG:"UPDATE_BLOG",
+  GET_BLOG_BY_ID:"GET_BLOG_BY_ID",
 
   ///
   ADD_TOPIC: "ADD_TOPIC",
   GET_TOPIC: "GET_TOPIC",
   GET_TOPIC_BY_PARENT_ID: "GET_TOPIC_BY_PARENT_ID",
+  GET_TOPIC_BY_ID: "GET_TOPIC_BY_ID",
+  UPDATE_TOPIC: "UPDATE_TOPIC",
+
   //
   UPDATED_MENU: "UPDATED_MENU",
   ADD_MENU: "ADD_MENU",

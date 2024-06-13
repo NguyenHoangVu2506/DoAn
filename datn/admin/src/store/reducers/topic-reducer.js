@@ -2,7 +2,9 @@ import { Action } from '../actions'
 
 const initialState = {
     allTopic: null,
-    createTopic:null
+    createTopic: null,
+    Topic:null,
+    updateTopic:null,
 }
 
 
@@ -18,6 +20,16 @@ const TopicReducer = (state = initialState, action) => {
             return {
                 ...state,
                 createTopic: action.payload.metaData
+            }
+        case Action.UPDATE_TOPIC:
+            return {
+                ...state,
+                updateTopic: action.payload.metaData
+            }
+        case Action.GET_TOPIC_BY_ID:
+            return {
+                ...state,
+                Topic: action.payload.metaData
             }
         default:
             return state;

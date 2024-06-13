@@ -2,7 +2,8 @@ import { Action } from '../actions'
 
 const initialState = {
     userInfo: localStorage.getItem("userInfo") ? JSON.parse(localStorage.getItem("userInfo")) : null,
-    add_address:null
+    add_address: null,
+    alluser:null,
 
 
 }
@@ -39,12 +40,14 @@ const UserReducer = (state = initialState, action) => {
         case Action.ADD_ADDRESS:
             return {
                 ...state,
-                add_address:action.payload
+                add_address: action.payload
             }
 
-        case Action.GET_ADDRESS:
-            return state
-
+        case Action.GET_ALL_USER:
+            return {
+                ...state,
+                alluser: action.payload.metaData
+            }
 
 
         default:
