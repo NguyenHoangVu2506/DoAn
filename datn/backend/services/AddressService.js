@@ -35,7 +35,8 @@ class AddressService {
                     country: country
                 }
             }, options = {
-                returnNewDocument: true
+                returnNewDocument: true,
+                new:true
             }
             console.log(query)
             return await AddressModel.findOneAndUpdate(query, updates, options)

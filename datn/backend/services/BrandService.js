@@ -53,7 +53,8 @@ const updateBrand = async ({ brand_id, brand_name, brand_description, brand_imag
                 brand_image: brand_image
             }
         }, options = {
-            returnNewDocument: true
+            returnNewDocument: true,
+            new: true
         }
         return await brand.findOneAndUpdate(query, updates, options)
 
@@ -73,7 +74,8 @@ const pulishBrand = async ({ brand_id, isPublished = false }) => {
                 isPublished: true
             },
         }, options = {
-            upsert: true
+            upsert: true,
+            new:true
         }
         return await brand.updateOne(query, updateSet, options)
     } catch (error) {
@@ -90,7 +92,8 @@ const unpulishBrand = async ({ brand_id, isPublished = true }) => {
                 isPublished: false
             },
         }, options = {
-            upsert: true
+            upsert: true,
+            new: true
         }
         return await brand.updateOne(query, updateSet, options)
     } catch (error) {
@@ -107,7 +110,8 @@ const deleteBrandById = async ({ brand_id, isDeleted = false }) => {
                 isDeleted: true
             },
         }, options = {
-            upsert: true
+            upsert: true,
+            new: true
         }
         console.log(updateSet)
         return await brand.updateOne(query, updateSet, options)
@@ -125,7 +129,8 @@ const restoreBrandById = async ({ brand_id, isDeleted = true }) => {
                 isDeleted: false
             },
         }, options = {
-            upsert: true
+            upsert: true,
+            new : true
         }
         console.log(updateSet)
         return await brand.updateOne(query, updateSet, options)

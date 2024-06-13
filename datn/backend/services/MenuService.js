@@ -66,7 +66,8 @@ class MenuService {
                     menu_position: menu_position
                 }
             }, options = {
-                returnNewDocument: true
+                returnNewDocument: true,
+                new:true
 
             }
             return await menu.findOneAndUpdate(query, updates, options)
@@ -86,7 +87,8 @@ class MenuService {
                     isPublished: true
                 },
             }, options = {
-                upsert: true
+                upsert: true,
+                new:true
             }
             return await menu.updateOne(query, updateSet, options)
         } catch (error) {
@@ -103,7 +105,8 @@ class MenuService {
                     isPublished: false
                 },
             }, options = {
-                upsert: true
+                upsert: true,
+                new:true
             }
             return await menu.updateOne(query, updateSet, options)
         } catch (error) {
@@ -120,7 +123,8 @@ class MenuService {
                     isDeleted: true
                 },
             }, options = {
-                upsert: true
+                upsert: true,
+                new:true
             }
             console.log(updateSet)
             return await menu.updateOne(query, updateSet, options)
@@ -138,7 +142,8 @@ class MenuService {
                     isDeleted: false
                 },
             }, options = {
-                upsert: true
+                upsert: true,
+                new:true
             }
             console.log(updateSet)
             return await menu.updateOne(query, updateSet, options)

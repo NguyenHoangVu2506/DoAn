@@ -68,7 +68,8 @@ class PageService {
                     public_image_id: public_image_id,
                 }
             }, options = {
-                returnNewDocument: true
+                returnNewDocument: true,
+                new:true
             }
             return await page.findOneAndUpdate(query, updates, options)
 
@@ -88,7 +89,8 @@ class PageService {
                     isPublished: true
                 },
             }, options = {
-                upsert: true
+                upsert: true,
+                new:true
             }
             return await page.updateOne(query, updateSet, options)
         } catch (error) {
@@ -105,7 +107,8 @@ class PageService {
                     isPublished: false
                 },
             }, options = {
-                upsert: true
+                upsert: true,
+                new:true
             }
             return await page.updateOne(query, updateSet, options)
         } catch (error) {
@@ -122,7 +125,8 @@ class PageService {
                     isDeleted: true
                 },
             }, options = {
-                upsert: true
+                upsert: true,
+                new:true
             }
             console.log(updateSet)
             return await page.updateOne(query, updateSet, options)
@@ -140,7 +144,8 @@ class PageService {
                     isDeleted: false
                 },
             }, options = {
-                upsert: true
+                upsert: true,
+                new:true
             }
             console.log(updateSet)
             return await page.updateOne(query, updateSet, options)

@@ -18,7 +18,7 @@ class BrandController {
 
     updateBrand = async (req, res, next) => {
         new SuccessResponse({
-            message: 'update success',
+            message: 'updateBrand success',
             metaData: await BrandService.updateBrand(req.body)
         }).send(res)
         console.log("updateBrand")

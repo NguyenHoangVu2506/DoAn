@@ -60,7 +60,8 @@ class SliderService {
                     slider_is_active: slider_is_active
                 }
             }, options = {
-                returnNewDocument: true
+                returnNewDocument: true,
+                new:true
             }
             return await slider.findOneAndUpdate(query, updates, options)
 
@@ -80,7 +81,8 @@ class SliderService {
                     isPublished: true
                 },
             }, options = {
-                upsert: true
+                upsert: true,
+                new:true
             }
             return await slider.updateOne(query, updateSet, options)
         } catch (error) {
@@ -97,7 +99,8 @@ class SliderService {
                     isPublished: false
                 },
             }, options = {
-                upsert: true
+                upsert: true,
+                new:true
             }
             return await slider.updateOne(query, updateSet, options)
         } catch (error) {
@@ -114,7 +117,8 @@ class SliderService {
                     isDeleted: true
                 },
             }, options = {
-                upsert: true
+                upsert: true,
+                new:true
             }
             console.log(updateSet)
             return await slider.updateOne(query, updateSet, options)
@@ -132,7 +136,8 @@ class SliderService {
                     isDeleted: false
                 },
             }, options = {
-                upsert: true
+                upsert: true,
+                new:true
             }
             console.log(updateSet)
             return await slider.updateOne(query, updateSet, options)

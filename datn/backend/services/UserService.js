@@ -112,13 +112,43 @@ class UserService {
         return getUser
     }
 
-    async getAllUser({ isPublished=true }) {
+    async getAllUser({ isPublished = true }) {
         const alluser = await UserModel.find({ isPublished }).lean()
         return alluser
 
     }
 
-    async removeAddressByUser({ user_id , address_id}) {
+    async updateUser({ user_id, user_name,
+        user_salf,
+        user_phone,
+        user_sex,
+        user_avatar,
+        user_date_of_birth
+    }) {
+        try {
+            const query = { _id: user_id }
+            const updates = {
+                $set: {
+                    user_name: user_name,
+                    user_salf: user_salf,
+                    user_phone: user_phone,
+                    user_sex: user_sex,
+                    user_avatar: user_avatar,
+                    user_date_of_birth: user_date_of_birth
+                }
+            }, options = {
+                returnNewDocument: true,
+                new: true
+            }
+            return await UserModel.findOneAndUpdate(query, updates, options)
+
+        } catch (error) {
+            console.log(`error`)
+
+        }
+    }
+
+    async removeAddressByUser({ user_id, address_id }) {
         const foundUser = await this.repository.findByUserId(user_id)
         if (!foundUser) {
             throw new errorResponse.ForbiddenRequestError("auth err")
@@ -130,7 +160,44 @@ class UserService {
         return remove_addressByUserId
     }
 
+    async pulishUser({ user_id, isPublished = false }) {
+        try {
+            const query = {
+                _id: user_id,
+                isPublished
+            }, updateSet = {
+                $set: {
+                    isPublished: true
+                },
+            }, options = {
+                upsert: true,
+                new:true
+            }
+            return await UserModel.updateOne(query, updateSet, options)
+        } catch (error) {
+        }
+    }
     
+    async unpulishUser({ user_id, isPublished = true }) {
+
+        try {
+            const query = {
+                _id: user_id,
+                isPublished
+            }, updateSet = {
+                $set: {
+                    isPublished: false
+                },
+            }, options = {
+                upsert: true,
+                new:true
+            }
+            return await UserModel.updateOne(query, updateSet, options)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
 
 
 

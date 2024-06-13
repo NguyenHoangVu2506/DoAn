@@ -82,7 +82,7 @@ class CategoryService {
           category_image: category_image
         }
       }, options = {
-        returnNewDocument: true
+        returnNewDocument: true, new:true
       }
       return await category.findOneAndUpdate(query, updates, options)
 
@@ -102,7 +102,8 @@ class CategoryService {
           isPublished: true
         },
       }, options = {
-        upsert: true
+        upsert: true,
+        new:true
       }
       return await category.updateOne(query, updateSet, options)
     } catch (error) {
@@ -119,7 +120,8 @@ class CategoryService {
           isPublished: false
         },
       }, options = {
-        upsert: true
+        upsert: true,
+        new:true
       }
       return await category.updateOne(query, updateSet, options)
     } catch (error) {
@@ -136,7 +138,8 @@ class CategoryService {
           isDeleted: true
         },
       }, options = {
-        upsert: true
+        upsert: true,
+        new:true
       }
       console.log(updateSet)
       return await category.updateOne(query, updateSet, options)
@@ -154,7 +157,8 @@ class CategoryService {
           isDeleted: false
         },
       }, options = {
-        upsert: true
+        upsert: true,
+        new:true
       }
       console.log(updateSet)
       return await category.updateOne(query, updateSet, options)

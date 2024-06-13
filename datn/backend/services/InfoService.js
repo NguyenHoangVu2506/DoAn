@@ -78,7 +78,8 @@ class InfoService {
                     other_info: other_info,
                 }
             }, options = {
-                returnNewDocument: true
+                returnNewDocument: true,
+                new:true
             }
             return await info.findOneAndUpdate(query, updates, options)
 
@@ -98,7 +99,8 @@ class InfoService {
                     isPublished: true
                 },
             }, options = {
-                upsert: true
+                upsert: true,
+                new:true
             }
             return await info.updateOne(query, updateSet, options)
         } catch (error) {
@@ -115,7 +117,8 @@ class InfoService {
                     isPublished: false
                 },
             }, options = {
-                upsert: true
+                upsert: true,
+                new:true
             }
             return await info.updateOne(query, updateSet, options)
         } catch (error) {
@@ -132,7 +135,8 @@ class InfoService {
                     isDeleted: true
                 },
             }, options = {
-                upsert: true
+                upsert: true,
+                new:true
             }
             console.log(updateSet)
             return await info.updateOne(query, updateSet, options)
@@ -150,7 +154,8 @@ class InfoService {
                     isDeleted: false
                 },
             }, options = {
-                upsert: true
+                upsert: true,
+                new:true
             }
             console.log(updateSet)
             return await info.updateOne(query, updateSet, options)

@@ -53,7 +53,8 @@ class TopicService {
                     topic_image: topic_image
                 }
             }, options = {
-                returnNewDocument: true
+                returnNewDocument: true,
+                new:true
             }
             return await topic.findOneAndUpdate(query, updates, options)
     
@@ -73,7 +74,8 @@ class TopicService {
                     isPublished: true
                 },
             }, options = {
-                upsert: true
+                upsert: true,
+                new:true
             }
             return await topic.updateOne(query, updateSet, options)
         } catch (error) {
@@ -90,7 +92,8 @@ class TopicService {
                     isPublished: false
                 },
             }, options = {
-                upsert: true
+                upsert: true,
+                new:true
             }
             return await topic.updateOne(query, updateSet, options)
         } catch (error) {
@@ -107,7 +110,8 @@ class TopicService {
                     isDeleted: true
                 },
             }, options = {
-                upsert: true
+                upsert: true,
+                new:true
             }
             console.log(updateSet)
             return await topic.updateOne(query, updateSet, options)
@@ -125,7 +129,8 @@ class TopicService {
                     isDeleted: false
                 },
             }, options = {
-                upsert: true
+                upsert: true,
+                new:true
             }
             console.log(updateSet)
             return await topic.updateOne(query, updateSet, options)

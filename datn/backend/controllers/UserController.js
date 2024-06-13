@@ -44,6 +44,28 @@ class UserController {
         }).send(res)
     }
 
+    updateUser= async (req, res, next) => {
+        return new successResponse.SuccessResponse({
+            message: "updateUser success",
+            metaData: await this.service.updateUser(req.body)
+        }).send(res)
+    }
+
+    pulishUser= async (req, res, next) => {
+        return new successResponse.SuccessResponse({
+            message: "pulishUser success",
+            metaData: await this.service.pulishUser(req.body)
+        }).send(res)
+    }
+
+    unpulishUser= async (req, res, next) => {
+        return new successResponse.SuccessResponse({
+            message: "unpulishUser success",
+            metaData: await this.service.unpulishUser(req.body)
+        }).send(res)
+    }
+
+
     getAddress = async (req, res, next) => {
         return new successResponse.SuccessResponse({
             message: "getAddress success",

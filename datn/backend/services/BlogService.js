@@ -74,7 +74,8 @@ class BlogService {
                     blog_detail: blog_detail
                 }
             }, options = {
-                returnNewDocument: true
+                returnNewDocument: true,
+                new: true
             }
             return await blog.findOneAndUpdate(query, updates, options)
 
@@ -95,7 +96,8 @@ class BlogService {
                     isDraft: false
                 },
             }, options = {
-                upsert: true
+                upsert: true,
+                new: true
             }
             return await blog.updateOne(query, updateSet, options)
         } catch (error) {
@@ -114,7 +116,8 @@ class BlogService {
                     isDraft: true
                 },
             }, options = {
-                upsert: true
+                upsert: true, 
+                new: true
             }
             return await blog.updateOne(query, updateSet, options)
         } catch (error) {
@@ -168,7 +171,7 @@ class BlogService {
                     isDeleted: true
                 },
             }, options = {
-                upsert: true
+                upsert: true, new :true
             }
             console.log(updateSet)
             return await blog.updateOne(query, updateSet, options)
@@ -185,7 +188,7 @@ class BlogService {
                     isDeleted: false
                 },
             }, options = {
-                upsert: true
+                upsert: true, new: true
             }
             console.log(updateSet)
             return await blog.updateOne(query, updateSet, options)
