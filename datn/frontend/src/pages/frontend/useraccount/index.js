@@ -144,10 +144,11 @@ export default function UserAccount() {
                     {list_address && list_address.map((address, index) => {
                       return (
                         <div class="col-md-6" key={index}>
-                          <div class="border p-3 rounded-3 bg-light">
+                          <div class=" border p-3 rounded-3 bg-light">
                             <b class="mx-2 text-muted"><i class="fa fa-map-marker-alt"></i></b>
                             {address.phone_number}, {address.street}, {address.city}, {address.country}
                           </div>
+                         
                         </div>
                       )
                     })}

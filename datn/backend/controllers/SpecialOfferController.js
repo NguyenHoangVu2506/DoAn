@@ -18,5 +18,12 @@ class SpecialOfferController{
         }).send(res)
 
     }
+    findSpecialOfferBetweenStartDateAndEndByDate=async(req, res, next)=>{
+        new SuccessResponse({
+            message: 'findSpecialOfferBetweenStartDateAndEndByDate success',
+            metaData: await SpecialOfferService.findSpecialOfferBetweenStartDateAndEndByDate(req.body)
+        }).send(res)
+
+    }
 }
 module.exports = new SpecialOfferController;

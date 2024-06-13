@@ -107,6 +107,14 @@ class UserService {
         return addressByUserId
     }
 
+    async getUser({ user_id }) {
+        const getUser = await this.repository.findByUserId({
+             user_id
+        })
+            .lean()
+        return getUser
+    }
+
     async removeAddressByUser({ user_id , address_id}) {
         const foundUser = await this.repository.findByUserId(user_id)
         if (!foundUser) {

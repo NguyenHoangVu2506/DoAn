@@ -4,7 +4,7 @@ const { specialOffer } = require('../models/SpecialOfferModel')
 const { getSelectData } = require('../utils')
 
 class SpecialOfferService {
-    static async createSpecialOffer(payload) {
+    async createSpecialOffer(payload) {
         const {
             name, start_date, end_date, image, is_active,
             description, spu_list
@@ -31,7 +31,7 @@ class SpecialOfferService {
         return newSpecialOffer
     }
 
-    static async getSpecialOfferBySpuId({ spu_id }) {
+    async getSpecialOfferBySpuId({ spu_id }) {
 
         const special = await specialOffer.find({
             "special_offer_spu_list.product_id": {
@@ -42,7 +42,7 @@ class SpecialOfferService {
         return special
     }
 
-    static async findSpecialOfferBySpuId({ spu_id, special_offer_is_active = true
+    async findSpecialOfferBySpuId({ spu_id, special_offer_is_active = true
     }) {
         try {
             let now = new Date(Date.now());
@@ -62,7 +62,7 @@ class SpecialOfferService {
         }
     }
 
-    static async updateStatusById({ special_offer_is_active, special_offer_id }) {
+    async updateStatusById({ special_offer_is_active, special_offer_id }) {
         const foundSpecialOffer = await specialOffer.findOne({
             _id: special_offer_id
         })
@@ -74,5 +74,17 @@ class SpecialOfferService {
         const updateSpecialOffer = await foundSpecialOffer.updateOne(foundSpecialOffer)
         return updateSpecialOffer
     }
+
+    async findSpecialOfferBetweenStartDateAndEndByDate({ special_offer_is_active = true, date = Date.now() }) {
+        let now = new Date(date);
+        console.log(now)
+        const special = await specialOffer.findOne({
+            special_offer_is_active,
+            special_offer_start_date: { $lte: now },
+            special_offer_end_date: { $gte: now }
+        })
+        console.log(special)
+        return special
+    }
 }
-module.exports = SpecialOfferService
+module.exports = new SpecialOfferService

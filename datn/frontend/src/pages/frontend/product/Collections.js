@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { AllCategory, getCategoryByParentId, onAllProduct } from "../../../store/actions";
+import { AllCategory, getAllAttribute, getAttribute, getCategoryByParentId, onAllProduct } from "../../../store/actions";
 import ProductListItem from "../../../Components/product/productListItem";
 import React, { useEffect, useState } from "react";
 import ProductItem from "../../../Components/product/productItem";
@@ -12,6 +12,8 @@ function Collections() {
   const { all_brand } = useSelector((state) => state.brandReducer);
   const { current_category } = useSelector((state) => state.categoryReducer);
   const { all_category } = useSelector((state) => state.categoryReducer);
+  const { all_attribute } = useSelector((state) => state.attributeReducer);
+  const { onAttribute } = useSelector((state) => state.attributeReducer);
 
 
 
@@ -19,15 +21,21 @@ function Collections() {
   const [categoryCollapsed, setCategoryCollapsed] = useState(0);
   const [categoryCollapsedStatus, setCategoryCollapsedStatus] = useState(false);
   const [brandCollapsed, setBrandCollapsed] = useState(false);
+  const [attributeCollapsed, setAttributeCollapsed] = useState(false);
+  const [attributeCollapsedStatus, setAttributeCollapsedStatus] = useState(false);
+
   const [priceCollapsed, setPriceCollapsed] = useState(false);
   const [ratingCollapsed, setRatingCollapsed] = useState(false);
 
 
-
-
-
   const toggleBrandCollapse = () => {
     setBrandCollapsed(!brandCollapsed);
+  };
+
+  const toggleAttributeCollapse = (id) => {
+    setAttributeCollapsed(id);
+    setAttributeCollapsedStatus(!attributeCollapsedStatus)
+
   };
 
   const toggleCategoryCollapse = (id) => {
@@ -55,6 +63,8 @@ function Collections() {
     dispatch(getListBrand({ isPublished: true }))
     dispatch(AllCategory())
     dispatch(getCategoryByParentId({ parent_id: null }))
+    dispatch(getAllAttribute({ isPublished: true }))
+    dispatch(getAttribute({ attribute_id: null }))
   }, []);
 
 
@@ -83,8 +93,6 @@ function Collections() {
               {/*<!-- Collapsible wrapper -->*/}
               <div class="collapse card d-lg-block mb-5" id="navbarSupportedContent">
                 <div class="accordion" id="accordionPanelsStayOpenExample">
-
-
                   {current_category && current_category?.map((categoryParentnull, index) => {
                     return (
                       <div class="accordion-item" key={index}>
@@ -200,7 +208,8 @@ function Collections() {
                       </div>
                     </div>
                   </div>
-                  <div class="accordion-item">
+
+                  {/* <div class="accordion-item">
                     <h2 class="accordion-header" id="headingThree">
                       <button
                         class="accordion-button text-dark bg-light"
@@ -225,7 +234,41 @@ function Collections() {
                         <label class="btn btn-white mb-1 px-1" style={{ width: '60px' }} for="btn-check4">XXL</label>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
+                  {all_attribute && all_attribute?.map((attribute, index) => {
+                    return (
+                      <div class="accordion-item" key={index}>
+                        <h2 class="accordion-header" id={attribute._id}>
+                          <button
+                            className="accordion-button text-dark bg-light"
+                            type="button"
+                            onClick={() => toggleAttributeCollapse(attribute._id)}
+                          >
+                            {attribute.attribute_name}
+                          </button>
+                        </h2>
+                        <div
+                          id={index}
+                          className={`collapse ${attributeCollapsed == attribute._id && attributeCollapsedStatus == true ? "show" : ""}`}
+                          aria-labelledby={attribute._id}
+                        >
+                          <div class="accordion-body">
+                            {attribute?.attribute_value?.map((attribute_value) => {
+                              return (
+                                <div class="form-check">
+                                  <input class="form-check-input" type="checkbox" value="" id={attribute_value._id} />
+                                  <label class="form-check-label" for={attribute_value._id}>{attribute_value.attribute_value}</label>
+                                </div>
+                              )
+                            })}
+
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+
+
                   <div class="accordion-item">
                     <h2 class="accordion-header" id="headingThree">
                       <button

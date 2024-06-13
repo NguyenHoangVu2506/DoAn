@@ -1,7 +1,7 @@
 'use strict'
 const { NotFoundRequestError } = require('../core/error.response')
 const SPU_MODEL = require('../models/SpuModel')
-const { newSku, allSkuBySpuId } = require('./SkuService')
+const { newSku, allSkuBySpuId, oneSku } = require('./SkuService')
 const _ = require('lodash')
 const { addImage } = require('./GalleryService')
 const spu_repo = require('../models/repositories/spu.repo')
@@ -154,7 +154,7 @@ const findProductsByCategory = async ({ limit = 50, sort = 'ctime', page = 1, fi
     let sku_list = []
     console.log("productsByCategory", productsByCategory)
     for (let index = 0; index < productsByCategory.length; index++) {
-        const brand = await  getBrandById({ brand_id: productsByCategory[index].product_brand })
+        const brand = await getBrandById({ brand_id: productsByCategory[index].product_brand })
         brand_list.push(brand)
         const skulist = await allSkuBySpuId({ product_id: productsByCategory[index]._id })
         sku_list.push(skulist)
@@ -185,7 +185,7 @@ const findProductDetail = async ({ spu_id, isPublished = true }) => {
         product.sku_list = sku_list ? sku_list : []
         product.product_brand = await getBrandById({ brand_id: spu_info.product_brand })
         product.special_offer = await findSpecialOfferBySpuId({ spu_id: product.product_detail._id, special_offer_is_active: true })
-        const categories =await findCategoryByIdList({
+        const categories = await findCategoryByIdList({
             isPublished: true,
             category_id_list: spu_info.product_category
         })
@@ -209,8 +209,37 @@ const findProductDetail = async ({ spu_id, isPublished = true }) => {
     }
 }
 
+const checkProductByServer = async (products) => {
+    return await Promise.all(products.map(async product => {
+        if (product.sku_id) {
+            const foundSku = await oneSku({ product_id: product.productId, sku_id: product.sku_id })
+            if (foundSku) {
+                console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", foundSku)
+                return {
+                    price: foundSku.sku_price,
+                    quantity: product.quantity,
+                    productId: product.productId,
+                    sku_id: foundSku._id
+                }
+            }
+        } else {
+            const foundProduct = await spu_repo.getProductById(product.productId)
+            if (foundProduct) {
+                return {
+                    price: foundProduct.product_price,
+                    quantity: product.quantity,
+                    productId: product.productId,
+                    sku_id: null
+                }
+            }
+        }
+
+
+    }))
+}
+
 module.exports = {
     newSpu, oneSpu, isPublishProduct, isUnPublishProduct, isFindProductsByAttributes, isFindProduct,
     isfindAllProducts,
-    findProductDetail, isFindProductByFilter, getProductDetails, findProductsByCategory
+    findProductDetail, isFindProductByFilter, getProductDetails, findProductsByCategory, checkProductByServer
 }

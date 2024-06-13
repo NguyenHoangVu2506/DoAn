@@ -24,6 +24,7 @@ const newAttribute = async ({
         console.log(`error`)
     }
 }
+
 const findAttribute = async ({
     attribute_id
 }) => {
@@ -44,6 +45,19 @@ const findAttribute = async ({
 
     } catch (error) {
 
+    }
+}
+const  findAllAttribute= async ()=> {
+    try {
+        let attributes = await ATTRIBUTES_MODEL.attribute.find().lean()
+        for (let i = 0; i < attributes.length; i++) {
+            const attribute_value = await allAttributeValue({ attribute_id: attributes[i]._id })
+            attributes[i] = { ...attributes[i], attribute_value }
+        }
+
+        return attributes
+    } catch (error) {
+        return null
     }
 }
 
@@ -86,4 +100,6 @@ const findAttributesByProductAttributes = async ({
     }
 }
 
-module.exports = { newAttribute, findAttribute, findAttributeByIdList, findAttributesByProductAttributes }
+module.exports = { newAttribute, findAttribute, findAttributeByIdList, findAttributesByProductAttributes,
+    findAllAttribute
+ }

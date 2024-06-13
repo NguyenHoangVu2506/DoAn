@@ -13,7 +13,13 @@ class InfoController{
     getInfo=async(req,res, next)=>{
         new SuccessResponse({
             message:'success',
-            metaData: await InfoService.getInfoById(req.body)
+            metaData: await InfoService.getInfo(req.body)
+        }).send(res)
+    }
+    getInfoByName=async(req,res, next)=>{
+        new SuccessResponse({
+            message:'getInfoByName success',
+            metaData: await InfoService.getInfoByName(req.body)
         }).send(res)
     }
     

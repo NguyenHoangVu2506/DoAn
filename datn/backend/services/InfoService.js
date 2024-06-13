@@ -31,12 +31,11 @@ class InfoService {
     //     return await info.findOne({ isPublished: isPublished }).lean()
     // }
 
-    static async getListInfo({ sort, isPublished = true }) {
+    static async getInfo({ isPublished = true }) {
         try {
-            const sortBy = sort === 'ctime' ? { _id: -1 } : { _id: 1 }
-            const listInfo = await info.find({
+            const listInfo = await info.findOne({
                 isPublished
-            }).sort(sortBy)
+            })
                 .lean()
             return listInfo
 
@@ -45,15 +44,15 @@ class InfoService {
         }
     }
 
-    static async getInfoById({ info_id }) {
+    static async getInfoByName({ name }) {
         try {
             const listInfo = await info.findOne({
-                _id: info_id
+                info_name: name
             }).lean()
             return listInfo
 
         } catch (error) {
-
+            return null
         }
     }
 
@@ -62,7 +61,7 @@ class InfoService {
         info_hotline,
         info_phone,
         info_website,
-        other_info, 
+        other_info,
         info_logo }) {
         try {
             const query = { _id: info_id }

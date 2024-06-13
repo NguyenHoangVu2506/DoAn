@@ -24,11 +24,8 @@ const newSku = async ({
 
 const oneSku = async ({ sku_id, product_id }) => {
     try {
-        const sku = await SKU_MODEL.sku.findOne({ sku_id, product_id }).lean()
-        // if(sku){
+        const sku = await SKU_MODEL.sku.findOne({ _id: sku_id, product_id }).lean()
 
-        // }
-        console.log(sku)
         return _.omit(sku, ['__v', 'updateAt', 'createAt', 'isDeleted'])
 
     } catch (error) {
@@ -38,7 +35,7 @@ const oneSku = async ({ sku_id, product_id }) => {
 
 const allSkuBySpuId = async ({ product_id }) => {
     try {
-        const skus = await SKU_MODEL.sku.find({ product_id:new Types.ObjectId(product_id) }).lean()
+        const skus = await SKU_MODEL.sku.find({ product_id: new Types.ObjectId(product_id) }).lean()
         return skus
 
     } catch (error) {
@@ -48,9 +45,9 @@ const allSkuBySpuId = async ({ product_id }) => {
 const getSkuByPrice = async ({ min_price, max_price }) => {
     try {
         const skus = await SKU_MODEL.sku.find({
-            sku_price:{
-             "min_price":min_price,
-             "max_price":max_price
+            sku_price: {
+                "min_price": min_price,
+                "max_price": max_price
             }
         }).lean()
         return skus

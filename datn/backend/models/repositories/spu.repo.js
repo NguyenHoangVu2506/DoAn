@@ -151,9 +151,9 @@ const isProductByCategory = async ({ limit, sort, page,  isPublished, product_ca
 
 const checkProductByServer = async (products) => {
     return await Promise.all(products.map(async product => {
+
         const foundProduct = await getProductById(product.productId)
         console.log(foundProduct)
-
         if (foundProduct) {
             return {
                 price: foundProduct.product_price,

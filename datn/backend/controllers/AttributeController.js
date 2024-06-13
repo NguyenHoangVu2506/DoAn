@@ -11,11 +11,17 @@ class AttributeController{
     }
 
     getAttribute =async(req, res, next)=>{
-        const{attribute_id}=req.query;
-
         new SuccessResponse({
-            message:'success',
-            metaData: await AttributeService.findAttribute({ attribute_id})//sai ngoac ha
+            message:'get attribute  success',
+            metaData: await AttributeService.findAttribute(req.body)
+            
+        }).send(res)
+    }
+
+    getAllAttribute =async(req, res, next)=>{
+        new SuccessResponse({
+            message:'findAllAttribute success',
+            metaData: await AttributeService.findAllAttribute(req.body)
             
         }).send(res)
     }

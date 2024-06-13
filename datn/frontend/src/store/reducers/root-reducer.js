@@ -9,6 +9,8 @@ import BlogReducer from './blog-reducer';
 import TopicReducer from './topic-reducer';
 import SliderReducer from './slider-reducer';
 import BrandReducer from './brand-reducer';
+import AttributeReducer from './attribute-reducer';
+
 
 
 const reducers = combineReducers({
@@ -21,7 +23,8 @@ const reducers = combineReducers({
     blogReducer: BlogReducer,
     topicReducer: TopicReducer,
     sliderReducer:SliderReducer,
-    brandReducer: BrandReducer
+    brandReducer: BrandReducer,
+    attributeReducer: AttributeReducer
 
 
 })

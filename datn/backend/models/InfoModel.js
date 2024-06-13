@@ -13,7 +13,6 @@ const infoSchema = new Schema({
     other_info:{type:String, default:''},
     isDeleted:  { type: Boolean, default: false, index: true, select: false },
     isPublished: { type: Boolean, default: true, index: true, select: false },
-
 },
     {
         collection: COLLECTION_NAME,

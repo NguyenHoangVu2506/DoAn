@@ -5,6 +5,7 @@ const { asyncHandler } = require("../helpers");
 
 router.post('', asyncHandler(infoController.createInfo))
 router.post('/getInfo', asyncHandler(infoController.getInfo))
+router.post('/getInfoByName', asyncHandler(infoController.getInfoByName))
 
 router.post('/updateInfo', asyncHandler(infoController.updateInfo))
 router.post('/deleteInfoById', asyncHandler(infoController.deleteInfoById))

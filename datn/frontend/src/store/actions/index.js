@@ -8,6 +8,8 @@ export * from './topic-actions';
 export * from './blog-actions';
 export * from './slider-actions';
 export * from './brand-actions';
+export * from './attribute-actions';
+
 
 
 
@@ -30,6 +32,10 @@ export const Action = {
   ALL_PRODUCTS:"ALL_PRODUCTS",
   PRODUCT_DETAIL:"PRODUCT_DETAIL",
   GET_PRODUCT_BY_CAT_ID:"GET_PRODUCT_BY_CAT_ID",
+
+  //ATTRIBUTE
+  GET_ATTRIBUTE_LIST:"GET_ATTRIBUTE_LIST",
+  GET_ATTRIBUTE:"GET_ATTRIBUTE",
 
   ////cart
   GET_CART:"GET_CART",
