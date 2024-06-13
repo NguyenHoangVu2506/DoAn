@@ -108,11 +108,14 @@ class UserService {
     }
 
     async getUser({ user_id }) {
-        const getUser = await this.repository.findByUserId({
-             user_id
-        })
-            .lean()
+        const getUser = await this.repository.findByUserId(user_id)
         return getUser
+    }
+
+    async getAllUser({ isPublished=true }) {
+        const alluser = await UserModel.find({ isPublished }).lean()
+        return alluser
+
     }
 
     async removeAddressByUser({ user_id , address_id}) {

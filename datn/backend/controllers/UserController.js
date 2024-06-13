@@ -58,6 +58,13 @@ class UserController {
         }).send(res)
     }
 
+    getAllUser = async (req, res, next) => {
+        return new successResponse.SuccessResponse({
+            message: "getAllUser success",
+            metaData: await this.service.getAllUser(req.body)
+        }).send(res)
+    }
+
     removeAddressByUser = async (req, res, next) => {
         return new successResponse.SuccessResponse({
             message: "remove Address By User success",

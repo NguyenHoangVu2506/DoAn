@@ -20,7 +20,7 @@ class CartController {
         }).send(res)
     }
 
-    deleteToCart = async (req, res, next) => {
+    deleteCartItem = async (req, res, next) => {
 
         return new SuccessResponse({
             message: "deleted cart success",
@@ -43,6 +43,37 @@ class CartController {
             metaData: await CartService.getListUserCart(req.body)
         }).send(res)
     }
+
+    findUserCart = async (req, res, next) => {
+        return new SuccessResponse({
+            message: "find User Cart success",
+            metaData: await CartService.findUserCart(req.body)
+        }).send(res)
+    }
+
+    updateSkuFromCart = async (req, res, next) => {
+        return new SuccessResponse({
+            message: "update Sku From Cart success",
+            metaData: await CartService.updateSkuFromCart(req.body)
+        }).send(res)
+    }
+
+    updateQuantityFromCart = async (req, res, next) => {
+        return new SuccessResponse({
+            message: "update Quantity FromCart success",
+            metaData: await CartService.updateQuantityFromCart(req.body)
+        }).send(res)
+    }
+
+    updateSkuFromCartV2 = async (req, res, next) => {
+        return new SuccessResponse({
+            message: "updateSkuFromCartV2 success",
+            metaData: await CartService.updateSkuFromCartV2(req.body)
+        }).send(res)
+    }
+
+
+
 
 
 }

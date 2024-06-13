@@ -51,7 +51,6 @@ class MenuService {
             return listmenu
 
         } catch (error) {
-
         }
     }
 
@@ -60,22 +59,20 @@ class MenuService {
             const query = { _id: menu_id }
             const updates = {
                 $set: {
-                    menu_id: menu_id,
                     menu_name: menu_name,
                     parent_id: parent_id,
                     menu_link: menu_link,
                     menu_type: menu_type,
-                    menu_slug: menu_slug,
                     menu_position: menu_position
                 }
             }, options = {
                 returnNewDocument: true
+
             }
             return await menu.findOneAndUpdate(query, updates, options)
 
         } catch (error) {
             console.log(`error`)
-
         }
     }
 

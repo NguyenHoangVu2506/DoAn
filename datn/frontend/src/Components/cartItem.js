@@ -37,7 +37,7 @@ export default function CartItem({ product_id, sku_id, quantity }) {
                                     <div class="d-flex">
                                         <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/13.webp" class="border rounded me-3" style={{ width: '96px', height: '96px' }} />
                                         <div class="">
-                                            <a href="#" class="nav-link">{productDetail.spu_info.product_name}</a>
+                                            <a href="#" class="nav-link">{productDetail.product_name}</a>
                                             {/* <p class="text-muted">{sku_tier_idx(sku)}</p> */}
                                         </div>
                                     </div>
