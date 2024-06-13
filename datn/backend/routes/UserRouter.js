@@ -23,10 +23,8 @@ router.post('/removeAddressByUser',asyncHandler(userController.removeAddressByUs
 router.get('/welcome', asyncHandler(userController.checkLoginEmailToken))
 router.post('/signup', asyncHandler(userController.signUp))
 router.post('/login', asyncHandler(userController.login))
-
 ///authentication
 router.use(authentication)
-
 router.post('/logout',asyncHandler(userController.logout))
 router.post('/handlerRefreshToken', asyncHandler(userController.handlerRefreshToken))
 

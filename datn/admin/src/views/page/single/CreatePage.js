@@ -12,35 +12,24 @@ import {
     CFormTextarea,
     CRow,
 } from '@coreui/react'
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { BannerStore, BannerUpdate, getSliderById, uploadSingleImage } from '../../../store/actions';
+import { PageStore } from '../../../store/actions/page-actions';
+import { uploadSingleImage } from '../../../store/actions';
 
-const CreateBanner = () => {
+const CreatePage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { id } = useParams(); // Lấy ID từ URL
 
-    const { updateBanner } = useSelector((state) => state.sliderReducer);
-    const { getBannerById } = useSelector((state) => state.sliderReducer);
+    const { createMenu } = useSelector((state) => state.userReducer);
 
     const [name, setName] = useState('');
-    const [description, setSummary] = useState('');
     const [link, setLink] = useState('/');
-    const [image, setImage] = useState('');
-    const [position, setPosition] = useState('');
+    const [title, setTitle] = useState('');
+    const [detail, setDetail] = useState('');
+    const [public_image_id, setImageId] = useState('public_image_id');
+    const [type, setType] = useState('');
 
-    useEffect(() => {
-        if (!getBannerById) {
-            dispatch(getSliderById({ slider_id:id }));
-        } else {
-            setName(getBannerById.slider_name || '');
-            setLink(getBannerById.slider_link || '');
-            setSummary(getBannerById.slider_summary || 'slider-main');
-            setImage(getBannerById.slider_image || '');
-        }
-    }, [dispatch,getBannerById]);
-    console.log(getBannerById)
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -53,28 +42,27 @@ const CreateBanner = () => {
             else {
                 formFile.append("file", images.files[0]);
             }
-            formFile.append('folderName', 'website/slider')
+            formFile.append('folderName', 'website/page')
             const image = await dispatch(uploadSingleImage(formFile))
-            image && dispatch(BannerUpdate({slider_id:id, slider_name: name, slider_summary: description,slider_link: description, slider_image: image?.payload?.metaData?.thumb_url, slider_is_active: true }))
-            navigate('/banner/bannerlist')
+            image && dispatch(PageStore({ page_name: name, page_title: title,page_detail: detail,page_link:link,page_type:type,public_image_id:"public_image_id", page_image: image?.payload?.metaData?.thumb_url }))
+            navigate('/page/pagelist')
 
         } catch (error) {
             console.log(error)
         }
 
     }
-
     return (
         <CRow>
             <CCol xs={12}>
                 <CCard className="mb-4">
                     <CCardHeader>
-                        <strong>Chỉnh sửa Banner</strong>
+                        <strong>Thêm Trang Đơn</strong>
                     </CCardHeader>
                     <CCardBody>
                         <CForm className="row g-3" onSubmit={handleSubmit}>
                             <CCol md={6}>
-                                <CFormLabel htmlFor="inputName">Tên banner</CFormLabel>
+                                <CFormLabel htmlFor="inputName">Tên</CFormLabel>
                                 <CFormInput type="text" id="inputName" value={name} onChange={(e) => setName(e.target.value)} />
                             </CCol>
                             <CCol md={6}>
@@ -83,22 +71,19 @@ const CreateBanner = () => {
                             </CCol>
                             
                             <CCol md={6}>
-                                <CFormLabel htmlFor="inputState">Vị trí</CFormLabel>
-                                <CFormSelect id="inputState" onChange={(e) => setPosition(e.target.value)} value={position}>
-                                    
-                                        <option value='slider-main'>Banner home</option>
-                                        <option value='slider-contact'>Banner contact</option>
-                                        <option value='slider-post'>Banner post</option>
-                                        <option value='slider-other'>Banner other</option>
-
-                                </CFormSelect>
+                                <CFormLabel htmlFor="inputState">Tiêu đề</CFormLabel>
+                                <CFormInput type="text" id="inputName" value={title} onChange={(e) => setTitle(e.target.value)} />
                             </CCol>
                             <CCol md={6}>
-                                <CFormLabel htmlFor="inputCity">Mô tả</CFormLabel>
+                                <CFormLabel htmlFor="inputState">Type</CFormLabel>
+                                <CFormInput type="text" id="inputName" value={type} onChange={(e) => setType(e.target.value)} />
+                            </CCol>
+                            <CCol md={6}>
+                                <CFormLabel htmlFor="inputCity">Chi tiết</CFormLabel>
                                 <CFormTextarea
                                     id="exampleFormControlTextarea1"
                                     rows={3}
-                                    value={description} onChange={(e) => setSummary(e.target.value)}
+                                    value={detail} onChange={(e) => setDetail(e.target.value)}
                                 ></CFormTextarea>
                             </CCol>
                             <CCol md={6}>
@@ -118,4 +103,4 @@ const CreateBanner = () => {
     );
 }
 
-export default CreateBanner;
+export default CreatePage;

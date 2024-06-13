@@ -39,11 +39,13 @@ class SliderService {
 
     static async getSliderById({ slider_id }) {
         try {
-            const slider = await slider.findOne({
+            const getSliderById = await slider.findOne({
                 _id: slider_id
             }).lean()
-            return slider
+            return getSliderById
         } catch (error) {
+            console.log.error
+            return null
         }
     }
 

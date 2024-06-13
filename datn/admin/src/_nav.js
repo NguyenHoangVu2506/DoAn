@@ -27,104 +27,6 @@ const _nav = [
     },
   },
   {
-    component: CNavTitle,
-    name: 'Theme',
-  },
-  {
-    component: CNavItem,
-    name: 'Colors',
-    to: '/theme/colors',
-    icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
-  },
-  {
-    component: CNavItem,
-    name: 'Typography',
-    to: '/theme/typography',
-    icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
-  },
-  {
-    component: CNavTitle,
-    name: 'Components',
-  },
-  // {
-  //   component: CNavGroup,
-  //   name: 'Base',
-  //   to: '/base',
-  //   icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
-  //   items: [
-  //     {
-  //       component: CNavItem,
-  //       name: 'Accordion',
-  //       to: '/base/accordion',
-  //     },
-  //     {
-  //       component: CNavItem,
-  //       name: 'Breadcrumb',
-  //       to: '/base/breadcrumbs',
-  //     },
-  //     {
-  //       component: CNavItem,
-  //       name: 'Cards',
-  //       to: '/base/cards',
-  //     },
-  //     {
-  //       component: CNavItem,
-  //       name: 'Carousel',
-  //       to: '/base/carousels',
-  //     },
-  //     {
-  //       component: CNavItem,
-  //       name: 'Collapse',
-  //       to: '/base/collapses',
-  //     },
-  //     {
-  //       component: CNavItem,
-  //       name: 'List group',
-  //       to: '/base/list-groups',
-  //     },
-  //     {
-  //       component: CNavItem,
-  //       name: 'Navs & Tabs',
-  //       to: '/base/navs',
-  //     },
-  //     {
-  //       component: CNavItem,
-  //       name: 'Pagination',
-  //       to: '/base/paginations',
-  //     },
-  //     {
-  //       component: CNavItem,
-  //       name: 'Placeholders',
-  //       to: '/base/placeholders',
-  //     },
-  //     {
-  //       component: CNavItem,
-  //       name: 'Popovers',
-  //       to: '/base/popovers',
-  //     },
-  //     {
-  //       component: CNavItem,
-  //       name: 'Progress',
-  //       to: '/base/progress',
-  //     },
-  //     {
-  //       component: CNavItem,
-  //       name: 'Spinners',
-  //       to: '/base/spinners',
-  //     },
-  //     {
-  //       component: CNavItem,
-  //       name: 'Tables',
-  //       to: '/base/tables',
-  //     },
-  //     {
-  //       component: CNavItem,
-  //       name: 'Tooltips',
-  //       to: '/base/tooltips',
-  //     },
-  //   ],
-  // },
-  {
     component: CNavGroup,
     name: 'Sản phẩm',
     to: '/product',
@@ -177,32 +79,11 @@ const _nav = [
         name: 'Chủ đề',
         to: '/topic/topiclist',
       },
-      
-      // {
-      //   component: CNavItem,
-      //   name: 'Range',
-      //   to: '/forms/range',
-      // },
-      // {
-      //   component: CNavItem,
-      //   name: 'Input Group',
-      //   to: '/forms/input-group',
-      // },
-      // {
-      //   component: CNavItem,
-      //   name: 'Floating Labels',
-      //   to: '/forms/floating-labels',
-      // },
-      // {
-      //   component: CNavItem,
-      //   name: 'Layout',
-      //   to: '/forms/layout',
-      // },
-      // {
-      //   component: CNavItem,
-      //   name: 'Validation',
-      //   to: '/forms/validation',
-      // },
+      {
+        component: CNavItem,
+        name: 'Trang đơn',
+        to: '/page/pagelist',
+      },
     ],
   },
   {
@@ -214,7 +95,7 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Liên hệ',
-    to: '/charts',
+    to: '/charts/b',
     icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
   },
   {
@@ -226,7 +107,7 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Khách hàng',
-    to: '/charts',
+    to: '/charts/a',
     icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
   },
 
@@ -249,14 +130,15 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Menu',
-        to: '/icons/flags',
+        to: '/menu/menulist',
       },
-      /////////////////
-      // {
-      //   component: CNavItem,
-      //   name: 'CoreUI Brands',
-      //   to: '/icons/brands',
-      // },
+
+      ///////////////
+      {
+        component: CNavItem,
+        name: 'Info',
+        to: '/info/infolist',
+      },
     ],
   },
   /////////////da

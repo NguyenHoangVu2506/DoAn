@@ -12,3 +12,18 @@ export const getInfo= (data) => async (dispatch) => {
     }
   
   };
+
+  export const updateInfo= (data) => async (dispatch) => {
+    try {
+      const response = await PostData('/info/updateInfo', 
+        data
+      );
+      console.log('response:', response)
+      return dispatch({ type: Action.UPDATE_INFO, payload: response.data });
+  
+    } catch (err) {
+      console.log(err)
+      return err.response.data
+  
+    }
+  };

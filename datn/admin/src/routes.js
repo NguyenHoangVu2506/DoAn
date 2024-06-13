@@ -47,20 +47,31 @@ const DetailBanner = React.lazy(() => import('./views/page/banner/DetailBanner')
 const ListTrashBanner = React.lazy(() => import('./views/page/banner/ListTrashBanner'))
 const CreateBanner = React.lazy(() => import('./views/page/banner/CreateBanner'))
 const UpdateBanner = React.lazy(() => import('./views/page/banner/UpdateBanner'))
+///info
+const InfoList = React.lazy(() => import('./views/page/info/InfoList'))
+// const CreateInfo = React.lazy(() => import('./views/page/info/CreateInfo'))
+// const UpdateInfo = React.lazy(() => import('./views/page/info/UpdateInfo'))
+
+///menu
+const MenuList = React.lazy(() => import('./views/page/menu/MenuList'))
+const CreateMenu = React.lazy(() => import('./views/page/menu/CreateMenu'))
+const UpdateMenu = React.lazy(() => import('./views/page/menu/UpdateMenu'))
 
 ////
 const OrderList = React.lazy(() => import('./views/page/order/OrderList'))
 const OrderDetail = React.lazy(() => import('./views/page/order/DetailOrder'))
 const ListTrashOrder = React.lazy(() => import('./views/page/order/ListTrashOrder'))
-
 ///
 const UserList = React.lazy(() => import('./views/page/user/UserList'))
-
 
 //////
 const ProductListTest = React.lazy(() => import('./views/page/productdanc/ProductListTest'))
 const CreateProductTest = React.lazy(() => import('./views/page/productdanc/CreateProductTest'))
-
+//////////////
+///page
+const PageList = React.lazy(() => import('./views/page/single/PageList'))
+const CreatePage = React.lazy(() => import('./views/page/single/CreatePage'))
+const UpdatePage = React.lazy(() => import('./views/page/single/UpdatePage'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -127,6 +138,18 @@ const routes = [
 { path: '/productdacn/updateproduct/:id', name: 'UpdateProduct', element: UpdateProduct },
 { path: '/productdacn/detailproduct/:id', name: 'DetailProduct', element: DetailProduct },
 { path: '/productdacn/list-trash', name: 'ListTrashProduct', element: ListTrashProduct },
+////////////info
+{ path: '/info/infolist', name: 'InfoList', element: InfoList },
+// { path: '/info/createinfo', name: 'CreateInfo', element: CreateInfo },
+// { path: '/info/updateinfo/:id', name: 'UpdateInfo', element: UpdateInfo },
+////////////menu
+{ path: '/menu/menulist', name: 'MenuList', element: MenuList },
+{ path: '/menu/createmenu', name: 'CreateMenu', element: CreateMenu },
+{ path: '/menu/updatemenu/:id', name: 'UpdateMenu', element: UpdateMenu },
+////////////page
+{ path: '/page/pagelist', name: 'PageList', element: PageList },
+{ path: '/page/createpage', name: 'CreatePage', element: CreatePage },
+{ path: '/page/updatepage/:id', name: 'UpdatePage', element: UpdatePage },
 
 
 ]

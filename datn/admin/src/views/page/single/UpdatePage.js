@@ -14,33 +14,38 @@ import {
 } from '@coreui/react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { BannerStore, BannerUpdate, getSliderById, uploadSingleImage } from '../../../store/actions';
+import { PageUpdate, getPageById } from '../../../store/actions/page-actions';
+import { uploadSingleImage } from '../../../store/actions';
 
-const CreateBanner = () => {
+const UpdatePage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams(); // Lấy ID từ URL
+    const { updatePage } = useSelector((state) => state.pageReducer);
+    const { listPageById } = useSelector((state) => state.pageReducer);
 
-    const { updateBanner } = useSelector((state) => state.sliderReducer);
-    const { getBannerById } = useSelector((state) => state.sliderReducer);
 
     const [name, setName] = useState('');
-    const [description, setSummary] = useState('');
     const [link, setLink] = useState('/');
+    const [title, setTitle] = useState('');
+    const [detail, setDetail] = useState('');
+    const [public_image_id, setImageId] = useState('public_image_id');
+    const [type, setType] = useState('');
     const [image, setImage] = useState('');
-    const [position, setPosition] = useState('');
 
     useEffect(() => {
-        if (!getBannerById) {
-            dispatch(getSliderById({ slider_id:id }));
+        if (!listPageById) {
+            dispatch(getPageById({ page_id:id }));
         } else {
-            setName(getBannerById.slider_name || '');
-            setLink(getBannerById.slider_link || '');
-            setSummary(getBannerById.slider_summary || 'slider-main');
-            setImage(getBannerById.slider_image || '');
+            setName(listPageById.page_name || '');
+            setLink(listPageById.page_link || '');
+            setTitle(listPageById.page_title || '');
+            setDetail(listPageById.page_detail || '');
+            setType(listPageById.page_type || '');
+            setImage(listPageById.page_image || '');
+
         }
-    }, [dispatch,getBannerById]);
-    console.log(getBannerById)
+    }, [dispatch,listPageById]);
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -53,28 +58,26 @@ const CreateBanner = () => {
             else {
                 formFile.append("file", images.files[0]);
             }
-            formFile.append('folderName', 'website/slider')
+            formFile.append('folderName', 'website/page')
             const image = await dispatch(uploadSingleImage(formFile))
-            image && dispatch(BannerUpdate({slider_id:id, slider_name: name, slider_summary: description,slider_link: description, slider_image: image?.payload?.metaData?.thumb_url, slider_is_active: true }))
-            navigate('/banner/bannerlist')
-
-        } catch (error) {
-            console.log(error)
-        }
-
+            image && dispatch(PageUpdate({ page_id:id,page_name: name, page_title: title,page_detail: detail,page_link:link,page_type:type,public_image_id:"public_image_id", page_image: image?.payload?.metaData?.thumb_url }))
+            navigate('/page/pagelist')
+    
+          } catch (error) {
+            
+          }
     }
-
     return (
         <CRow>
             <CCol xs={12}>
                 <CCard className="mb-4">
                     <CCardHeader>
-                        <strong>Chỉnh sửa Banner</strong>
+                        <strong>Chỉnh Sửa Trang Đơn</strong>
                     </CCardHeader>
                     <CCardBody>
                         <CForm className="row g-3" onSubmit={handleSubmit}>
                             <CCol md={6}>
-                                <CFormLabel htmlFor="inputName">Tên banner</CFormLabel>
+                                <CFormLabel htmlFor="inputName">Tên</CFormLabel>
                                 <CFormInput type="text" id="inputName" value={name} onChange={(e) => setName(e.target.value)} />
                             </CCol>
                             <CCol md={6}>
@@ -83,22 +86,19 @@ const CreateBanner = () => {
                             </CCol>
                             
                             <CCol md={6}>
-                                <CFormLabel htmlFor="inputState">Vị trí</CFormLabel>
-                                <CFormSelect id="inputState" onChange={(e) => setPosition(e.target.value)} value={position}>
-                                    
-                                        <option value='slider-main'>Banner home</option>
-                                        <option value='slider-contact'>Banner contact</option>
-                                        <option value='slider-post'>Banner post</option>
-                                        <option value='slider-other'>Banner other</option>
-
-                                </CFormSelect>
+                                <CFormLabel htmlFor="inputState">Tiêu đề</CFormLabel>
+                                <CFormInput type="text" id="inputName" value={title} onChange={(e) => setTitle(e.target.value)} />
                             </CCol>
                             <CCol md={6}>
-                                <CFormLabel htmlFor="inputCity">Mô tả</CFormLabel>
+                                <CFormLabel htmlFor="inputState">Type</CFormLabel>
+                                <CFormInput type="text" id="inputName" value={type} onChange={(e) => setType(e.target.value)} />
+                            </CCol>
+                            <CCol md={6}>
+                                <CFormLabel htmlFor="inputCity">Chi tiết</CFormLabel>
                                 <CFormTextarea
                                     id="exampleFormControlTextarea1"
                                     rows={3}
-                                    value={description} onChange={(e) => setSummary(e.target.value)}
+                                    value={detail} onChange={(e) => setDetail(e.target.value)}
                                 ></CFormTextarea>
                             </CCol>
                             <CCol md={6}>
@@ -118,4 +118,4 @@ const CreateBanner = () => {
     );
 }
 
-export default CreateBanner;
+export default UpdatePage;

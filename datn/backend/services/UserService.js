@@ -97,8 +97,6 @@ class UserService {
         console.log(updateAddress)
         return updateAddress
     }
-
-
     async getAddress({ user_id }) {
         const addressByUserId = await AddressModel.find({
             "user_id": user_id
@@ -106,7 +104,6 @@ class UserService {
             .lean()
         return addressByUserId
     }
-
     async getUser({ user_id }) {
         const getUser = await this.repository.findByUserId(user_id)
         return getUser
