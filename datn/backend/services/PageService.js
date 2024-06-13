@@ -38,10 +38,10 @@ class PageService {
     }
 
 
-    static async getPageById({ isPublished = true, topic_id }) {
+    static async getPageById({ isPublished = true, page_id }) {
         const Page = await page.findOne({
             isPublished,
-            _id: topic_id
+            _id: page_id
         }).lean()
         return Page
     }

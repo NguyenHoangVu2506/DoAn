@@ -1,7 +1,8 @@
 import { Action } from '../actions'
 
 const initialState = {
-    info: localStorage.getItem("info") ? JSON.parse(localStorage.getItem("info")) : null
+    info: null,
+    updateInfo:null
 }
 
 
@@ -9,12 +10,16 @@ const InfoReducer = (state = initialState, action) => {
 
     switch (action.type) {
         case Action.GET_INFO:
-              localStorage.setItem('info',JSON.stringify(action.payload.metaData))
-                return {
-                    ...state,
-                    info: action.payload.metaData
-                }
-    
+            return {
+                ...state,
+                info: action.payload.metaData
+            }
+        case Action.UPDATE_INFO:
+            return {
+                ...state,
+                updateInfo: action.payload.metaData
+            }
+
         default:
             return state;
     }

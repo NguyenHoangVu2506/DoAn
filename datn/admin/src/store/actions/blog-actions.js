@@ -11,7 +11,6 @@ export const getListBlog = (data) => async (dispatch) => {
         console.log(err)
         return err.response.data
     }
-
 };
 
 export const getBlogDetails = (data) => async (dispatch) => {
