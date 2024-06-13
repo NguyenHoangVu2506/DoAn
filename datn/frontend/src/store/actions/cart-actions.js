@@ -39,13 +39,13 @@ export const getCart= (data) => async (dispatch) => {
     }
   
   };
-
-  export const deleteCart= (data) => async (dispatch) => {
+  
+  export const updateSkuFromCartV2= (data) => async (dispatch) => {
 
     try {
-      const response = await PostData('/cart/delete',data);
+      const response = await PostData('/cart/updateSkuFromCartV2',data);
       console.log('response:', response)
-      return dispatch({ type: Action.DELETE_CART, payload: response.data });
+      return dispatch({ type: Action.UPDATE_CART, payload: response.data });
     } catch (err) {
       console.log(err)
       return err.response.data
@@ -53,12 +53,51 @@ export const getCart= (data) => async (dispatch) => {
   
   };
 
-  export const deleteCartId= (data) => async (dispatch) => {
+  export const updateQuantityCart= (data) => async (dispatch) => {
 
     try {
-      const response = await PostData('/cart/deleteCartId',data);
+      const response = await PostData('/cart/updateQuantityFromCart',data);
       console.log('response:', response)
-      return dispatch({ type: Action.DELETE_CART_ID, payload: response.data });
+      return dispatch({ type: Action.UPDATE_CART, payload: response.data });
+    } catch (err) {
+      console.log(err)
+      return err.response.data
+    }
+  
+  };
+
+  export const updateSkuCart= (data) => async (dispatch) => {
+
+    try {
+      const response = await PostData('/cart/updateSkuFromCart',data);
+      console.log('response:', response)
+      return dispatch({ type: Action.UPDATE_CART, payload: response.data });
+    } catch (err) {
+      console.log(err)
+      return err.response.data
+    }
+  
+  };
+
+  export const deleteCartItem= (data) => async (dispatch) => {
+
+    try {
+      const response = await PostData('/cart/deleteCartItem',data);
+      console.log('response:', response)
+      return dispatch({ type: Action.DELETE_CART_ITEM, payload: response.data });
+    } catch (err) {
+      console.log(err)
+      return err.response.data
+    }
+  
+  };
+
+  export const deleteCartIdUserId= (data) => async (dispatch) => {
+
+    try {
+      const response = await PostData('/cart/deleteCartIdUserId',data);
+      console.log('response:', response)
+      return dispatch({ type: Action.DELETE_CART_ID_USER_ID, payload: response.data });
     } catch (err) {
       console.log(err)
       return err.response.data

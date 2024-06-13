@@ -65,7 +65,7 @@ const Header = () => {
             </div>
           </div>
         </div>
-        {/* <Categories /> */}
+        <Categories />
       </header>
     </>
 

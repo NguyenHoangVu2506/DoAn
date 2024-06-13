@@ -6,6 +6,8 @@ const userController = require('../controllers/UserController');
 const {asyncHandler} = require('../helpers/index');
 const { authentication } = require('../auth/authUtils');
 router.post('/getUser',asyncHandler(userController.getUser))
+router.post('/getAllUser',asyncHandler(userController.getAllUser))
+
 
 router.post('/address',asyncHandler(userController.insertAddress))
 router.post('/get_address',asyncHandler(userController.getAddress))
