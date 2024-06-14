@@ -6,7 +6,7 @@ const initialState = {
     blogDetails: null,
     createBlog: null,
     listBlogById:null,
-    createBlog:null,
+    updateBlog:null,
 }
 
 

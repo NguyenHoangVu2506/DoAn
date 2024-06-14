@@ -1,147 +1,65 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import "./order.css";
-import apiOrder from "../../../service/apiOrder";
+import { useDispatch, useSelector } from "react-redux";
+import { getOrder } from "../../../store/actions/order-actions";
+import accounting from "accounting";
 
 
 function OrderList() {
-
-    const [data, setData] = useState([]);
-
-    const page = parseInt(useParams().page);
-    const limit = parseInt(useParams().limit);
-
-    const [pages, setPages] = useState(1);
-
-    const [qty_data, setQtyData] = useState(0);
-    const [qty_cancel, setQtyCancel] = useState(0);
-
-    const [tamp, setTamp] = useState();
-
-
+    const { order } = useSelector((state) => state.orderReducer);
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        apiOrder.getAll(page, limit).then((res) => {
-            try {
-                console.log(res.data)
-                const numberOfPages = res.meta.pagination.pageCount;
-                setPages(numberOfPages);
-                setData(res.data);
-                setQtyData(res.meta.pagination.total);
-                setQtyCancel(res.qty_cancel);
-
-
-            } catch (e) {
-                console.log(e);
-            }
-            setTamp();
-        })
-    }, [tamp, page])
-
-
-    const [showForm, setShowForm] = useState(false);
-    const [selectedOrderId, setSelectedOrderId] = useState(null);
-
-    const showStatusForm = (orderId) => {
-        setSelectedOrderId(orderId);
-        setShowForm(true);
-    };
-
-    const handleStatusUpdate = async (e) => {
-        e.preventDefault();
-        const selectedStatus = document.querySelector('input[name="status"]:checked').value;
-        const data = {
-            status: selectedStatus
+        if (!order) {
+            dispatch(getOrder({ sort: 'ctime' }));
         }
-        await apiOrder.updateStatusOrder(data, selectedOrderId).then((res) => {
-            if (res.data.success === 'true') {
-                alert(res.data.message);
-                setShowForm(false);
-                setTamp(selectedOrderId)
-            }
-            else {
-                alert(res.data.message);
-            }
-        })
-    };
+    }, [dispatch, order]);
+
+    console.log(order);
 
     return (
         <div className="content-wrapper">
-            {console.log(showForm)}
-            <section className="content-header">
-                <div className="container-fluid">
-                    <div className="row mb-2">
-                        <div className="col-sm-10">
-                            <h1 className="d-inline">Tất cả đơn hàng <sup>({qty_data})</sup></h1>
-                        </div>
-                        <div className="col-sm-2  text-right">
-                            <Link class="action-btn btn" to="/order/list-trash" style={{ color: "red" }}>
-                                Đơn hủy
-                                <sup class="count ms-1">{qty_cancel}</sup>
-                            </Link>
-                        </div>
-
-                    </div>
-                </div>
-            </section>
+           
             <section className="content">
                 <div className="card">
                     <div className="text-right pt-2 pe-4">
-                        {/* <Link class="btn btn-success" to="/admin/list-post/create">
-                            Tạo bài viết
-                        </Link> */}
-
                     </div>
                     <div className="card-body">
-
                         <div className="row content">
                             <div className="col-md old-element">
-                                <table className="table table-bordered">
+                                <table className="table ">
                                     <thead>
                                         <tr>
-                                            <th className="text-center" style={{ width: "30px" }}>
-                                                <input type="checkbox" />
-                                            </th>
                                             <th>Id</th>
-                                            <th>Tên người nhận</th>
-                                            <th>Email</th>
-                                            <th>Số điện thoại</th>
-                                            <th>Địa chỉ</th>
+                                            <th>Ngày đặt</th>
+                                            <th>Tổng tiền</th>
                                             <th>Trạng thái</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {data.map((item, index) => {
-                                            return (
+                                    {order && order.map((item, index) => (
+                                            
                                                 <tr className="datarow" key={index}>
                                                     <td>
-                                                        <input type="checkbox" />
-                                                    </td>
-                                                    <td>{item.id}</td>
-                                                    <td>
-                                                        <div className="name">
-                                                            {item.delivery_name}
+                                                        <div>
+                                                            {item._id}
                                                         </div>
 
                                                         <div className="function_style">
-                                                            {/* <button onClick={() => displayPost(item.id)} className="btn btn-sm">{item.status === 2 ? "Hiện" : "Ẩn"}</button> | */}
-                                                            {/* <Link to={`/admin/list-post/update/${item.id}`} className="btn btn-sm">Chỉnh sửa</Link> | */}
                                                             <Link to={`/order/orderdetail/${item.id}`} className="btn btn-sm"><i className="fa fa-eye me-1"></i>Chi tiết</Link> |
                                                             <button onClick={() => showStatusForm(item.id)} className="btn btn-sm"><i className="fa fa-edit me-1" ></i>Cập nhật trạng thái</button>
                                                         </div>
                                                     </td>
-                                                    {/* <td>{item.slug}</td> */}
-                                                    <td>{item.email}</td>
-                                                    <td>{item.delivery_phone}</td>
-                                                    <td>{item.delivery_address}</td>
-                                                    <td>{item.status === 1 ? "Chưa giao hàng" : item.status === 2 ? "Đang giao hàng" : "Đã giao hàng"}</td>
+                                                    <td>{new Date(item.createdOn).toLocaleString()}</td>
+                                                    <td>{accounting.formatNumber(item.order_checkout.totalPrice, 0, ".", ",")}<span class="text-muted"> đ</span></td>
+                                                    <td>{item.order_status}</td>
                                                 </tr>
-                                            );
-                                        })}
+                                              ))}
                                     </tbody>
                                 </table>
                             </div>
-                            {showForm && (
+                            {/* {showForm && (
                                 <div className="new-element modal1">
                                     <div className="modal-content">
                                         <div className="row">
@@ -174,9 +92,9 @@ function OrderList() {
                                         </form>
                                     </div>
                                 </div>
-                            )}
+                            )} */}
 
-                            <ul className="pagination">
+                            {/* <ul className="pagination">
                                 <li className="page-item ">
                                     {page > 1 ? (
                                         <Link className="page-link" to={`/admin/orders/${page - 1}/${limit}`}>Previous</Link>
@@ -202,7 +120,7 @@ function OrderList() {
                                         Next
                                     </Link>
                                 </li>
-                            </ul>
+                            </ul> */}
                         </div>
                     </div>
                 </div>

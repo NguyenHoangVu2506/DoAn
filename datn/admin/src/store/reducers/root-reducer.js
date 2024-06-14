@@ -11,6 +11,8 @@ import BrandReducer from './brand-reducer';
 import SliderReducer from './slider-reducer';
 import MenuReducer from './menu-reducer';
 import PageReducer from './page-reducer';
+import DiscountReducer from './discount-reducer';
+import OrderReducer from './order-reducer';
 
 
 const reducers = combineReducers({
@@ -26,6 +28,8 @@ const reducers = combineReducers({
     sliderReducer: SliderReducer,
     menuReducer:MenuReducer,
     pageReducer:PageReducer,
+    discountReducer:DiscountReducer,
+    orderReducer:OrderReducer,
 
 
 })

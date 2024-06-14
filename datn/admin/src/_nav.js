@@ -56,7 +56,7 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Mã giảm giá',
-        to: '/productsale/productsalelist',
+        to: '/discount/discountlist',
       },
      
     ],

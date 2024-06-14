@@ -136,7 +136,7 @@ const isFindProduct = async ({ product_id }) => {
 const isfindAllProducts = async ({ limit = 50, sort = 'ctime', page = 1, filter = { isPublished: true } }) => {
     return await spu_repo.findAllProducts({
         limit, sort, page, filter,
-        select: ['product_name', 'product_thumb', 'product_price', 'product_slug']
+        select: ['product_name', 'product_thumb', 'product_price', 'product_slug','product_category','product_quantity']
     })
 }
 

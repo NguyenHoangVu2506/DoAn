@@ -18,7 +18,7 @@ export const onAllProduct = (data) => async (dispatch) => {
 
 export const onProductDetail = (data) => async (dispatch) => {
   try {
-    const response = await PostData('/spu/get_spu_info',data);
+    const response = await PostData('/spu/findProductDetail',data);
     console.log('response:', response)
     return dispatch({ type: Action.PRODUCT_DETAIL, payload: response.data });
 
