@@ -72,6 +72,8 @@ const CreateProductTest = React.lazy(() => import('./views/page/productdanc/Crea
 const PageList = React.lazy(() => import('./views/page/single/PageList'))
 const CreatePage = React.lazy(() => import('./views/page/single/CreatePage'))
 const UpdatePage = React.lazy(() => import('./views/page/single/UpdatePage'))
+////Discount
+const DiscountList = React.lazy(() => import('./views/page/discount/DiscountList'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -100,26 +102,26 @@ const routes = [
   { path: '/productsale/updateproductsale/:id', name: 'UpdateProductSale', element: UpdateProductSale },
   { path: '/productsale/list-trash', name: 'ListTrashSale', element: ListTrashSale },
 
-////////////post
+  ////////////post
   { path: '/post/postlist/:type/:page/:limit', name: 'PostList', element: PostList },
   { path: '/post/updatepost/:id', name: 'UpdatePost', element: UpdatePost },
   { path: '/post/:slug_id', name: 'DetailPost', element: DetailPost },
   { path: '/post/list-trash/:type/:page/:limit', name: 'ListTrashPost', element: ListTrashPost },
   { path: '/post/createpost', name: 'CreatePost', element: CreatePost },
-////////////topic
-{ path: '/topic/topiclist', name: 'TopicList', element: TopicList },
-{ path: '/topic/updatetopic/:id', name: 'UpdateTopic', element: UpdateTopic },
-// { path: '/post/:slug_id', name: 'DetailPost', element: DetailPost },
-// { path: '/post/list-trash/:type/:page/:limit', name: 'ListTrashPost', element: ListTrashPost },
-{ path: '/topic/createtopic', name: 'CreateTopic', element: CreateTopic },
+  ////////////topic
+  { path: '/topic/topiclist', name: 'TopicList', element: TopicList },
+  { path: '/topic/updatetopic/:id', name: 'UpdateTopic', element: UpdateTopic },
+  // { path: '/post/:slug_id', name: 'DetailPost', element: DetailPost },
+  // { path: '/post/list-trash/:type/:page/:limit', name: 'ListTrashPost', element: ListTrashPost },
+  { path: '/topic/createtopic', name: 'CreateTopic', element: CreateTopic },
 
   ///brand
-    { path: '/brand/createbrand', name: 'CreateBrand', element: CreateBrand },
+  { path: '/brand/createbrand', name: 'CreateBrand', element: CreateBrand },
   { path: '/brand/brandlist/:page/:limit', name: 'BrandList', element: BrandList },
   { path: '/brand/updatebrand/:id', name: 'UpdateBrand', element: UpdateBrand },
   { path: '/brand/detailbrand/:id', name: 'DetailBrand', element: DetailBrand },
   { path: '/brand/list-trash', name: 'ListTrashBrand', element: ListTrashBrand },
-    ///banner
+  ///banner
   { path: '/banner/bannerlist', name: 'BannerList', element: BannerList },
   { path: '/banner/createbanner', name: 'CreateBanner', element: CreateBanner },
 
@@ -127,29 +129,31 @@ const routes = [
   { path: '/banner/detailbanner/:id', name: 'DetailBanner', element: DetailBanner },
   { path: '/banner/list-trash', name: 'ListTrashBanner', element: ListTrashBanner },
 
-////order
-{ path: '/order/orderlist/:page/:limit', name: 'OrderList', element: OrderList },
-{ path: '/order/orderdetail/:id', name: 'OrderDetail', element: OrderDetail },
-{ path: '/order/list-trash', name: 'ListTrashOrder', element: ListTrashOrder },
+  ////order
+  { path: '/order/orderlist/:page/:limit', name: 'OrderList', element: OrderList },
+  { path: '/order/orderdetail/:id', name: 'OrderDetail', element: OrderDetail },
+  { path: '/order/list-trash', name: 'ListTrashOrder', element: ListTrashOrder },
 
-///////////////////////////////
-{ path: '/productdacn/createproduct', name: 'CreateProductTest', element: CreateProductTest },
-{ path: '/productdacn/productlist', name: 'ProductListTest', element: ProductListTest },
-{ path: '/productdacn/updateproduct/:id', name: 'UpdateProduct', element: UpdateProduct },
-{ path: '/productdacn/detailproduct/:id', name: 'DetailProduct', element: DetailProduct },
-{ path: '/productdacn/list-trash', name: 'ListTrashProduct', element: ListTrashProduct },
-////////////info
-{ path: '/info/infolist', name: 'InfoList', element: InfoList },
-// { path: '/info/createinfo', name: 'CreateInfo', element: CreateInfo },
-// { path: '/info/updateinfo/:id', name: 'UpdateInfo', element: UpdateInfo },
-////////////menu
-{ path: '/menu/menulist', name: 'MenuList', element: MenuList },
-{ path: '/menu/createmenu', name: 'CreateMenu', element: CreateMenu },
-{ path: '/menu/updatemenu/:id', name: 'UpdateMenu', element: UpdateMenu },
-////////////page
-{ path: '/page/pagelist', name: 'PageList', element: PageList },
-{ path: '/page/createpage', name: 'CreatePage', element: CreatePage },
-{ path: '/page/updatepage/:id', name: 'UpdatePage', element: UpdatePage },
+  ///////////////////////////////
+  { path: '/productdacn/createproduct', name: 'CreateProductTest', element: CreateProductTest },
+  { path: '/productdacn/productlist', name: 'ProductListTest', element: ProductListTest },
+  { path: '/productdacn/updateproduct/:id', name: 'UpdateProduct', element: UpdateProduct },
+  { path: '/productdacn/detailproduct/:id', name: 'DetailProduct', element: DetailProduct },
+  { path: '/productdacn/list-trash', name: 'ListTrashProduct', element: ListTrashProduct },
+  ////////////info
+  { path: '/info/infolist', name: 'InfoList', element: InfoList },
+  // { path: '/info/createinfo', name: 'CreateInfo', element: CreateInfo },
+  // { path: '/info/updateinfo/:id', name: 'UpdateInfo', element: UpdateInfo },
+  ////////////menu
+  { path: '/menu/menulist', name: 'MenuList', element: MenuList },
+  { path: '/menu/createmenu', name: 'CreateMenu', element: CreateMenu },
+  { path: '/menu/updatemenu/:id', name: 'UpdateMenu', element: UpdateMenu },
+  ////////////page
+  { path: '/page/pagelist', name: 'PageList', element: PageList },
+  { path: '/page/createpage', name: 'CreatePage', element: CreatePage },
+  { path: '/page/updatepage/:id', name: 'UpdatePage', element: UpdatePage },
+  //////////discount
+  { path: '/discount/discountlist', name: 'DiscountList', element: DiscountList },
 
 
 ]

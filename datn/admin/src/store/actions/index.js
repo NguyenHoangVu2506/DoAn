@@ -89,11 +89,17 @@ export const Action = {
 
   //upload
   UPLOAD_IMAGE_SINGLE: "UPLOAD_IMAGE_SINGLE",
+
   ///Page
   UPDATE_PAGE: "UPDATE_PAGE",
   ADD_PAGE: "ADD_PAGE",
   GET_PAGE: "GET_PAGE",
   GET_PAGE_BY_ID: "GET_PAGE_BY_ID",
 
+  ///discount
+  UPDATE_DISCOUNT: "UPDATE_DISCOUNT",
+  GET_DISCOUNT: "GET_DISCOUNT",
+/////////////order
+  GET_ORDER:"GET_ORDER",
 
 };

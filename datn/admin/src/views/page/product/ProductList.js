@@ -81,7 +81,7 @@ function ProductList() {
                                                 <td>
                                                     <div className="function_style">
                                                         <Link to={`/product/updateproduct/${item.id}`} className="btn btn-sm"><i className="fa fa-edit me-1" ></i>Chỉnh sửa</Link> |
-                                                        <Link to={`/product/detailproduct/${item.id}`} className="btn btn-sm"><i className="fa fa-eye me-1"></i>Chi tiết</Link> |
+                                                        <Link to={`/product/detailproduct/${item._id}`} className="btn btn-sm"><i className="fa fa-eye me-1"></i>Chi tiết</Link> |
                                                         <button onClick={() => trashProduct(item.id)} className="btn btn-sm"><i className="fa fa-trash me-1"></i>Xoá</button>
                                                     </div>
                                                 </td>
