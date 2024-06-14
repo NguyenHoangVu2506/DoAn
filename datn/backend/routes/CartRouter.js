@@ -3,8 +3,7 @@ const router = express.Router();
 const cartController = require("../controllers/CartController");
 const { asyncHandler } = require("../helpers");
 
-router.post('', asyncHandler(cartController.addToCart))
-router.post('/update', asyncHandler(cartController.updateToCart))
+router.post('/addToCart', asyncHandler(cartController.addToCart))
 router.post('/listCart', asyncHandler(cartController.listToCart))
 router.post('/deleteCartIdUserId', asyncHandler(cartController.deleteToCartByCartIdAndUserId))
 router.post('/deleteCartItem', asyncHandler(cartController.deleteCartItem))

@@ -1,16 +1,107 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
-import { getCart } from "../../../store/actions";
+import { deleteCartItem, getCart, updateQuantityCart, updateSkuCart, updateSkuFromCartV2 } from "../../../store/actions";
 import CartItem from "../../../Components/cartItem";
+import { specialOfferToday } from "../../../store/actions/special_offer-actions";
 
 export default function Cart() {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { userInfo } = useSelector((state) => state.userReducer)
+    const { special_offer } = useSelector((state) => state.specialOfferReducer)
     const { cart } = useSelector((state) => state.cartReducer)
-    const dispatch = useDispatch()
+    const [price_total, setprice_total] = useState(0)
+    const [special_offer_today, setSpecial_offer_today] = useState(null)
+
     useEffect(() => {
-        if (!cart) {
-            dispatch(getCart({userId:'234'}))
+        if (userInfo) {
+            dispatch(getCart({ userId: userInfo._id }))
+            dispatch(specialOfferToday());
         }
-    }, [cart])
+    }, [])
+
+    const updateItemFromCart = async (type, data) => {
+        if (type === 'deleteItem') {
+            const { productId, sku_id = null } = data;
+            await dispatch(
+                deleteCartItem({
+                    userId: userInfo._id,
+                    productId: productId,
+                    sku_id: sku_id,
+                })
+            );
+        }
+        if (type === 'updateItemQuantity') {
+            const { productId, sku_id = null, quantity, old_quantity } = data;
+
+            console.log("updateItemQuantity: ", productId, sku_id, quantity, old_quantity);
+            await dispatch(updateQuantityCart({
+                userId: userInfo._id,
+                shop_order_ids: {
+                    item_products: {
+                        productId: productId,
+                        sku_id: sku_id,
+                        quantity: quantity,
+                        old_quantity: old_quantity,
+                    },
+                },
+            })
+            );
+        }
+        if (type === 'updateItemSku') {
+            const { productId, sku_id, sku_id_old } = data;
+
+            console.log("updateItemSku: ", productId, sku_id, sku_id_old);
+            await dispatch(updateSkuCart({
+                userId: userInfo._id,
+                shop_order_ids: {
+                    item_products: {
+                        productId: productId,
+                        sku_id: sku_id,
+                        sku_id_old: sku_id_old,
+                    },
+                },
+            })
+            );
+        }
+        if (type === 'updateItemSkuV2') {
+            const { productId, sku_id, sku_id_old, quantity } = data;
+
+            console.log("updateItemSkuV2: ", productId, sku_id, sku_id_old, quantity);
+            await dispatch(updateSkuFromCartV2({
+                userId: userInfo._id,
+                shop_order_ids: {
+                    item_products: {
+                        productId: productId,
+                        sku_id: sku_id,
+                        sku_id_old: sku_id_old,
+                        quantity: quantity
+                    },
+                },
+            })
+            );
+        }
+        return dispatch(getCart({ userId: userInfo._id }));
+    };
+    useEffect(() => {
+        special_offer && setSpecial_offer_today(special_offer)
+    }, [special_offer]);
+    // useEffect(() => {
+    //     cart?.cart_products?.length > 0 && setprice_total(cart?.cart_products?.reduce(
+    //         (accumulator, currentValue) => accumulator + (currentValue.price * currentValue.quantity),
+    //         0,
+    //     ))
+    // }, [cart]);
+    // const OpenCart = async () => {
+    //     await dispatch(getCart({ userId: userInfo._id }));
+    //     dispatch(specialOfferToday());
+
+    //     setSelectedProductFromCart(getSelectedListFromCart)
+    //     setprice_total(0)
+    //     setOpen(true);
+    // };
+
     return (
         <>
 
@@ -23,8 +114,9 @@ export default function Cart() {
                             <div class="card border shadow-0">
                                 <div class="m-4">
                                     <h4 class="card-title mb-4">Giỏ hàng của bạn</h4>
-                                    {cart && cart.cart_products.map((product, index) => {
-                                        return <CartItem product_id={product.productId} sku_id={product.sku_id} quantity={product.quantity} key={index} />
+                                    {cart?.cart_products?.length > 0 && cart.cart_products.map((product, index) => {
+                                        return <CartItem product={product} special_offer_today={special_offer_today}
+                                            update={updateItemFromCart} key={index} />
                                     })}
 
 
@@ -60,7 +152,7 @@ export default function Cart() {
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between">
                                         <p class="mb-2">Total price:</p>
-                                        <p class="mb-2">$329.00</p>
+                                        <p class="mb-2">{price_total}</p>
                                     </div>
                                     <div class="d-flex justify-content-between">
                                         <p class="mb-2">Discount:</p>
@@ -77,8 +169,15 @@ export default function Cart() {
                                     </div>
 
                                     <div class="mt-3">
-                                        <a href="/checkout" class="btn btn-success w-100 shadow-0 mb-2"> Thanh toan </a>
-                                        <a href="#" class="btn btn-light w-100 border mt-2"> Back to shop </a>
+                                        {price_total > 0
+                                            ? <button href="/checkout" onClick={() => {
+                                                navigate('/checkout');
+
+                                            }} disabled={false} class="btn btn-success w-100 shadow-0 mb-2">  Thanh toan </button>
+                                            : <button disabled={true} class="btn btn-success w-100 shadow-0 mb-2"> </button>
+                                        }
+                                        <Link
+                                            to={"/"} class="btn btn-light w-100 border mt-2"> Back to shop </Link>
                                     </div>
                                 </div>
                             </div>

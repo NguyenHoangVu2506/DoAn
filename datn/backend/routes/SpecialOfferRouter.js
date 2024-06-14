@@ -4,7 +4,7 @@ const specialOfferController = require("../controllers/SpecialOfferController");
 const { asyncHandler } = require("../helpers");
 
 router.post('', asyncHandler(specialOfferController.createSpecialOffer))
-router.post('/listSpecialOffer', asyncHandler(specialOfferController.getSpecialOfferBySpuId))
+router.post('/getSpecialOfferBySpuId', asyncHandler(specialOfferController.getSpecialOfferBySpuId))
 router.post('/findSpecialOfferBetweenStartDateAndEndByDate', asyncHandler(specialOfferController.findSpecialOfferBetweenStartDateAndEndByDate))
 
 

@@ -22,22 +22,18 @@ class CartService {
     async updateUserCartQuantity({ userId, product }) {
 
         const { productId, quantity, sku_id } = product
-
         const query = sku_id ? {
             cart_userId: userId,
-            // 'cart_products.productId': productId,
             'cart_products.sku_id': sku_id,
             cart_state: 'active'
         } : {
             cart_userId: userId,
             'cart_products.productId': productId,
-            // 'cart_products.sku_id': sku_id,
             cart_state: 'active'
         }, updateSet = {
             $inc: {
                 'cart_products.$.quantity': quantity
-            },
-
+            }
         }, options = {
             upsert: true,
             new: true
@@ -69,21 +65,19 @@ class CartService {
     //end repo cart
 
     async addToCart({ userId, product = {} }) {
-        //ktra cart co ton tai hay khong
+       console.log(userId, product )
         const userCart = await cart.findOne({ cart_userId: userId })
         if (!userCart) {
             return await this.createUserCart({ userId, product })
         }
-
-        //neu co cart roi nhung chua co sp
-        if (!userCart.cart_products.length) {
+console.log(userCart.cart_products.length)
+        if (userCart.cart_products.length == 0) {
             userCart.cart_products = [product]
             userCart.cart_count_product = userCart.cart_count_product + 1
             return await userCart.save()
         }
-        //neu gio hang chua co sp khac 
         let hasProduct = await userCart.cart_products.find((pro) => {
-            return pro.productId === product.productId
+            return pro?.productId === product?.productId
         })
         if (!hasProduct) {
             userCart.cart_products = [...userCart.cart_products, product]
@@ -98,70 +92,10 @@ class CartService {
             userCart.cart_count_product = userCart.cart_count_product + 1
             return await userCart.save()
         }
-        //gio hang ton tai co sp nay => update quantity
         return await this.updateUserCartQuantity({ userId, product })
 
     }
 
-    //update cart trong gio hang
-    async addToCartV2({ userId, shop_order_ids = {} }) {
-        // console.log(userId[1].o1[0]+userId[1].o2[1])
-        const { productId, quantity, old_quantity, sku_id, sku_id_old } = shop_order_ids?.item_products
-        console.log(shop_order_ids)
-        // check sp co ton tai k
-        const foundProduct = await getProductById(productId)
-        if (!foundProduct) throw new NotFoundRequestError('product do not belong to the shop')
-
-        if (quantity === 0) {
-            //deleted
-        }
-        if (quantity != old_quantity && sku_id == sku_id_old) {
-            console.log("aa", quantity - old_quantity)
-            return await CartService.updateUserCartQuantity({
-                userId,
-                product: {
-                    productId,
-                    quantity: quantity - old_quantity,
-                    sku_id
-                }
-            })
-        }
-        const userCart = await cart.findOne({ cart_userId: userId })
-        if (!userCart) {
-            return null
-        }
-        let hasSkuId = await userCart.cart_products.find((pro) => {
-            return pro.sku_id === sku_id
-        })
-        if (hasSkuId && sku_id != sku_id_old) {
-            this.deleteCartItem({ userId: userId, productId: productId, sku_id: sku_id_old })
-            return await this.updateUserCartQuantity({
-                userId,
-                product: {
-                    productId,
-                    quantity: quantity,
-                    sku_id: hasSkuId.sku_id
-                }
-            })
-            // console.log(hasSkuId)
-        }
-
-        if (sku_id != sku_id_old && quantity == old_quantity) {
-            return await this.updateUserCartSku({
-                userId,
-                product: {
-                    productId,
-                    sku_id,
-                    sku_id_old
-                }
-            })
-        }
-        if (sku_id == sku_id_old && quantity == old_quantity) {
-            return userCart
-
-        }
-        return null
-    }
     async updateQuantityFromCart({ userId, shop_order_ids = {} }) {
         const { productId, sku_id, quantity, old_quantity } = shop_order_ids?.item_products
 

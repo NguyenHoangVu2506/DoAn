@@ -7,7 +7,7 @@ import ProductRelatedItem from "../../../../Components/product/product_related_i
 import { addCart, addProWishList, removeFromWishList } from "../../../../store/actions";
 import { toast } from 'react-toastify';
 import { addFavoriteToLocalStorage, getFavoritesFromLocalStorage, removeFavoriteFromLocalStorage } from "../../../../utils";
-function ProductDetail({}) {
+function ProductDetail({ }) {
     const { product_slug_id } = useParams()
     const spu_id = product_slug_id.split("-").pop()
     const dispatch = useDispatch();
@@ -61,7 +61,8 @@ function ProductDetail({}) {
     }
 
     ////addtoCart
-    const handleAddToCart = async (userId, { productId, sku_id, quantity }) => {
+    const handleAddToCart = async (userId, { productId, sku_id = null, quantity }) => {
+        console.log("productId, sku_id, quantity", productId, sku_id, quantity, userId)
         if (userId) {
             if (quantity <= stock) {
                 // console.log('selected_sku', sku_id + productId + sku_id)
@@ -112,13 +113,14 @@ function ProductDetail({}) {
             !selected_sku && set_selected_sku(productDetail.sku_list.find((sku) => sku.sku_tier_idx.toString() === sku_tier_idx.toString()))
         )
         productDetail && setLargeImageSrc(productDetail.product_detail.product_thumb[0])
+        productDetail && setStock(productDetail.product_detail.product_quantity)
 
     }, [productDetail, sku_tier_idx])
 
     useEffect(() => {
         dispatch(onProductDetail({ spu_id: spu_id }));
     }, [product_slug_id]);
-    console.log("productDetail", productDetail);
+    console.log("productDetail", productDetail, selected_sku);
 
     return (
         <>
@@ -245,30 +247,30 @@ function ProductDetail({}) {
                                 </div>
                                 <button href="#" className="btn btn-warning shadow-0 me-1"> Buy now </button>
 
-                                {productDetail && (selected_sku ?
-                                    (<button className="btn btn-primary shadow-0 me-1"
+                                {productDetail &&
+                                    <button className="btn btn-primary shadow-0 me-1"
                                         onClick={() =>
                                             handleAddToCart(userInfo, {
                                                 productId:
-                                                productDetail.product_detail._id,
-                                                sku_id: selected_sku._id,
+                                                    productDetail?.product_detail?._id,
+                                                sku_id: selected_sku?.sku_id,
                                                 quantity: quantity,
                                             })
-                                        }> <i className="me-1 fa fa-shopping-basket"></i> Add to cart </button>)
-                                    :
-                                    (<button disabled className="btn btn-primary shadow-0 me-1"> <i className="me-1 fa fa-shopping-basket"></i> Add to cart </button>
-                                    ))}
-                            {productDetail &&
-                                (userInfo ?
-                                    (
-                                        favories_products.some((p_id) => p_id === productDetail.product_detail._id) == true
-                                            ?
-                                            <button className="btn btn-light border icon-hover  px-2 py-2  " onClick={()=>HandleRemoveFromWishList({userId:userInfo._id , productId:productDetail.product_detail._id})}><i className="fas fa-heart fa-lg text-danger px-1" ></i></button>
-                                            :
-                                            <button className="btn btn-light border icon-hover  px-2 py-2 " onClick={()=>HandleAddToWishList({userId:userInfo._id , productId:productDetail.product_detail._id})}><i className="fas fa-heart fa-lg text-secondary px-1" ></i></button>
-                                    ) : (
-                                        <button className="btn btn-light border icon-hover  px-2 py-2  " ><i className="fas fa-heart fa-lg text-secondary px-1" ></i></button>
-                                    ))}                            </div>
+                                        }> <i className="me-1 fa fa-shopping-basket"></i> Add to cart </button>
+
+                                }
+                                {productDetail &&
+                                    (userInfo ?
+                                        (
+                                            favories_products.some((p_id) => p_id === productDetail.product_detail._id) == true
+                                                ?
+                                                <button className="btn btn-light border icon-hover  px-2 py-2  " onClick={() => HandleRemoveFromWishList({ userId: userInfo._id, productId: productDetail.product_detail._id })}><i className="fas fa-heart fa-lg text-danger px-1" ></i></button>
+                                                :
+                                                <button className="btn btn-light border icon-hover  px-2 py-2 " onClick={() => HandleAddToWishList({ userId: userInfo._id, productId: productDetail.product_detail._id })}><i className="fas fa-heart fa-lg text-secondary px-1" ></i></button>
+                                        ) : (
+                                            <button className="btn btn-light border icon-hover  px-2 py-2  " ><i className="fas fa-heart fa-lg text-secondary px-1" ></i></button>
+                                        ))}
+                            </div>
                         </main>
                     </div>
                 </div>

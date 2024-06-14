@@ -4,7 +4,7 @@ import { Action } from '../actions'
 export const addCart= ({userId, product}) => async (dispatch) => {
 
   try {
-    const response = await PostData('/cart',{userId, product});
+    const response = await PostData('/cart/addToCart',{userId, product});
     console.log('response:', response)
     return dispatch({ type: Action.ADD_CART, payload: response.data });
   } catch (err) {
@@ -14,7 +14,7 @@ export const addCart= ({userId, product}) => async (dispatch) => {
 
 };
 
-export const getCart= (data) => async (dispatch) => {
+export const getCart = (data) => async (dispatch) => {
 
     try {
       const response = await PostData('/cart/listCart',data);

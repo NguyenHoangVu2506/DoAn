@@ -35,7 +35,7 @@ function App() {
           {/* <Route path='/product-list' element={<ProList/>} /> */}
           <Route path='/collections?/:category0_slug?/:category1_slug?/:category2_slug' element={<Collections/>} />
 
-          <Route path='/gio-hang' element={<Cart />} />
+          <Route path='/gio-hang' element={<Cart/>} />
           <Route path='/template' element={<Template />} />
           <Route path='/forgotpassword' element={<ForgotPassword />} />
           <Route path='/blog' element={<Blog />} />

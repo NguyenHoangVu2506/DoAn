@@ -20,7 +20,18 @@ class CheckoutController {
 
 
     }
-    
+    findOrderByUser = async(req, res, next) => {
+        return new SuccessResponse({
+            message: "findOrderByUser success",
+            metaData: await CheckoutService.findOrderByUser(req.body)
+        }).send(res)
+    }
+    findAllOrder = async(req, res, next) => {
+        return new SuccessResponse({
+            message: "findAllOrder success",
+            metaData: await CheckoutService.findAllOrder()
+        }).send(res)
+    }
 }
 
 module.exports = new CheckoutController()

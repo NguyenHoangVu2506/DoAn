@@ -148,8 +148,15 @@ class CheckoutService {
         return newOrder
     }
 
-    static async getOneOrderByUser() {
-
+    static async findOrderByUser({ user_id }) {
+        const Order = await order.find({
+            order_userId: user_id
+        })
+        return Order
+    }
+    static async findAllOrder() {
+        const Order = await order.find()
+        return Order
     }
     static async cancelOrderByUser() {
 

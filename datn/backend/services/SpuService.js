@@ -67,7 +67,7 @@ const newSpu = async ({
 }
 
 const oneSpu = async ({ spu_id }) => {
-    console.log(spu_id)
+    console.log(spu_id,"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
 
     try {
         const spu = await SPU_MODEL.spu.findOne({
@@ -165,7 +165,7 @@ const findProductsByCategory = async ({ limit = 50, sort = 'ctime', page = 1, fi
         return { ...product, brand: brand_list[index], special_offer: special_offer[index], sku_list: sku_list[index] }
     })
 
-    return product_list
+    return product_list.productsByCategory
 }
 
 const findProductDetail = async ({ spu_id, isPublished = true }) => {

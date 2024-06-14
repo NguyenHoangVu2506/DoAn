@@ -12,13 +12,6 @@ class CartController {
         }).send(res)
     }
 
-    updateToCart = async (req, res, next) => {
-
-        return new SuccessResponse({
-            message: "Updated cart success",
-            metaData: await CartService.addToCartV2(req.body)
-        }).send(res)
-    }
 
     deleteCartItem = async (req, res, next) => {
 

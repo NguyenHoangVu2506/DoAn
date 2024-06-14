@@ -23,7 +23,7 @@ const Header = () => {
               <div class="col-lg-2 col-sm-4 col-4">
                  {/* <img src='../../' alt="" height="100px"
                     width="100px"></img>  */}
-                   <Link to='/' className="text-dark"><h2>HIBEAUTY</h2></Link> 
+                   <Link to='/' className="text-dark"><h3>FRUITSTORE</h3></Link> 
               </div>
 
               <div class="order-lg-last col-lg-5 col-sm-8 col-8">
@@ -40,11 +40,11 @@ const Header = () => {
 
                   )}
 
-                  <a href="/gio-hang" class="btn btn-rounded py-1 px-3 nav-link d-flex align-items-center"style={{ background: '#f6831f linear-gradient(180deg, #fff3ea 0%, #f6831f 100%)' }} > <i class="fas fa-shopping-cart m-1 me-md-2"></i>
+                  <a href="/gio-hang" class="btn btn-rounded py-1 px-3 nav-link d-flex align-items-center me-1"style={{ background: '#f6831f linear-gradient(180deg, #fff3ea 0%, #f6831f 100%)' }} > <i class="fas fa-shopping-cart m-1 me-md-2"></i>
                     <p class="d-none d-md-block mb-0">Giỏ hàng</p>
                   </a>
 
-                  <a href="/wish-list" class="btn btn-rounded py-1 px-3 nav-link d-flex align-items-center"style={{ background: '#f6831f linear-gradient(180deg, #fff3ea 0%, #f6831f 100%)' }} > <i class="fas fa-heart m-1 me-md-2"></i>
+                  <a href="/wish-list" class="btn btn-rounded py-1 px-3 nav-link d-flex align-items-center me-1"style={{ background: '#f6831f linear-gradient(180deg, #fff3ea 0%, #f6831f 100%)' }} > <i class="fas fa-heart m-1 me-md-2"></i>
                     <p class="d-none d-md-block mb-0">Yêu thích</p>
                   </a>
                 </div>

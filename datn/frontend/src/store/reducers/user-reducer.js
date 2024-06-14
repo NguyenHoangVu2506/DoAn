@@ -2,7 +2,7 @@ import { Action } from '../actions'
 
 const initialState = {
     userInfo: localStorage.getItem("userInfo") ? JSON.parse(localStorage.getItem("userInfo")) : null,
-    add_address:null
+    add_address: null
 
 
 }
@@ -31,7 +31,7 @@ const UserReducer = (state = initialState, action) => {
                 userInfo: action.payload
             }
         case Action.LOGOUT:
-            localStorage.clear();
+            localStorage.removeItem("userInfo");
             return {
                 ...state,
                 userInfo: null
@@ -39,7 +39,7 @@ const UserReducer = (state = initialState, action) => {
         case Action.ADD_ADDRESS:
             return {
                 ...state,
-                add_address:action.payload
+                add_address: action.payload
             }
 
         case Action.GET_ADDRESS:

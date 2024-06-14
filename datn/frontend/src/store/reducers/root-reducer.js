@@ -10,8 +10,7 @@ import TopicReducer from './topic-reducer';
 import SliderReducer from './slider-reducer';
 import BrandReducer from './brand-reducer';
 import AttributeReducer from './attribute-reducer';
-
-
+import SpecialOfferReducer from './special_offer-reducer';
 
 const reducers = combineReducers({
     userReducer: UserReducer,
@@ -24,7 +23,8 @@ const reducers = combineReducers({
     topicReducer: TopicReducer,
     sliderReducer:SliderReducer,
     brandReducer: BrandReducer,
-    attributeReducer: AttributeReducer
+    attributeReducer: AttributeReducer,
+    specialOfferReducer: SpecialOfferReducer
 
 
 })

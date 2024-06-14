@@ -30,7 +30,7 @@ export default function Home() {
                 productByCategory && (
                     all_category && (
                         current_category.map((cat, index) => {
-                            return < CategoryList key={index} all_product_category={productByCategory.productsByCategory} category_parent={cat} all_category={all_category} />
+                            return < CategoryList key={index} all_product_category={productByCategory} category_parent={cat} all_category={all_category} />
                         })
                     )
                 )

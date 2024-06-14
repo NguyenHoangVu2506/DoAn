@@ -34,7 +34,7 @@ export default function CategoryList({ category_parent, all_product_category, al
         <div className="row flex justify-content-around ">
           {category_childrent && category_childrent.map((category, index) => {
             return (
-              <button onClick={() => changeSelectedCategory(category)} key={index} className="btn btn-light btn-group-vertical  col-2 flex justify-content-center align-content-center rounded-3 mb-3" style={{ width: '140px', height: '140px' }}>
+              <button onClick={() => changeSelectedCategory(category)} key={index} className="btn btn-white btn-group-vertical  col-2 flex justify-content-center align-content-center rounded-3 mb-3" style={{ width: '140px', height: '140px' }}>
                 <img src={category.category_icon} style={{ width: '100%', height: '50%' }} />
                 <div className="card-body pt-3 text-center">
                   <p style={{ color: '#545453' }}>{category.category_name}</p>
@@ -49,7 +49,7 @@ export default function CategoryList({ category_parent, all_product_category, al
 
       <div class=" row " >
         {productByCategory.length > 0 ? productByCategory.map((product, index) => {
-          return <ProductItem product={product} key={index} />
+          return <ProductItem product={product} key={index} special/>
         }) :
           <div>
             <div className="card-body pt-3 text-center">
