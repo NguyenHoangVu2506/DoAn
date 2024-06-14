@@ -89,12 +89,12 @@ const _nav = [
     to: '/order/orderlist/1/10',
     icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
   },
-  {
-    component: CNavItem,
-    name: 'Liên hệ',
-    to: '/charts/b',
-    icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
-  },
+  // {
+  //   component: CNavItem,
+  //   name: 'Liên hệ',
+  //   to: '/charts/b',
+  //   icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
+  // },
   // {
   //   component: CNavItem,
   //   name: 'Thành viên',

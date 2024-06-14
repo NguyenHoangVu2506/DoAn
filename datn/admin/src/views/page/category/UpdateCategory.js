@@ -12,125 +12,71 @@ import {
     CFormTextarea,
     CRow,
 } from '@coreui/react'
-import apiCategory from '../../../service/categoryservice';
 import { useParams, useNavigate } from "react-router-dom";
-import apiUploadFile from '../../../service/apiUploadFile';
-import axiosInstance from '../../../axio';
-import { data } from 'autoprefixer';
+import { useDispatch, useSelector } from 'react-redux';
+import { CategoryStore, CategoryUpdate, getCategory, getCategoryById, uploadSingleImage } from '../../../store/actions';
 
 const UpdateCategory = () => {
-    const navigate = useNavigate(); // chuyen trang
     const { id } = useParams();
 
-    const [categorys, setCategorys] = useState([]);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const { createCategory } = useSelector((state) => state.userReducer);
+    const { listCategory } = useSelector((state) => state.categoryReducer);
+    const { listCateById } = useSelector((state) => state.categoryReducer);
+
+    useEffect(() => {
+        if (!listCategory) {
+            dispatch(getCategory({ sort: 'ctime' }));
+        }
+    }, [dispatch, listCategory]);
 
     const [name, setName] = useState('');
     const [parent_id, setParent_Id] = useState(0);
-    const [sortOrder, setSortOrder] = useState(0);
+    const [image, setImage] = useState('');
     const [description, setDescription] = useState('');
-    const [metakey, setMetakey] = useState('');
-    const [status, setStatus] = useState(2);
-    const [slug, setSlug] = useState('a');
-    const [metadesc, setMetadesc] = useState('a');
-    const [image, setImage] = useState(null);
-    const [created_at, setCreated_at] = useState();
-    const [updated_at, setUpdated_at] = useState();
-    const [created_by, setCreated_by] = useState(0);
-    const [updated_by, setUpdated_by] = useState(0);
 
     useEffect(() => {
-        apiCategory.getCategoryById(id).then((res) => {
-            try {
-                const dataCate = res.data; // hoặc res.response.data
-                console.log(dataCate);
-                setName(dataCate.name);
-                setParent_Id(dataCate.parent_id);
-                setSortOrder(dataCate.sort_order);
-                setStatus(dataCate.status);
-                setMetakey(dataCate.metakey);
-                setDescription(dataCate.description);
-               
-            } catch (e) {
-                console.log(e);
-            }
-        });
-    }, [id]);
-    useEffect(() => {
-        apiCategory.getAll().then((res) => {
-            try {
-                console.log(res);
-                const categoryData = res.data.map((item) => {
-
-                    return {
-                        id: item.id,
-                        name: item.name,
-                        slug: item.slug,
-                        parent: item.parent_id,
-                        sort_order: item.sort_order,
-                        status: item.status,
-                    }
-                });
-                setCategorys(categoryData);
-            } catch (e) {
-                console.log(e);
-            }
-        });
-    }, [id]);
+        if (!listCateById) {
+            dispatch(getCategoryById({ category_id: id }));
+        } else {
+            setName(listCateById.category_name || '');
+            setParent_Id(listCateById.parent_id || '');
+            setDescription(listCateById.category_description || 'slider-main');
+            setImage(listCateById.category_icon || '');
+        }
+    }, [dispatch, listCateById]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (name !== '') {
-            const category = {
-                name: name,
-                parent_id: parent_id,
-                sort_order: sortOrder,
-                description: description,
-                metakey: metakey,
-                status: status,
-                slug: slug,
-                metadesc: metadesc,
-                created_at: created_at,
-                updated_at: updated_at,
-                created_by: created_by,
-                updated_by: updated_by,
-                image: ""
-            };
+        try {
+            const formFile = new FormData()
 
-            if (image) {
-                let file = new FormData();
-                file.append("files", image);
-                axiosInstance.enableUploadFile();
-                try {
-                    const res = await apiUploadFile.uploadFile(file);
-                    let filename = res.data.filename;
-                    category.image = filename;
-                } catch (e) {
-                    console.log(e);
-                    alert("File upload failed!");
-                    return;
-                }
-                axiosInstance.enableJson();
+            const images = document.querySelector("#image");
+            if (images.files.length === 0) {
+                formFile.append("file", "")
             }
+            else {
+                formFile.append("file", images.files[0]);
+            }
+            formFile.append('folderName', 'website/category')
+            const image = await dispatch(uploadSingleImage(formFile))
+            image && dispatch(CategoryUpdate({category_id:id, category_name: name, category_description: description, category_icon: image?.payload?.metaData?.thumb_url, parent_id: parent_id, isPublished: true }))
+            navigate('/category/categorylist/1/10')
 
-            await apiCategory.updateCategory(category, id).then((res) => {
-                if (res.data != null) {
-                    alert("Cập nhật dữ liệu thành công !");
-                    navigate('/category/categorylist/1/10', { replace: true });
-                } else {
-                    alert("Không thành công !");
-                }
-            });
-        } else {
-            alert('Vui lòng nhập đầy đủ thông tin!');
+        } catch (error) {
+            console.log(error)
         }
+
     }
-console.log(name)
+
     return (
         <CRow>
             <CCol xs={12}>
                 <CCard className="mb-4">
                     <CCardHeader>
-                        <strong>Chỉnh sửa danh mục</strong>
+                        <strong>Thêm danh mục</strong>
                     </CCardHeader>
                     <CCardBody>
                         <CForm className="row g-3" onSubmit={handleSubmit}>
@@ -141,24 +87,12 @@ console.log(name)
                             <CCol md={6}>
                                 <CFormLabel htmlFor="inputState">Danh mục cha</CFormLabel>
                                 <CFormSelect id="inputState" onChange={(e) => setParent_Id(e.target.value)} value={parent_id}>
-                                    {categorys.map((item, index) => (
-                                        <option value={item.id} key={index}>{item.name}</option>
+                                    {Array.isArray(listCategory) && listCategory.map((item, index) => (
+                                        <option value={item._id} key={index}>{item.category_name}</option>
                                     ))}
                                 </CFormSelect>
-                            </CCol>
-                            <CCol xs={6}>
-                                <CFormLabel htmlFor="inputAddress">Từ khóa</CFormLabel>
-                                <CFormInput id="inputAddress" value={metakey} onChange={(e) => setMetakey(e.target.value)} />
                             </CCol>
                             <CCol md={6}>
-                                <CFormLabel htmlFor="inputState">Sắp xếp</CFormLabel>
-                                <CFormSelect id="inputState" onChange={(e) => setSortOrder(e.target.value)} value={sortOrder}>
-                                    {categorys.map((item, index) => (
-                                        <option value={item.sort_order + 1} key={index}>Sau: {item.name}</option>
-                                    ))}
-                                </CFormSelect>
-                            </CCol>
-                            <CCol md={9}>
                                 <CFormLabel htmlFor="inputCity">Mô tả</CFormLabel>
                                 <CFormTextarea
                                     id="exampleFormControlTextarea1"
@@ -168,14 +102,7 @@ console.log(name)
                             </CCol>
                             <CCol md={3}>
                                 <CFormLabel htmlFor="formFile">Hình ảnh</CFormLabel>
-                                <CFormInput type="file" id="image" onChange={(e) => setImage(e.target.files[0])} />
-                            </CCol>
-                            <CCol md={3}>
-                                <CFormLabel htmlFor="inputState">Trang thái</CFormLabel>
-                                <CFormSelect id="inputState" value={status} onChange={(e) => setStatus(e.target.value)}>
-                                    <option value="1">Xuất bản</option>
-                                    <option value="2">Chưa xuất bản</option>
-                                </CFormSelect>
+                                <CFormInput type="file" id="image" />
                             </CCol>
                             <CCol xs={12}>
                                 <CButton color="primary" type="submit">

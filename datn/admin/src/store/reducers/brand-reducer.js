@@ -2,7 +2,7 @@ import { Action } from '../actions'
 
 const initialState = {
     allBrand: null,
-    createBrand:null,
+    createBrand: null,
 }
 
 const BrandReducer = (state = initialState, action) => {
@@ -17,6 +17,17 @@ const BrandReducer = (state = initialState, action) => {
             return {
                 ...state,
                 createBrand: action.payload.metaData
+            }
+        case Action.UPDATE_BRAND:
+            return {
+                ...state,
+                updateBrand: action.payload.metaData
+            }
+
+        case Action.GET_BRAND_BY_ID:
+            return {
+                ...state,
+                listBrandById: action.payload.metaData
             }
         default:
             return state;

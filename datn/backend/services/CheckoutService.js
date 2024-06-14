@@ -79,7 +79,7 @@ class CheckoutService {
             const { discount = 0 } = await getDiscountAmount({
                 codeId: shop_discounts[0].codeId,
                 userId,
-                products: checkProductServerSpecialOffer
+                products: checkProductServerSpecialOffer.length>0?checkProductServerSpecialOffer:checkProductServer
             })
             //tong discount 
             checkout_oder.totalDiscount += discount
