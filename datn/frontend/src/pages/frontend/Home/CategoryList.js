@@ -49,7 +49,7 @@ export default function CategoryList({ category_parent, all_product_category, al
 
       <div class=" row " >
         {productByCategory.length > 0 ? productByCategory.map((product, index) => {
-          return <ProductItem product={product} key={index} special/>
+          return <ProductItem product={product} key={index} />
         }) :
           <div>
             <div className="card-body pt-3 text-center">

@@ -212,7 +212,7 @@ function ProductDetail({ }) {
                                                     {variation.options.map((option, indexOption) => {
                                                         return (
                                                             <div key={indexOption} >
-                                                                <input type="radio" class="btn-check" name="options" id={option} autocomplete="off"
+                                                                <input type="radio" class="btn btn-check" name="options" id={option} autocomplete="off"
                                                                     value={indexOption} onClick={() => onChangeVariation(indexOption, indexVariation)} />
                                                                 <label class="btn btn-secondary" for={option} data-mdb-ripple-init>{option}</label>
                                                             </div>

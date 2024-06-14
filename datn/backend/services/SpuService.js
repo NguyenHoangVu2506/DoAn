@@ -67,7 +67,7 @@ const newSpu = async ({
 }
 
 const oneSpu = async ({ spu_id }) => {
-    console.log(spu_id,"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+    console.log(spu_id, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
 
     try {
         const spu = await SPU_MODEL.spu.findOne({
@@ -158,7 +158,8 @@ const findProductsByCategory = async ({ limit = 50, sort = 'ctime', page = 1, fi
         brand_list.push(brand)
         const skulist = await allSkuBySpuId({ product_id: productsByCategory[index]._id })
         sku_list.push(skulist)
-        const specialoffer = await findSpecialOfferBySpuId({ spu_id: productsByCategory[index]._id, special_offer_is_active: true })
+        console.log("id", productsByCategory[index]._id)
+        const specialoffer = await findSpecialOfferBySpuId({ spu_id: productsByCategory[index]._id.toString(), special_offer_is_active: true })
         special_offer.push(specialoffer)
     }
     product_list.productsByCategory = await productsByCategory.map((product, index) => {

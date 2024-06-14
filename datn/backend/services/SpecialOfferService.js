@@ -45,7 +45,7 @@ class SpecialOfferService {
     async findSpecialOfferBySpuId({ spu_id, special_offer_is_active = true
     }) {
         try {
-            let now = new Date(Date.now());
+            let now = new Date();
             const special = await specialOffer.findOne({
                 special_offer_is_active,
                 special_offer_start_date: { $lte: now },
