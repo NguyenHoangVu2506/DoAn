@@ -40,7 +40,7 @@ export const getChildCategoryByParentId = (data) => async (dispatch) => {
 export const CategoryStore = (data) => async (dispatch) => {
 
   try {
-    const response = await PostData('/category', 
+    const response = await PostData('/category',
       data
     );
     console.log('response:', response)
@@ -52,4 +52,29 @@ export const CategoryStore = (data) => async (dispatch) => {
 
   }
 
+};
+export const getCategoryById = (data) => async (dispatch) => {
+  try {
+    const response = await PostData('/category/getCategory', data);
+    console.log('response:', response)
+    return dispatch({ type: Action.GET_CATEGORY_BY_ID, payload: response.data });
+  } catch (err) {
+    console.log(err)
+    return err.response.data
+  }
+
+};
+export const CategoryUpdate = (data) => async (dispatch) => {
+
+  try {
+    const response = await PostData('/category/update',
+      data
+    );
+    console.log('response:', response)
+    return dispatch({ type: Action.UPDATE_CATEGORY, payload: response.data });
+
+  } catch (err) {
+    console.log(err)
+    return err.response.data
+  }
 };

@@ -13,7 +13,7 @@ function MenuList() {
         if (!allMenu) {
             dispatch(getListMenu({ sort: 'ctime' }));
         }
-    }, [dispatch,allMenu]);
+    }, [dispatch, allMenu]);
     console.log(allMenu)
     return (
         <div className=" admin content-wrapper">
@@ -25,17 +25,17 @@ function MenuList() {
                                 <div className="d-grid gap-2 d-md-flex justify-content-md-begin">
                                     <Link to='/menu/createmenu'>
                                         <CButton color="primary" variant="outline" className="me-md-2">
-                                        <CIcon icon={cilPlus} title="Store menu" />
-                                             Thêm Menu
-                                            </CButton>
+                                            <CIcon icon={cilPlus} title="Store menu" />
+                                            Thêm Menu
+                                        </CButton>
                                     </Link>
                                     <Link to='/menu/createmenu'>
                                         <CButton color="danger" variant="outline" className="me-md-2">
-                                        <CIcon icon={cilTrash} title="Store menu" /> Thùng rác
-                                            </CButton>
-                                    </Link>                           
-                                    </div>
-                                    <hr/>
+                                            <CIcon icon={cilTrash} title="Store menu" /> Thùng rác
+                                        </CButton>
+                                    </Link>
+                                </div>
+                                <hr />
                                 <table className="table ">
                                     <thead>
                                         <tr>
@@ -47,27 +47,27 @@ function MenuList() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    {allMenu && allMenu.map((item, index) => (
-                                                <tr className="datarow" key={index}>
-                                                    <td className="text-center">
-                                                        {item.menu_name}
-                                                    </td>
-                                                    <td className="text-center">
-                                                        <div className="name">
-                                                            {item.parent_id
-                                                            }
-                                                        </div>
-                                                    </td>
-                                                    <td className="text-center">{item.menu_link}</td>
-                                                    <td className="text-center">{item.menu_position}</td>                                                  
-                                                    <td>
-                                                        <div className="function_style">
-                                                            <Link to={`/menu/updatemenu/${item._id}`} className="btn btn-sm"><CIcon icon={cilPencil} title="Store menu" /> Chỉnh sửa</Link> |
-                                                            <button className="btn btn-sm"><CIcon icon={cilDelete} title="Store menu" /> Xoá</button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                         
+                                        {allMenu && allMenu.map((item, index) => (
+                                            <tr className="datarow" key={index}>
+                                                <td className="text-center">
+                                                    {item.menu_name}
+                                                </td>
+                                                <td className="text-center">
+                                                    <div className="name">
+                                                        {item.parent_id
+                                                        }
+                                                    </div>
+                                                </td>
+                                                <td className="text-center">{item.menu_link}</td>
+                                                <td className="text-center">{item.menu_position}</td>
+                                                <td>
+                                                    <div className="function_style">
+                                                        <Link to={`/menu/updatemenu/${item._id}`} className="btn btn-sm"><CIcon icon={cilPencil} title="Store menu" /> Chỉnh sửa</Link> |
+                                                        <button className="btn btn-sm"><CIcon icon={cilDelete} title="Store menu" /> Xoá</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
                                         ))}
                                     </tbody>
                                 </table>

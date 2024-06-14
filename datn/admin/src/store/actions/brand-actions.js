@@ -28,3 +28,28 @@ export const BrandStore = (data) => async (dispatch) => {
   }
 
 };
+export const getBrandById = (data) => async (dispatch) => {
+  try {
+    const response = await PostData('/brand/getBrand', data);
+    console.log('response:', response)
+    return dispatch({ type: Action.GET_BRAND_BY_ID, payload: response.data });
+  } catch (err) {
+    console.log(err)
+    return err.response.data
+  }
+
+};
+export const BrandUpdate = (data) => async (dispatch) => {
+
+  try {
+    const response = await PostData('/brand/update',
+      data
+    );
+    console.log('response:', response)
+    return dispatch({ type: Action.UPDATE_BRAND, payload: response.data });
+
+  } catch (err) {
+    console.log(err)
+    return err.response.data
+  }
+};

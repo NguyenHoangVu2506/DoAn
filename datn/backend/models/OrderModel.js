@@ -3,7 +3,7 @@ const DOCUMENT_NAME = 'Order'
 const COLLECTION_NAME = 'orders'
 
 const orderSchema = new Schema({
-    order_userId:{type:Number, requied: true},
+    order_userId:{type:String, requied: true},
     order_checkout:{type:Object, default:{}},
     order_shipping:{type:Object, default:{}},
     order_payment:{type:Object, default:{}},

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { CButton } from '@coreui/react';
-import { cilTrash } from '@coreui/icons';
+import { cilPencil, cilPlus, cilTrash } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getListBrand } from '../../../store/actions';
@@ -18,58 +18,50 @@ function BrandList() {
 
     return (
         <div className="admin content-wrapper">
-            <section className="content-header">
-                <div className="container-fluid">
-                    <div className="row mb-2">
-                        <div className="col-sm-12">
-                            <h1 className="d-inline">Danh sách thương hiệu<sup></sup></h1>
-                        </div>
-                        <div className="col-sm-1 mt-2 text-right">
-                            <Link className="action-btn" to="/brand/list-trash" style={{ color: "red" }}>
-                                <CIcon icon={cilTrash} title="Download file" />
-                                <sup className="count ms-1">2</sup>
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            
             <section className="content">
                 <div className="card">
                     <div className="card-body">
                         <div className="row">
                             <div className="col-md-12">
-                                <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                                
+                                <div className="d-grid gap-2 d-md-flex justify-content-md-begin">
                                     <Link to='/brand/createbrand'>
-                                        <CButton color="primary" className="me-md-2">Thêm Thương hiệu</CButton>
+                                        <CButton color="primary" variant="outline" className="me-md-2">
+                                            <CIcon icon={cilPlus} title="Store menu" />
+                                            Thêm thương hiệu
+                                        </CButton>
+                                    </Link>
+                                    <Link to='/menu/createmenu'>
+                                        <CButton color="danger" variant="outline" className="me-md-2">
+                                            <CIcon icon={cilTrash} title="Store menu" /> Thùng rác
+                                        </CButton>
                                     </Link>
                                 </div>
-                                <table className="table table-bordered">
+                                <hr />
+                                <table className="table ">
                                     <thead>
                                         <tr>
-                                            <th className="text-center" style={{ width: "30px" }}></th>
-                                            <th className="text-center" style={{ width: "30px" }}>Id</th>
-                                            <th className="text-center" style={{ width: "130px" }}>Logo</th>
-                                            <th style={{ width: "220px" }}>Tên thương hiệu</th>
-                                            <th className="text-center" style={{ width: "130px" }}>Mô tả</th>
-                                            <th className="text-center" style={{ width: "150px" }}>Chức năng</th>
+                                            <th className="text-left" style={{ width: "130px" }}>Logo</th>
+                                            <th className="text-left"  style={{ width: "220px" }}>Tên thương hiệu</th>
+                                            <th className="text-left"  style={{ width: "130px" }}>Mô tả</th>
+                                            <th className="text-left"  style={{ width: "150px" }}>Chức năng</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {Array.isArray(allBrand) && allBrand.map((item, index) => (
                                             <tr className="datarow" key={index}>
-                                                <td><input type="checkbox" /></td>
-                                                <td>{item._id}</td>
-                                                <td>
+                                                <td className="text-left" >
                                                     <img src={item.brand_image} alt={item.brand_name} style={{ width: "70px" }} />
                                                 </td>
-                                                <td>
+                                                <td className="text-left" >
                                                     <div className="name">{item.brand_name}</div>
                                                 </td>
-                                                <td>{item.brand_description}</td>
-                                                <td>
+                                                <td className="text-left" >{item.brand_description}</td>
+                                                <td className="text-left" >
                                                     <div className="function_style">
-                                                        <Link to="" className="btn btn-sm">
-                                                            <i className="fa fa-edit me-1"></i>Chỉnh sửa
+                                                        <Link to={`/brand/updatebrand/${item._id}`} className="btn btn-sm">
+                                                        <CIcon icon={cilPencil} title="Store menu" /> Chỉnh sửa
                                                         </Link> |
                                                         <button className="btn btn-sm">
                                                             <CIcon icon={cilTrash} title="Delete" /> Xoá

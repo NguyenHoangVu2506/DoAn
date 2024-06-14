@@ -131,6 +131,7 @@ class DiscountService {
                 discount_code: codeId
             }
         })
+        console.log(products)
         if (!foundDiscount) throw new NotFoundRequestError("discount not found")
             
         const { discount_is_active, discount_max_uses, discount_min_order_value, 
@@ -167,7 +168,7 @@ class DiscountService {
                 totalOrderDiscount = totalOrder
             }
             if (totalOrder < discount_min_order_value) {
-                throw new errorResponse.NotFoundRequestError(`discount requires a minium order value of ${discount_min_order_value}`)
+                throw new NotFoundRequestError(`discount requires a minium order value of ${discount_min_order_value}`)
             }
         }
 
