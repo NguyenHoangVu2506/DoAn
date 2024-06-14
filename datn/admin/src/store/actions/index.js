@@ -101,5 +101,8 @@ export const Action = {
   GET_DISCOUNT: "GET_DISCOUNT",
 /////////////order
   GET_ORDER:"GET_ORDER",
-
+/////special-offer
+  GET_SPECIAL:"GET_SPECIAL",
+  ADD_SPECIAL:"ADD_SPECIAL",
+  UPDATE_SPECIAL:"UPDATE_SPECIAL",
 };
