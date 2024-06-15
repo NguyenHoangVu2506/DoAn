@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { addFavoriteToLocalStorage, getFavoritesFromLocalStorage, removeFavoriteFromLocalStorage } from "../../utils";
 import accounting from "accounting";
-import { onProductDetail } from "../../store/actions";
+import { onProductDetail, productById } from "../../store/actions";
 
 export default function ProductItem({ product }) {
     const navigate = useNavigate();
@@ -13,7 +13,7 @@ export default function ProductItem({ product }) {
     console.log("product", product);
     const { userInfo } = useSelector((state) => state.userReducer);
 
-    const { productDetail } = useSelector((state) => state.productReducer);
+    const { spuInfo } = useSelector((state) => state.productReducer);
 
 
     const [favories_products, setfavoriesProduct] = useState(getFavoritesFromLocalStorage());
@@ -22,6 +22,8 @@ export default function ProductItem({ product }) {
 
     const [showModal, setShowModal] = useState(false);
     const [largeImageSrc, setLargeImageSrc] = useState(product.product_thumb[0]);
+    const [spu_id, setSpus_id] = useState(product._id);
+    const [selectedProductId, setSelectedProductId] = useState(null);
 
     const HandleAddToWishList = async ({ userId, productId }) => {
         await dispatch(addProWishList({
@@ -71,12 +73,17 @@ export default function ProductItem({ product }) {
     const closeModal = () => {
         setShowModal(false);
     };
-
+    const addToCart = (productId) => {
+        setSelectedProductId(productId);
+        openModal();
+    };
     useEffect(() => {
-        dispatch(onProductDetail({ spu_id: productId }));
-    }, [product_slug_id]);
-    console.log("productDetail", productDetail, selected_sku);
-
+        // Sửa đổi ở đây: Thêm selectedProductId vào dependency của useEffect
+        if (selectedProductId && !spuInfo) {
+            dispatch(productById({ spu_id: selectedProductId }));
+        }
+    }, [selectedProductId]);
+    console.log(spuInfo)
     return (
         <>
             <div className="col-lg-3 col-md-6 col-sm-6 d-flex" key={product._id}>
@@ -91,7 +98,8 @@ export default function ProductItem({ product }) {
                         <div className="d-flex justify-content-around">
                             <button className="btn btn-primary shadow-0 px-2 py-2"
                                 style={{ backgroundColor: '#f6831f', color: 'white' }}
-                                onClick={openModal}
+                                // onClick={openModal}
+                                onClick={() => addToCart(product._id)}
                             >Thêm vào giỏ</button>
                             {product.product_variations && product.product_variations.length > 0 ? (
                                 showModal && (
@@ -153,7 +161,7 @@ export default function ProductItem({ product }) {
                                                                             <div className="col-12 mb-3">
                                                                                 <label className="mb-2">Variations:</label>
                                                                                 <div>
-                                                                                    {product.product_variations.map((variation, index) => (
+                                                                                    {spuInfo.sku_list.map((variation, index) => (
                                                                                         variation.options.map((option, optIndex) => (
                                                                                             <button key={optIndex} className="btn btn-outline-secondary mx-1 my-1">
                                                                                                 {option}
