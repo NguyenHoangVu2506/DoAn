@@ -3,7 +3,7 @@ import { Action } from '../actions'
 const initialState = {
     allProducts: null,
     productDetail: null,
-    productByCategory: null,
+    productByCategory: [],
     spuInfo:null
 
 
@@ -27,7 +27,7 @@ const ProductReducer = (state = initialState, action) => {
         case Action.GET_PRODUCT_BY_CAT_ID:
             return {
                 ...state,
-                productByCategory: action.payload.metaData
+                productByCategory: action?.payload?.metaData
             }
 
         case Action.GET_SPU_INFO:

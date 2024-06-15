@@ -31,7 +31,7 @@ const Categories = () => {
     }, [all_category]);
 
     const handleDropdownMouseLeave = () => {
-        setIsDropdownOpen(true);
+        setIsDropdownOpen(false);
     };
     const handleTabMouseEnter = (tabId) => {
         setActiveTab(tabId);
