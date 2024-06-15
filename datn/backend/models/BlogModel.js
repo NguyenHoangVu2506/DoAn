@@ -13,8 +13,8 @@ const blogSchema = new Schema({
     blog_title: String,
     blog_detail: String,
     isDraft:{type:Boolean,default:false,index:true,select:false},
-    isPublished: { type: Boolean, default: true, index: true, select: false },
-    isDeleted:  { type: Boolean, default: false, index: true, select: false },
+    isPublished: { type: Boolean, default: true, index: true},
+    isDeleted:  { type: Boolean, default: false, index: true},
 
 },
     {

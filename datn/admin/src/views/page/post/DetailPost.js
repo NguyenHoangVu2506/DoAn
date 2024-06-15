@@ -1,28 +1,28 @@
 import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { imageURL } from "../../../config";
-import { getBlogByTopicId, getBlogDetails, getTopic } from "../../../store/actions";
 import { useDispatch, useSelector } from "react-redux";
+import { getBlogById, getBlogByTopicId, getTopic } from "../../../store/actions";
+import { imageURL } from "../../../config";
+import { CCard, CCardBody, CCol, CContainer, CTableRow } from "@coreui/react";
+// import { Container, Row, Col, Card, Button } from "react-bootstrap";
 
 function DetailPost() {
-    const { slug_id } = useParams()
-    const blog_id = slug_id.split('-').pop()
-    console.log(blog_id)
-    const { blogDetails } = useSelector((state) => state.blogReducer)
+    const { slug_id } = useParams();
+    const blog_id = slug_id.split('-').pop();
+    console.log(blog_id);
+    const { listBlogById } = useSelector((state) => state.blogReducer);
     const { onBlogByTopicId } = useSelector((state) => state.blogReducer);
     const { allTopic } = useSelector((state) => state.topicReducer);
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (!blogDetails) {
-            dispatch(getBlogDetails({ blog_id: blog_id }))
+        if (!listBlogById) {
+            dispatch(getBlogById({ blog_id: blog_id }));
         }
 
-        blogDetails && (!onBlogByTopicId && dispatch(getBlogByTopicId({ topic_id: blogDetails.topic_id })))
-
-        console.log(blogDetails)
-    }, [blogDetails, onBlogByTopicId])
+        listBlogById && (!onBlogByTopicId && dispatch(getBlogByTopicId({ topic_id: listBlogById.topic_id })));
+    }, [listBlogById, onBlogByTopicId]);
 
     useEffect(() => {
         if (!allTopic) {
@@ -38,76 +38,36 @@ function DetailPost() {
 
     return (
         <div className="content-wrapper">
-            <section className="content-header">
-                <div className="container-fluid">
-                    <div className="row mb-2">
-                        <div className="col-sm-12">
-                            <h1 className="d-inline">Chi tiết bài viết</h1>
+            <CContainer>
+
+                <section className="content">
+                    <CCard>
+                        <div className="card-header text-right">
+                            <Link to="/post/postlist" className="btn btn-sm btn-info">
+                                <i className="fa fa-reply me-1" aria-hidden="true"></i>
+                                Quay lại
+                            </Link>
                         </div>
-                    </div>
-                </div>
-            </section>
-
-            <section className="content">
-                <div className="card">
-                    <div className="card-header text-right">
-                        <Link to="/post/postlist/news/1/10" className="btn btn-sm btn-info">
-                            <i className="fa fa-reply me-1" aria-hidden="true"></i>
-                            Quay lại
-                        </Link>
-                    </div>
-                    <div className="card-body p-2">
-                        {blogDetails && (
-                            <table className="table ">
-                                <thead>
-                                    <tr>
-                                        <th style={{ width: "30%" }}>Tên trường</th>
-                                        <th>Giá trị</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <th>ID</th>
-                                        <td>{blogDetails.post._id}</td>
-                                    </tr>
-
-                                    <tr>
-                                        <th>Hình ảnh</th>
-                                        <td>
-                                        <img src={blogDetails.blog_image} alt={blogDetails.blog_name} style={{ width: "70px" }} />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>Tiêu đề bài viết</th>
-                                        <td>{blogDetails.post.blog_name}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Mô tả ngắn</th>
-                                        <td>{blogDetails.post.blog_description}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Chi tiết</th>
-                                        <td>{blogDetails.post.blog_detail}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Chủ đề</th>
-                                        <td>{getTopicName(blogDetails.post.topic_id)}</td>
-                                    </tr>
-
-                                    <tr>
-                                        <th>Ngày thêm</th>
-                                        <td>{new Date(blogDetails.post.createdAt).toLocaleString()}</td>
-                                    </tr>
-                                </tbody>
-
-                            </table>
-                        )
-                        }
-                    </div>
-                </div>
-            </section>
+                        <CCardBody>
+                            {listBlogById && (
+                                <CTableRow>
+                                    <CCol md-4>
+                                        <img src={listBlogById.blog_image} alt={listBlogById.blog_name} className="img-fluid rounded" />
+                                    </CCol>
+                                    <CCol md-8>
+                                        <h2>{listBlogById.blog_name}</h2>
+                                        <p className="text-muted">{new Date(listBlogById.createdAt).toLocaleString()}</p>
+                                        <h5>Chủ đề: {getTopicName(listBlogById.topic_id)}</h5>
+                                        <p><strong>Mô tả ngắn:</strong> {listBlogById.blog_description}</p>
+                                        <p><strong>Chi tiết:</strong> {listBlogById.blog_detail}</p>
+                                    </CCol>
+                                </CTableRow>
+                            )}
+                        </CCardBody>
+                    </CCard>
+                </section>
+            </CContainer>
         </div>
-
     );
 }
 

@@ -16,11 +16,11 @@ const newBrand = async ({
     }
 }
 
-const getListBrand = async ({ sort, isPublished = true }) => {
+const getListBrand = async ({ sort, isDeleted = false }) => {
     try {
         const sortBy = sort === 'ctime' ? { _id: -1 } : { _id: 1 }
         const listbrand = await brand.find({
-            isPublished
+            isDeleted
         }).sort(sortBy)
             .lean()
         return listbrand

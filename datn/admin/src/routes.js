@@ -32,7 +32,7 @@ const UpdatePost = React.lazy(() => import('./views/page/post/UpdatePost'))
 ////topic
 const TopicList = React.lazy(() => import('./views/page/Topic/TopicList'))
 const CreateTopic = React.lazy(() => import('./views/page/Topic/CreateTopic'))
-// const ListTrashPost = React.lazy(() => import('./views/page/post/ListTrashPost'))
+const ListTrashTopic = React.lazy(() => import('./views/page/Topic/ListTrashTopic'))
 const UpdateTopic = React.lazy(() => import('./views/page/Topic/UpdateTopic'))
 
 ///brand
@@ -56,6 +56,7 @@ const InfoList = React.lazy(() => import('./views/page/info/InfoList'))
 const MenuList = React.lazy(() => import('./views/page/menu/MenuList'))
 const CreateMenu = React.lazy(() => import('./views/page/menu/CreateMenu'))
 const UpdateMenu = React.lazy(() => import('./views/page/menu/UpdateMenu'))
+const ListTrashMenu = React.lazy(() => import('./views/page/menu/ListTrashMenu'))
 
 ////
 const OrderList = React.lazy(() => import('./views/page/order/OrderList'))
@@ -72,6 +73,8 @@ const CreateProductTest = React.lazy(() => import('./views/page/productdanc/Crea
 const PageList = React.lazy(() => import('./views/page/single/PageList'))
 const CreatePage = React.lazy(() => import('./views/page/single/CreatePage'))
 const UpdatePage = React.lazy(() => import('./views/page/single/UpdatePage'))
+const ListTrashPage = React.lazy(() => import('./views/page/single/ListTrashPage'))
+
 ////Discount
 const DiscountList = React.lazy(() => import('./views/page/discount/DiscountList'))
 
@@ -103,21 +106,21 @@ const routes = [
   { path: '/productsale/list-trash', name: 'ListTrashSale', element: ListTrashSale },
 
   ////////////post
-  { path: '/post/postlist/:type/:page/:limit', name: 'PostList', element: PostList },
+  { path: '/post/postlist', name: 'PostList', element: PostList },
   { path: '/post/updatepost/:id', name: 'UpdatePost', element: UpdatePost },
   { path: '/post/:slug_id', name: 'DetailPost', element: DetailPost },
-  { path: '/post/list-trash/:type/:page/:limit', name: 'ListTrashPost', element: ListTrashPost },
+  { path: '/post/list-trash', name: 'ListTrashPost', element: ListTrashPost },
   { path: '/post/createpost', name: 'CreatePost', element: CreatePost },
   ////////////topic
   { path: '/topic/topiclist', name: 'TopicList', element: TopicList },
   { path: '/topic/updatetopic/:id', name: 'UpdateTopic', element: UpdateTopic },
   // { path: '/post/:slug_id', name: 'DetailPost', element: DetailPost },
-  // { path: '/post/list-trash/:type/:page/:limit', name: 'ListTrashPost', element: ListTrashPost },
+  { path: '/topic/list-trash', name: 'ListTrashTopic', element: ListTrashTopic },
   { path: '/topic/createtopic', name: 'CreateTopic', element: CreateTopic },
 
   ///brand
   { path: '/brand/createbrand', name: 'CreateBrand', element: CreateBrand },
-  { path: '/brand/brandlist/:page/:limit', name: 'BrandList', element: BrandList },
+  { path: '/brand/brandlist', name: 'BrandList', element: BrandList },
   { path: '/brand/updatebrand/:id', name: 'UpdateBrand', element: UpdateBrand },
   { path: '/brand/detailbrand/:id', name: 'DetailBrand', element: DetailBrand },
   { path: '/brand/list-trash', name: 'ListTrashBrand', element: ListTrashBrand },
@@ -148,10 +151,14 @@ const routes = [
   { path: '/menu/menulist', name: 'MenuList', element: MenuList },
   { path: '/menu/createmenu', name: 'CreateMenu', element: CreateMenu },
   { path: '/menu/updatemenu/:id', name: 'UpdateMenu', element: UpdateMenu },
+  { path: '/menu/list-trash', name: 'ListTrashMenu', element: ListTrashMenu },
+
   ////////////page
   { path: '/page/pagelist', name: 'PageList', element: PageList },
   { path: '/page/createpage', name: 'CreatePage', element: CreatePage },
   { path: '/page/updatepage/:id', name: 'UpdatePage', element: UpdatePage },
+  { path: '/page/list-trash', name: 'ListTrashPage', element: ListTrashPage },
+
   //////////discount
   { path: '/discount/discountlist', name: 'DiscountList', element: DiscountList },
 

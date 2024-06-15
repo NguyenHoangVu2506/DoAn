@@ -4,7 +4,7 @@ import { CButton, CFormSwitch } from '@coreui/react';
 import { cilDelete, cilPencil, cilPlus, cilTrash } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getListSlider } from '../../../store/actions';
+import { BannerPublished, BannerUnPublished, TrashBanner, getListSlider } from '../../../store/actions';
 
 function BannerList() {
     const dispatch = useDispatch();
@@ -15,6 +15,18 @@ function BannerList() {
             dispatch(getListSlider({ sort: 'ctime' }));
         }
     }, [dispatch, allSlider]);
+
+    const handleSwitchChange = (sliderId, isPublished) => {
+        if (isPublished) {
+            dispatch(BannerUnPublished({ slider_id: sliderId }));
+        } else {
+            dispatch(BannerPublished({ slider_id: sliderId }));
+        }
+    };
+
+    const handleTrash = (sliderId) => {
+        dispatch(TrashBanner({ slider_id: sliderId, isDeleted: false }));
+    };
 
     return (
         <div className="admin content-wrapper">
@@ -30,7 +42,7 @@ function BannerList() {
                                             Thêm banner
                                         </CButton>
                                     </Link>
-                                    <Link to='/menu/createmenu'>
+                                    <Link to='/banner/list-trash'>
                                         <CButton color="danger" variant="outline" className="me-md-2">
                                             <CIcon icon={cilTrash} title="Trash" /> Thùng rác
                                         </CButton>
@@ -60,9 +72,10 @@ function BannerList() {
                                                 <td className="text-left">{item.slider_link}</td>
                                                 <td>{item.slider_position}</td>
                                                 <td className="text-left">
-                                                    <CFormSwitch 
-                                                        id={`formSwitchCheckDefault-${item._id}`} 
+                                                    <CFormSwitch
+                                                        id={`formSwitchCheckDefault-${item._id}`}
                                                         checked={item.isPublished}
+                                                        onChange={() => handleSwitchChange(item._id, item.isPublished)}
                                                     />
                                                 </td>
                                                 <td className="text-left">
@@ -70,7 +83,7 @@ function BannerList() {
                                                         <Link to={`/banner/updatebanner/${item._id}`} className="btn btn-sm">
                                                             <CIcon icon={cilPencil} title="Edit" /> Chỉnh sửa
                                                         </Link> |
-                                                        <button className="btn btn-sm">
+                                                        <button className="btn btn-sm" onClick={() => handleTrash(item._id)}>
                                                             <CIcon icon={cilDelete} title="Delete" /> Xoá
                                                         </button>
                                                     </div>

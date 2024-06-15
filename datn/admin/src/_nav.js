@@ -41,7 +41,7 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Thương hiệu',
-        to: '/brand/brandlist/1/10',
+        to: '/brand/brandlist',
       },
       {
         component: CNavItem,
@@ -69,7 +69,7 @@ const _nav = [
       {
         component: CNavItem,
         name: ' Bài viết',
-        to: '/post/postlist/news/1/10',
+        to: '/post/postlist',
       },
       {
         component: CNavItem,

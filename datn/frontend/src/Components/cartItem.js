@@ -223,10 +223,11 @@ export default function CartItem({ product, special_offer_today, update }) {
                         </div>
                     </div>
 
-                    <div class="col-lg col-sm-6 d-flex justify-content-sm-center justify-content-md-start justify-content-lg-center justify-content-xl-end">
-                        <button class="btn btn-light border  icon-hover-primary"><i class="fas fa-heart fa-lg  text-secondary"></i></button>
-                        <button onClick={() => updateCart('deleteItem', { productId: product.productId, sku_id: selected_sku?.sku_id })} class="btn btn-light border text-danger icon-hover-danger" > Remove</button>
-
+                    <div class="col-lg col-sm-6 d-flex justify-content-sm-center justify-content-md-start justify-content-lg-center justify-content-xl-end mb-2">
+                        <div className="float-md-end">
+                            <button class="btn btn-light tesxt center border icon-hover-primary"><i class="fas fa-heart fa-lg  text-secondary"></i></button>
+                            <button onClick={() => updateCart('deleteItem', { productId: product.productId, sku_id: selected_sku?.sku_id })} class="btn btn-light border text-danger icon-hover-danger" > Remove</button>
+                        </div>
                     </div>
                 </div>
             )}

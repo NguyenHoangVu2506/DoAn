@@ -30,9 +30,9 @@ class PageService {
 
     }
 
-    static async getListPage({ isPublished = true }) {
+    static async getListPage({ isDeleted = false }) {
         const listPage = await page.find({
-            isPublished
+            isDeleted
         }).lean()
         return listPage
     }

@@ -59,7 +59,6 @@ function ProductDetail({ }) {
         })
         console.log(indexOption, indexVariation)
     }
-
     ////addtoCart
     const handleAddToCart = async (userId, { productId, sku_id = null, quantity }) => {
         console.log("productId, sku_id, quantity", productId, sku_id, quantity, userId)
@@ -121,6 +120,7 @@ function ProductDetail({ }) {
         dispatch(onProductDetail({ spu_id: spu_id }));
     }, [product_slug_id]);
     console.log("productDetail", productDetail, selected_sku);
+    console.log("pro", selected_sku);
 
     return (
         <>
@@ -202,11 +202,11 @@ function ProductDetail({ }) {
 
                                 <hr />
 
-                                <div className="row">
-                                    <div className="col-12 mb-3">
-                                        {productDetail && productDetail.product_detail.product_variations.map((variation, indexVariation) => {
-                                            return (
+                                <div className="row mb-4">
 
+                                    {productDetail && productDetail.product_detail.product_variations.map((variation, indexVariation) => {
+                                        return (
+                                            <div className="col-12 mb-3">
                                                 <div key={indexVariation}>
                                                     <p>{variation.name}</p>
 
@@ -215,17 +215,18 @@ function ProductDetail({ }) {
                                                             <div key={indexOption} >
                                                                 <input type="radio" class="btn btn-check" name="options" id={option} autocomplete="off"
                                                                     value={indexOption} onClick={() => onChangeVariation(indexOption, indexVariation)} />
-                                                                <button class="btn btn-outline-secondary btn-square-md mx-1 my-1" for={option} data-mdb-ripple-init>{option}</button>
+                                                                <label class="btn btn-outline-primary mx-1 my-1" for={option} data-mdb-ripple-init>{option}</label>
                                                             </div>
                                                         )
                                                     })}
+
                                                 </div>
+                                            </div>
 
+                                        )
+                                    })}
+                                    {/*<!-- col.// --> */}
 
-                                            )
-                                        })}
-                                        {/*<!-- col.// --> */}
-                                    </div>
                                     <div className="col-md-4 col-6 mb-3">
                                         <label className="mb-2 d-block">Quantity</label>
                                         <div className="input-group mb-3" style={{ width: '170px' }}>
@@ -463,7 +464,7 @@ function ProductDetail({ }) {
                             <div className="px-0 border rounded-2 shadow-0">
                                 <div className="card">
                                     <div className="card-body">
-                                        <h5 className="card-title">Sản phẩm liên quan</h5>
+                                        <h5 className="card-title">Sản phẩm liên</h5>
                                         {productDetail && productDetail.related_products.map((product, index) => {
                                             return (
                                                 <ProductRelatedItem key={index} product={product} />

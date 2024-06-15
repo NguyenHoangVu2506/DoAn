@@ -5,8 +5,12 @@ const initialState = {
     onBlogByTopicId: null,
     blogDetails: null,
     createBlog: null,
-    listBlogById:null,
-    updateBlog:null,
+    listBlogById: null,
+    updateBlog: null,
+    publishedBlog: null,
+    unpublishedBlog: null,
+    restoreBlog: null,
+    listDelBlog: null,
 }
 
 
@@ -44,6 +48,39 @@ const BlogReducer = (state = initialState, action) => {
                 ...state,
                 listBlogById: action.payload.metaData
             }
+        case Action.PUBLISHED:
+            return {
+                ...state,
+                publishedBlog: action.payload.metaData
+            }
+        case Action.UNPUBLISHED:
+            return {
+                ...state,
+                unpublishedBlog: action.payload.metaData
+            }
+        case Action.DELETETRASH:
+            return {
+                ...state,
+                deleteTrash: action.payload.metaData,
+
+            }
+        case Action.RESTORE:
+            return {
+                ...state,
+                restoreBlog: action.payload.metaData,
+                listDelBlog: state.listDelBlog.filter(blog => blog._id !== action.payload.metaData._id)
+            }
+        case Action.DELETE:
+            return {
+                ...state,
+                deleteBlog: action.payload.metaData
+            }
+        case Action.LISTTRASH:
+            return {
+                ...state,
+                listDelBlog: action.payload.metaData
+            }
+
         default:
             return state;
     }

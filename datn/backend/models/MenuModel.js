@@ -10,8 +10,8 @@ const menuSchema = new Schema({
     menu_type: { type: Object, default: '' },
     menu_slug: String,
     menu_position: { type: String, default: '' },
-    isPublished: { type: Boolean, default: true, index: true, select: false },
-    isDeleted:  { type: Boolean, default: false, index: true, select: false },
+    isPublished: { type: Boolean, default: true, index: true },
+    isDeleted: { type: Boolean, default: false, index: true },
 
 
 

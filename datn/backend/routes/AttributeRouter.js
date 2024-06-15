@@ -8,5 +8,5 @@ router.post('/get_Attribute',asyncHandler(attributeController.getAttribute))
 router.post('/getAllAttribute',asyncHandler(attributeController.getAllAttribute))
 
 
-
+ 
 module.exports = router

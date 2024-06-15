@@ -4,7 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { CButton, CFormSwitch } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getListMenu } from '../../../store/actions/menu-actions';
+import { MenuPublished, MenuUnPublished, TrashMenu, getListMenu } from '../../../store/actions/menu-actions';
 import { cilDelete, cilPencil, cilPlus, cilTrash } from '@coreui/icons';
 function MenuList() {
     const dispatch = useDispatch();
@@ -15,6 +15,19 @@ function MenuList() {
         }
     }, [dispatch, allMenu]);
     console.log(allMenu)
+    const handleSwitchChange = (menuId, isPublished) => {
+        console.log(menuId)
+        console.log(isPublished)
+
+        if (isPublished) {
+            dispatch(MenuUnPublished({ menu_id: menuId, isPublished: true }));
+        } else {
+            dispatch(MenuPublished({ menu_id: menuId, isPublished: false }));
+        }
+    };
+    const handleTrash = (menuId) => {
+        dispatch(TrashMenu({ menu_id: menuId, isDeleted: false }));
+    };
     return (
         <div className=" admin content-wrapper">
             <section className="content">
@@ -29,7 +42,7 @@ function MenuList() {
                                             Thêm Menu
                                         </CButton>
                                     </Link>
-                                    <Link to='/menu/createmenu'>
+                                    <Link to='/menu/list-trash'>
                                         <CButton color="danger" variant="outline" className="me-md-2">
                                             <CIcon icon={cilTrash} title="Store menu" /> Thùng rác
                                         </CButton>
@@ -40,7 +53,6 @@ function MenuList() {
                                     <thead>
                                         <tr>
                                             <th className="text-left" style={{ width: "130px" }}>Tên</th>
-                                            <th className="text-left" style={{ width: "130px" }}>parent_id</th>
                                             <th className="text-left" style={{ width: "220px" }}>menu_link</th>
                                             <th className="text-left" style={{ width: "130px" }}>Vị trí</th>
                                             <th className="text-left" style={{ width: "70px" }}>Ẩn/Hiện</th>
@@ -53,24 +65,21 @@ function MenuList() {
                                                 <td className="text-left">
                                                     {item.menu_name}
                                                 </td>
-                                                <td className="text-left">
-                                                    <div className="name">
-                                                        {item.parent_id
-                                                        }
-                                                    </div>
-                                                </td>
+
                                                 <td className="text-left">{item.menu_link}</td>
                                                 <td className="text-left">{item.menu_position}</td>
                                                 <td className="text-left">
-                                                <CFormSwitch 
-                                                            id={`formSwitchCheckDefault-${item._id}`} 
-                                                        />
+                                                    <CFormSwitch
+                                                        id={`formSwitchCheckDefault-${item._id}`}
+                                                        checked={item.isPublished}
+                                                        onChange={() => handleSwitchChange(item._id, item.isPublished)}
+                                                    />
                                                 </td>
 
                                                 <td>
                                                     <div className="function_style">
                                                         <Link to={`/menu/updatemenu/${item._id}`} className="btn btn-sm"><CIcon icon={cilPencil} title="Store menu" /> Chỉnh sửa</Link> |
-                                                        <button className="btn btn-sm"><CIcon icon={cilDelete} title="Store menu" /> Xoá</button>
+                                                        <button className="btn btn-sm" onClick={() => handleTrash(item._id)}><CIcon icon={cilDelete} title="Store menu" /> Xoá</button>
                                                     </div>
                                                 </td>
                                             </tr>

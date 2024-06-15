@@ -1,168 +1,102 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { imageURL } from "../../../config";
-import apiBanner from "../../../service/apiBanner";
-
+import CIcon from "@coreui/icons-react";
+import { cilDelete, cilPencil } from "@coreui/icons";
+import { useDispatch, useSelector } from "react-redux";
+import { BannerRestore, ListTrashBanner1, RemoveBanner } from "../../../store/actions";
 function ListTrashBanner() {
-
-    const [banners, setBanners] = useState([]);
-    const [qty, setQty] = useState(0);
-
-    const [tamp, setTamp] = useState();
+    const dispatch = useDispatch();
+    const { listDelSlider } = useSelector((state) => state.sliderReducer);
 
     useEffect(() => {
-        apiBanner.getListTrash().then((res) => {
-            try {
-                setBanners(res.data.data);
-                setQty(res.data.qty);
+        if (!listDelSlider) {
+            dispatch(ListTrashBanner1({ isDeleted: true }));
+        }
+    }, [dispatch, listDelSlider]);
+    console.log(listDelSlider)
+    const handleRestore = async (sliderId) => {
+        try {
+            await dispatch(BannerRestore({ slider_id: sliderId, isDeleted: true }));
+            dispatch(ListTrashBanner1({ isDeleted: true }));
+            toast.success("Phục hồi thành công!");
+        } catch (error) {
+            toast.error("Đã xảy ra lỗi khi phục hồi!");
+        }
+    };
 
-            } catch (e) {
-                console.log(e);
-            }
-        })
-        setTamp();
-    }, [tamp])
+    const handleDelete = (sliderId) => {
+        try {
+            dispatch(RemoveBanner({ slider_id: sliderId }));
+            dispatch(ListTrashBanner1({ isDeleted: true }));
+            toast.success("Xóa thành công!");
+        } catch (error) {
+            toast.error("Đã xảy ra lỗi khi xóa!");
+        }
+    };
 
 
-
-    // phu hoi rac
-    function rescoverTrashBanner(id) {
-        apiBanner.rescoverTrash(id).then(function (result) {
-            if (result.data.success === 'true') {
-                alert(result.data.message);
-                setTamp(id);
-            }
-            else {
-                alert(result.data.message);
-            }
-        })
-    }
-
-    // hien thi
-    function deleteBanner(id) {
-        apiBanner.deleteBanner(id).then(function (result) {
-            if (result.data.success === 'true') {
-                alert(result.data.message);
-                setTamp(id);
-            }
-            else {
-                alert(result.data.message);
-            }
-        })
-    }
-
-    if (banners.length !== 0) {
-        return (
-            <div className="content-wrapper">
-                <section className="content-header">
-                    <div className="container-fluid">
-                        <div className="row mb-2">
-                            <div className="col-sm-10">
-                                <h1 className="d-inline">Thùng rác</h1>
-                            </div>
-                        </div>
+    
+    return (
+        <div className="content-wrapper">
+            <section className="content">
+                <div className="card">
+                    <div className="card-header text-right">
+                        <Link to="/banner/bannerlist" className="btn btn-sm btn-info">
+                            <i className="fa fa-reply me-1" aria-hidden="true"></i>
+                            Quay lại
+                        </Link>
                     </div>
-                </section>
-                <section className="content">
-                    <div className="card">
-                        <div className="card-header text-right">
-                            <Link to="/banner/bannerlist" className="btn btn-sm btn-info">
-                                <i className="fa fa-reply me-1" aria-hidden="true"></i>
-                                Quay lại
-                            </Link>
-                        </div>
-                        <div className="card-body">
-                            <div className="row">
-                                <div className="col-md-12">
-                                    <table className="table table-bordered">
+                    <div className="card-body">
+                        <div className="row">
+                            <div className="col-md-12">
+                                {listDelSlider && listDelSlider.length > 0 ? (
+                                    <table className="table">
                                         <thead>
                                             <tr>
-                                                <th className="text-center" style={{ width: "30px" }}>
-                                                    <input type="checkbox" />
-                                                </th>
-                                                <th>Id</th>
-                                                <th className="text-center" style={{ width: "130px" }}>Hình ảnh</th>
-                                                <th>Tên banner</th>
-                                                <th>Link</th>
-                                                <th>Vị trí</th>
-                                                <th>Ngày tạo</th>
-
+                                                <th className="text-left" style={{ width: "130px" }}>Hình ảnh</th>
+                                                <th className="text-left">Tên banner</th>
+                                                <th className="text-left">Link</th>
+                                                <th className="text-left">Vị trí</th>
+                                                <th className="text-left">Ngày tạo</th>
+                                                <th className="text-left">Chức năng</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {banners.map((item, index) => {
-                                                return (
-                                                    <tr className="datarow" key={index}>
-                                                        <td>
-                                                            <input type="checkbox" />
-                                                        </td>
-                                                        <td>{item.id}</td>
-                                                        <td>
-                                                        <img src={imageURL + item.image} alt={item.name} style={{ width: "70px" }} />
-                                                            </td>
-                                                        <td>
-                                                            <div className="name">
-                                                                {item.name}
-                                                            </div>
-                                                            <div className="function_style" style={{ fontSize: "14px" }}>
-                                                                <Link to={`/admin/list-brands/show/${item.id}`} className="btn btn-sm"><i className="fa fa-eye me-1"></i>Chi tiết</Link> |
-                                                                <button onClick={() => rescoverTrashBanner(item.id)} className="btn btn-sm"><i className="fa fa-history me-1" aria-hidden="true"></i>Phục hồi</button>
-                                                                <button onClick={() => deleteBanner(item.id)} className="btn btn-sm"><i className="fa fa-trash me-1"></i>Xoá</button>
-                                                            </div>
-                                                        </td>
-                                                        <td>{item.link}</td>
-                                                        <td>{item.position}</td>
-                                                        <td>{item.created_at ? new Date(item.created_at).toLocaleString() : ''}</td>
-                                                    </tr>
-
-                                                );
-                                            })}
+                                            {listDelSlider.map((item, index) => (
+                                                <tr className="datarow" key={index}>
+                                                    <td className="text-left">
+                                                        <img src={item.slider_image} alt={item.slider_name} style={{ width: "70px" }} />
+                                                    </td>
+                                                    <td className="text-left">{item.slider_name}</td>
+                                                    <td className="text-left">{item.slider_link}</td>
+                                                    <td className="text-left">{item.slider_position}</td>
+                                                    <td className="text-left">{item.createdOn ? new Date(item.createdOn).toLocaleString() : ''}</td>
+                                                    <td className="text-left">
+                                                        <div className="function_style">
+                                                            <button className="btn btn-sm" onClick={() => handleRestore(item._id)}>
+                                                                <CIcon icon={cilPencil} title="Restore" /> Phục hồi
+                                                            </button> |
+                                                            <button className="btn btn-sm" onClick={() => handleDelete(item._id)}>
+                                                                <CIcon icon={cilDelete} title="Delete" /> Xoá
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ))}
                                         </tbody>
                                     </table>
-                                </div>
+                                ) : (
+                                    <div className="text-center">
+                                        <p>Hiện tại không có rác !</p>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
-                </section>
-            </div>
-
-        );
-    }
-    else {
-        return (
-            <div className="content-wrapper">
-                <section className="content-header">
-                    <div className="container-fluid">
-                        <div className="row mb-2">
-                            <div className="col-sm-10">
-                                <h1 className="d-inline">Thùng rác</h1>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <section className="content">
-                    <div className="card">
-                        <div className="card-header text-right">
-                            <Link to="/banner/bannerlist" className="btn btn-sm btn-info">
-                                <i className="fa fa-reply me-1" aria-hidden="true"></i>
-                                Quay lại
-                            </Link>
-                        </div>
-                        <div className="card-body">
-                            <div className="row">
-                                <div className="col-md-12 text-center">
-                                    <p>Hiện tại không có rác !</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-
-        );
-
-    }
-
+                </div>
+            </section>
+        </div>
+    );
 }
 
 export default ListTrashBanner;

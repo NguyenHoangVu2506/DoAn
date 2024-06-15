@@ -23,10 +23,10 @@ class SliderService {
         return newSlider
     }
 
-    static async getListSlider({ slider_is_active = true, slider_position = "banner" }) {
+    static async getListSlider({ slider_is_active = true, slider_position = "banner", isDeleted = false }) {
         try {
             const listSlider = await slider.find({
-                slider_is_active, slider_position
+                slider_is_active, slider_position, isDeleted
             }).lean()
             console.log(listSlider)
             return listSlider
@@ -63,7 +63,7 @@ class SliderService {
                 }
             }, options = {
                 returnNewDocument: true,
-                new:true
+                new: true
             }
             return await slider.findOneAndUpdate(query, updates, options)
 
@@ -73,36 +73,35 @@ class SliderService {
         }
     }
 
-    static async pulishSlider({ slider_id, isPublished = false }) {
+    static async pulishSlider({ slider_id }) {
         try {
             const query = {
-                _id: slider_id,
-                isPublished
+                _id: slider_id
             }, updateSet = {
                 $set: {
                     isPublished: true
                 },
             }, options = {
                 upsert: true,
-                new:true
+                new: true
             }
             return await slider.updateOne(query, updateSet, options)
         } catch (error) {
         }
     }
 
-    static async unpulishSlider({ slider_id, isPublished = true }) {
+    static async unpulishSlider({ slider_id }) {
         try {
             const query = {
-                _id: slider_id,
-                isPublished
+                _id: slider_id
+
             }, updateSet = {
                 $set: {
                     isPublished: false
                 },
             }, options = {
                 upsert: true,
-                new:true
+                new: true
             }
             return await slider.updateOne(query, updateSet, options)
         } catch (error) {
@@ -120,14 +119,13 @@ class SliderService {
                 },
             }, options = {
                 upsert: true,
-                new:true
+                new: true
             }
             console.log(updateSet)
             return await slider.updateOne(query, updateSet, options)
         } catch (error) {
         }
     }
-
     static async restoreSliderById({ slider_id, isDeleted = true }) {
         try {
             const query = {
@@ -139,15 +137,31 @@ class SliderService {
                 },
             }, options = {
                 upsert: true,
-                new:true
+                new: true
             }
             console.log(updateSet)
             return await slider.updateOne(query, updateSet, options)
         } catch (error) {
-
         }
-
     }
+    // static async restoreSliderById({ slider_id, isDeleted = true }) {
+    //     try {
+    //         const query = {
+    //             _id: slider_id,
+    //             isDeleted
+    //         }, updateSet = {
+    //             $set: {
+    //                 isDeleted: false
+    //             },
+    //         }, options = {
+    //             upsert: true,
+    //             new: true
+    //         }
+    //         console.log(updateSet)
+    //         return await slider.updateOne(query, updateSet, options)
+    //     } catch (error) {
+    //     }
+    // }
 
     static async getDeleteSliderList({ sort, isDeleted = true }) {
         try {

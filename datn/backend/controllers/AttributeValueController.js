@@ -9,5 +9,5 @@ class AttributeValueController{
             metadata: await newAttributeValue({...req.body})
         }).send(res)
     }
-}
+} 
 module.exports = new AttributeValueController;

@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { CButton } from '@coreui/react';
+import { CButton, CFormSwitch } from '@coreui/react';
 import { cilPencil, cilPlus, cilTrash } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getListBrand } from '../../../store/actions';
+import { BrandPublished, BrandUnPublished, TrashBrand, getListBrand } from '../../../store/actions';
 
 function BrandList() {
     const dispatch = useDispatch();
@@ -15,7 +15,19 @@ function BrandList() {
             dispatch(getListBrand({ sort: 'ctime' }));
         }
     }, [dispatch, allBrand]);
+    const handleSwitchChange = (brandId, isPublished) => {
+        console.log(brandId)
+        console.log(isPublished)
 
+        if (isPublished) {
+            dispatch(BrandUnPublished({ brand_id: brandId, isPublished: true }));
+        } else {
+            dispatch(BrandPublished({ brand_id: brandId, isPublished: false }));
+        }
+    };
+    const handleTrash = (brandId) => {
+        dispatch(TrashBrand({ brand_id: brandId, isDeleted: false }));
+    };
     return (
         <div className="admin content-wrapper">
             
@@ -32,7 +44,7 @@ function BrandList() {
                                             Thêm thương hiệu
                                         </CButton>
                                     </Link>
-                                    <Link to='/menu/createmenu'>
+                                    <Link to='/brand/list-trash'>
                                         <CButton color="danger" variant="outline" className="me-md-2">
                                             <CIcon icon={cilTrash} title="Store menu" /> Thùng rác
                                         </CButton>
@@ -45,6 +57,8 @@ function BrandList() {
                                             <th className="text-left" style={{ width: "130px" }}>Logo</th>
                                             <th className="text-left"  style={{ width: "220px" }}>Tên thương hiệu</th>
                                             <th className="text-left"  style={{ width: "130px" }}>Mô tả</th>
+                                            <th className="text-left"  style={{ width: "130px" }}>Ẩn/Hiện</th>
+
                                             <th className="text-left"  style={{ width: "150px" }}>Chức năng</th>
                                         </tr>
                                     </thead>
@@ -58,12 +72,19 @@ function BrandList() {
                                                     <div className="name">{item.brand_name}</div>
                                                 </td>
                                                 <td className="text-left" >{item.brand_description}</td>
+                                                <td className="text-left">
+                                                    <CFormSwitch
+                                                        id={`formSwitchCheckDefault-${item._id}`}
+                                                        checked={item.isPublished}
+                                                        onChange={() => handleSwitchChange(item._id, item.isPublished)}
+                                                    />
+                                                </td>
                                                 <td className="text-left" >
                                                     <div className="function_style">
                                                         <Link to={`/brand/updatebrand/${item._id}`} className="btn btn-sm">
                                                         <CIcon icon={cilPencil} title="Store menu" /> Chỉnh sửa
                                                         </Link> |
-                                                        <button className="btn btn-sm">
+                                                        <button className="btn btn-sm" onClick={() => handleTrash(item._id)}>
                                                             <CIcon icon={cilTrash} title="Delete" /> Xoá
                                                         </button>
                                                     </div>

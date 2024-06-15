@@ -12,11 +12,7 @@ import {
     CFormTextarea,
     CRow,
 } from '@coreui/react'
-import apiCategory from '../../../service/categoryservice';
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../../../axio';
-import apiUploadFile from '../../../service/apiUploadFile';
-import apiBanner from '../../../service/apiBanner';
 import { useDispatch, useSelector } from 'react-redux';
 import { BannerStore, uploadSingleImage } from '../../../store/actions';
 

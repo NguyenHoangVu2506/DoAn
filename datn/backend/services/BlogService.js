@@ -41,10 +41,10 @@ class BlogService {
         return blog_detail
 
     }
-    async getListBlogs({ sort, isPublished = true, select }) {
+    async getListBlogs({ sort, isDeleted = false, select }) {
         const sortBy = sort === 'ctime' ? { _id: -1 } : { _id: 1 }
         const listBlog = await blog.find({
-            isPublished
+            isDeleted
         }).sort(sortBy)
             .select(getSelectData(select))
             .lean()

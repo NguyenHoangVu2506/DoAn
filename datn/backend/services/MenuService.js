@@ -24,9 +24,9 @@ class MenuService {
         return newMenu
     }
 
-    static async getListMenu({ isPublished = true, select = [] }) {
+    static async getListMenu({isDeleted = false, select = [] }) {
         const allMenu = await menu.find({
-            isPublished
+            isDeleted 
         }).select(getSelectData(select))
             .lean()
         return allMenu

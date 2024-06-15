@@ -18,9 +18,9 @@ class TopicService {
 
     }
 
-    static async getListTopic({ isPublished = true }) {
+    static async getListTopic({ isDeleted = false }) {
         const listTopic = await topic.find({
-            isPublished
+            isDeleted
         }).lean()
         return listTopic
     }

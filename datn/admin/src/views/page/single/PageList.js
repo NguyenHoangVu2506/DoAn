@@ -1,11 +1,11 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { CButton } from '@coreui/react';
+import { CButton, CFormSwitch } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { cilDelete, cilPencil, cilPlus, cilTrash } from '@coreui/icons';
-import { getListPage } from '../../../store/actions/page-actions';
+import { PagePublished, PageUnPublished, TrashPage, getListPage } from '../../../store/actions/page-actions';
 function PageList() {
     const dispatch = useDispatch();
     const { allPage } = useSelector((state) => state.pageReducer);
@@ -15,6 +15,20 @@ function PageList() {
         }
     }, [dispatch, allPage]);
     console.log(allPage)
+    const handleSwitchChange = (pageId, isPublished) => {
+        console.log(pageId)
+        console.log(isPublished)
+
+        if (isPublished) {
+            dispatch(PageUnPublished({ page_id: pageId, isPublished: true }));
+        } else {
+            dispatch(PagePublished({ page_id: pageId, isPublished: false }));
+        }
+    };
+    const handleTrash = (pageId) => {
+        dispatch(TrashPage({ page_id: pageId, isDeleted: false }));
+    };
+
     return (
         <div className=" admin content-wrapper">
             <section className="content">
@@ -29,7 +43,7 @@ function PageList() {
                                             Thêm trang đơn
                                         </CButton>
                                     </Link>
-                                    <Link to='/page/createpage'>
+                                    <Link to='/page/list-trash'>
                                         <CButton color="danger" variant="outline" className="me-md-2">
                                             <CIcon icon={cilTrash} title="Store page" /> Thùng rác
                                         </CButton>
@@ -39,35 +53,42 @@ function PageList() {
                                 <table className="table ">
                                     <thead>
                                         <tr>
-                                            <th className="text-center" style={{ width: "70px" }}>Hình ảnh</th>
-                                            <th className="text-center" style={{ width: "130px" }}>Tên</th>
-                                            <th className="text-center" style={{ width: "130px" }}>Tiêu đề</th>
-                                            <th className="text-center" style={{ width: "220px" }}>Page_link</th>
-                                            <th className="text-center" style={{ width: "130px" }}>Page_type</th>
-                                            <th className="text-center" style={{ width: "160px" }}>Chức năng</th>
+                                            <th className="text-left" style={{ width: "70px" }}>Hình ảnh</th>
+                                            <th className="text-left" style={{ width: "130px" }}>Tên</th>
+                                            <th className="text-left" style={{ width: "130px" }}>Tiêu đề</th>
+                                            <th className="text-left" style={{ width: "130px" }}>Page_type</th>
+                                            <th className="text-left" style={{ width: "70px" }}>Ẩn/Hiện</th>
+                                            <th className="text-left" style={{ width: "160px" }}>Chức năng</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {allPage && allPage.map((item, index) => (
                                             <tr className="datarow" key={index}>
                                                 <td>
-                                                <img src={item.page_image} alt={item.page_name} style={{ width: "70px" }} />
+                                                    <img src={item.page_image} alt={item.page_name} style={{ width: "70px" }} />
                                                 </td>
-                                                <td className="text-center">
+                                                <td className="text-left">
                                                     {item.page_name}
                                                 </td>
-                                                <td className="text-center">
-                                                    
-                                                        {item.page_title
-                                                        }
-                                                  
+                                                <td className="text-left">
+
+                                                    {item.page_title
+                                                    }
+
                                                 </td>
-                                                <td className="text-center">{item.page_link}</td>
-                                                <td className="text-center">{item.page_type}</td>
+                                                <td className="text-left">{item.page_type}</td>
+                                                <td className="text-left">
+                                                    <CFormSwitch
+                                                        id={`formSwitchCheckDefault-${item._id}`}
+                                                        checked={item.isPublished}
+                                                        onChange={() => handleSwitchChange(item._id, item.isPublished)}
+                                                    />
+                                                </td>
+
                                                 <td>
                                                     <div className="function_style">
                                                         <Link to={`/page/updatepage/${item._id}`} className="btn btn-sm"><CIcon icon={cilPencil} title="Store page" /> Chỉnh sửa</Link> |
-                                                        <button className="btn btn-sm"><CIcon icon={cilDelete} title="Store page" /> Xoá</button>
+                                                        <button className="btn btn-sm" onClick={() => handleTrash(item._id)}><CIcon icon={cilDelete} title="Store page" /> Xoá</button>
                                                     </div>
                                                 </td>
                                             </tr>

@@ -174,7 +174,7 @@ export default function Cart() {
                                                 navigate('/checkout');
 
                                             }} disabled={false} class="btn btn-success w-100 shadow-0 mb-2">  Thanh toan </button>
-                                            : <button disabled={true} class="btn btn-success w-100 shadow-0 mb-2"> </button>
+                                            : <button disabled={true} class="btn btn-success w-100 shadow-0 mb-2">Thanh toan </button>
                                         }
                                         <Link
                                             to={"/"} class="btn btn-light w-100 border mt-2"> Back to shop </Link>

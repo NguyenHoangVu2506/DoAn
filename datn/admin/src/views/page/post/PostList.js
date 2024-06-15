@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { CButton } from '@coreui/react';
+import { CButton, CFormSwitch } from '@coreui/react';
 import { cilTrash, cilPlus, cilPencil, cilDescription } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
-import { getListBlog, getTopic } from '../../../store/actions';
+import { BlogPublished, BlogUnPublished, TrashBlog, getListBlog, getTopic } from '../../../store/actions';
 
 function PostList() {
     const dispatch = useDispatch();
@@ -28,6 +28,19 @@ function PostList() {
         const topic = allTopic.find((topic) => topic._id === topicId);
         return topic ? topic.topic_name : '';
     };
+    const handleSwitchChange = (blogId, isPublished) => {
+        console.log(blogId)
+        console.log(isPublished)
+
+        if (isPublished) {
+            dispatch(BlogUnPublished({ blog_id: blogId, isPublished: true }));
+        } else {
+            dispatch(BlogPublished({ blog_id: blogId, isPublished: false }));
+        }
+    };
+    const handleTrash = (blogId) => {
+        dispatch(TrashBlog({ blog_id: blogId, isDeleted: false }));
+    };
     return (
         <div className="admin content-wrapper">
             <section className="content">
@@ -35,16 +48,16 @@ function PostList() {
                     <div className="card-body">
                         <div className="row">
                             <div className="col-md-12">
-                            <div className="d-grid gap-2 d-md-flex justify-content-md-begin">
+                                <div className="d-grid gap-2 d-md-flex justify-content-md-begin">
                                     <Link to='/post/createpost'>
                                         <CButton color="primary" variant="outline" className="me-md-2">
-                                            <CIcon icon={cilPlus} title="Store page" />
+                                            <CIcon icon={cilPlus} title="Store blog" />
                                             Thêm bài viết
                                         </CButton>
                                     </Link>
-                                    <Link to='/page/createpage'>
+                                    <Link to='/post/list-trash'>
                                         <CButton color="danger" variant="outline" className="me-md-2">
-                                            <CIcon icon={cilTrash} title="Store page" /> Thùng rác
+                                            <CIcon icon={cilTrash} title="Store blog" /> Thùng rác
                                         </CButton>
                                     </Link>
                                 </div>
@@ -56,7 +69,7 @@ function PostList() {
                                             <th style={{ width: '220px' }}>Tên bài viết</th>
                                             <th className="text-left" style={{ width: '130px' }}>Mô tả ngắn</th>
                                             <th className="text-left" style={{ width: '130px' }}>Chủ đề</th>
-                                            <th className="text-left" style={{ width: '130px' }}>Ngày tạo</th>
+                                            <th className="text-left" style={{ width: '80px' }}>Ẩn/Hiện</th>
                                             <th className="text-left" style={{ width: '150px' }}>Chức năng</th>
                                         </tr>
                                     </thead>
@@ -70,17 +83,23 @@ function PostList() {
                                                 </td> {/* Thêm hình ảnh ở đây */}
                                                 <td><div className="text-left">{blog.blog_name}</div></td>
                                                 <td><div className="text-left">{blog.blog_description}</div></td>
-                                                <td className="text-left">{getTopicName(blog.topic_id)}</td> {/* Sử dụng hàm để lấy tên topic */}
-                                                <td className="text-left">{blog.createdAt}</td>
+                                                <td className="text-left">{getTopicName(blog.topic_id)}</td>
+                                                <td className="text-left">
+                                                    <CFormSwitch
+                                                        id={`formSwitchCheckDefault-${blog._id}`}
+                                                        checked={blog.isPublished}
+                                                        onChange={() => handleSwitchChange(blog._id, blog.isPublished)}
+                                                    />
+                                                </td>
                                                 <td className="text-left">
                                                     <div className="function_style">
                                                         <Link to={`/post/updatepost/${blog._id}`} className="btn btn-sm">
-                                                        <CIcon icon={cilPencil} title="Store page" /> Chỉnh sửa
+                                                            <CIcon icon={cilPencil} title="Store blog" /> Chỉnh sửa
                                                         </Link> |
                                                         <Link to={`/post/${blog.blog_slug}-${blog._id}`} className="btn btn-sm">
-                                                        <CIcon icon={cilDescription} title="Store page" /> Chi tiết
+                                                            <CIcon icon={cilDescription} title="Store blog" /> Chi tiết
                                                         </Link> |
-                                                        <button className="btn btn-sm">
+                                                        <button className="btn btn-sm" onClick={() => handleTrash(blog._id)}>
                                                             <CIcon icon={cilTrash} title="Delete" /> Xoá
                                                         </button>
                                                     </div>
