@@ -50,7 +50,7 @@ const _nav = [
       },
       {
         component: CNavItem,
-        name: 'Sản phẩm giảm giá',
+        name: 'Chương trình giảm giá',
         to: '/productsale/productsalelist',
       },
       {

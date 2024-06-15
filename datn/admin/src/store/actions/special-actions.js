@@ -3,7 +3,7 @@ import { GetData, PostData } from "../../utils";
 
 export const getSpecial= (data) => async (dispatch) => {
     try {
-      const response = await PostData('/discount/all_code',data);
+      const response = await PostData('/specialOffer/findSpecialOfferBetweenStartDateAndEndByDate',data);
       console.log('response:', response)
       return dispatch({ type: Action.GET_SPECIAL,payload: response.data });
     } catch (err) {

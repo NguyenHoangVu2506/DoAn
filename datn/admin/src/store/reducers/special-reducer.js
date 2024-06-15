@@ -1,18 +1,18 @@
 import { Action } from '../actions'
 
 const initialState = {
-    discount: null,
+    special: null,
     updateInfo:null
 }
 
 
-const DiscountReducer = (state = initialState, action) => {
+const SpecialReducer = (state = initialState, action) => {
 
     switch (action.type) {
-        case Action.GET_DISCOUNT:
+        case Action.GET_SPECIAL:
             return {
                 ...state,
-                discount: action.payload.metaData
+                special: action.payload.metaData
             }
         case Action.UPDATE_INFO:
             return {
@@ -26,4 +26,4 @@ const DiscountReducer = (state = initialState, action) => {
 
 }
 
-export default DiscountReducer
+export default SpecialReducer

@@ -9,7 +9,7 @@ class SliderService {
             slider_image,
             slider_summary = "",
             slider_position,
-            slider_is_active = false
+            slider_is_active = false,
         } = payload
 
         const newSlider = await slider.create({
@@ -18,7 +18,7 @@ class SliderService {
             slider_image: slider_image,
             slider_summary: slider_summary,
             slider_position: slider_position,
-            slider_is_active: slider_is_active
+            slider_is_active: slider_is_active,
         })
         return newSlider
     }

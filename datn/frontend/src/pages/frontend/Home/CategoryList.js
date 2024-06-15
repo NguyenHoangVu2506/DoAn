@@ -18,7 +18,7 @@ export default function CategoryList({ category_parent, all_product_category, al
     category_childrent && setSelectedCategory(category_childrent[0])
   }, [category_childrent]);
   useEffect(() => {
-    selectedCategory && setProductByCategory(all_product_category.filter((product) => product.product_category == selectedCategory._id))
+    selectedCategory && setProductByCategory(all_product_category.filter((product) => product.product_category.includes(selectedCategory._id)))
   }, [selectedCategory]);
 
   console.log("category_childrent", category_childrent)
