@@ -15,7 +15,7 @@ function ProductList() {
             dispatch(onAllProduct({ sort: 'ctime' }));
         }
     }, [dispatch, allProducts]);
-    
+    console.log(allProducts)
     const { listCategory } = useSelector((state) => state.categoryReducer);
 
     useEffect(() => {
@@ -32,7 +32,6 @@ function ProductList() {
         });
         return categoryNames.filter(name => name).join(', ');
     };
-
     return (
         <div className="admin content-wrapper">
             <section className="content">
@@ -41,7 +40,7 @@ function ProductList() {
                         <div className="row">
                             <div className="col-md-12">
                                 <div className="d-grid gap-2 d-md-flex justify-content-md-start">
-                                    <Link to='/category/createcategory'>
+                                    <Link to='/product/createproduct'>
                                         <CButton color="primary" variant="outline" className="me-md-2">
                                             <CIcon icon={cilPlus} title="Thêm sản phẩm" />
                                             Thêm sản phẩm
@@ -57,11 +56,11 @@ function ProductList() {
                                 <table className="table">
                                     <thead>
                                         <tr>
-                                            <th  className='text-left' style={{ width: "70px" }}>Hình ảnh</th>
-                                            <th  className='text-left' style={{ width: "220px" }}>Sản phẩm</th>
-                                            <th  className='text-left' style={{ width: "130px" }}>Loại</th>
-                                            <th  className='text-left' style={{ width: "130px" }}>Có thể bán</th>
-                                            <th  className='text-left' style={{ width: "150px" }}>Chức năng</th>
+                                            <th className='text-left' style={{ width: "70px" }}>Hình ảnh</th>
+                                            <th className='text-left' style={{ width: "220px" }}>Sản phẩm</th>
+                                            <th className='text-left' style={{ width: "130px" }}>Loại</th>
+                                            <th className='text-left' style={{ width: "130px" }}>Có thể bán</th>
+                                            <th className='text-left' style={{ width: "150px" }}>Chức năng</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -75,13 +74,14 @@ function ProductList() {
                                                     />
                                                 </td>
                                                 <td>
-                                                    <div  className='text-left'>
+                                                    <div className='text-left'>
                                                         {item.product_name}
                                                     </div>
                                                 </td>
-                                                <td  className='text-left'>
-                                                    {Array.isArray(item.product_category) 
-                                                        ? getCategoryName(item.product_category) 
+                                               
+                                                <td className='text-left'>
+                                                    {Array.isArray(item.product_category)
+                                                        ? getCategoryName(item.product_category)
                                                         : getCategoryName([item.product_category])}
                                                 </td>
                                                 <td className='text-left'>{item.product_quantity}</td>

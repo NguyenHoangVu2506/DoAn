@@ -1,7 +1,7 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { CButton } from '@coreui/react';
+import { CButton, CFormSwitch } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getListMenu } from '../../../store/actions/menu-actions';
@@ -39,27 +39,34 @@ function MenuList() {
                                 <table className="table ">
                                     <thead>
                                         <tr>
-                                            <th className="text-center" style={{ width: "130px" }}>Tên</th>
-                                            <th className="text-center" style={{ width: "130px" }}>parent_id</th>
-                                            <th className="text-center" style={{ width: "220px" }}>menu_link</th>
-                                            <th className="text-center" style={{ width: "130px" }}>Vị trí</th>
-                                            <th className="text-center" style={{ width: "160px" }}>Chức năng</th>
+                                            <th className="text-left" style={{ width: "130px" }}>Tên</th>
+                                            <th className="text-left" style={{ width: "130px" }}>parent_id</th>
+                                            <th className="text-left" style={{ width: "220px" }}>menu_link</th>
+                                            <th className="text-left" style={{ width: "130px" }}>Vị trí</th>
+                                            <th className="text-left" style={{ width: "70px" }}>Ẩn/Hiện</th>
+                                            <th className="text-left" style={{ width: "160px" }}>Chức năng</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {allMenu && allMenu.map((item, index) => (
                                             <tr className="datarow" key={index}>
-                                                <td className="text-center">
+                                                <td className="text-left">
                                                     {item.menu_name}
                                                 </td>
-                                                <td className="text-center">
+                                                <td className="text-left">
                                                     <div className="name">
                                                         {item.parent_id
                                                         }
                                                     </div>
                                                 </td>
-                                                <td className="text-center">{item.menu_link}</td>
-                                                <td className="text-center">{item.menu_position}</td>
+                                                <td className="text-left">{item.menu_link}</td>
+                                                <td className="text-left">{item.menu_position}</td>
+                                                <td className="text-left">
+                                                <CFormSwitch 
+                                                            id={`formSwitchCheckDefault-${item._id}`} 
+                                                        />
+                                                </td>
+
                                                 <td>
                                                     <div className="function_style">
                                                         <Link to={`/menu/updatemenu/${item._id}`} className="btn btn-sm"><CIcon icon={cilPencil} title="Store menu" /> Chỉnh sửa</Link> |

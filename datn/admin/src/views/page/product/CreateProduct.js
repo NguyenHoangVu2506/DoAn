@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useRef } from 'react';
 import {
     CButton,
     CCard,
@@ -6,150 +6,81 @@ import {
     CCardHeader,
     CCol,
     CForm,
-    CFormCheck,
     CFormInput,
     CFormLabel,
     CFormSelect,
     CFormTextarea,
-    CInputGroup,
-    CInputGroupText,
     CRow,
-} from '@coreui/react'
-import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../../../axio';
-import apiUploadFile from '../../../service/apiUploadFile';
-import apiProduct from '../../../service/apiProduct';
-import apiCategory from '../../../service/categoryservice';
-import apiBrand from '../../../service/apiBrand';
+} from '@coreui/react';
+import Select from 'react-select';
 
 const CreateProduct = () => {
-    const [products, setProduct] = useState([]);
-    const [categorys, setCategory] = useState([]);
-    const [brands, setBrand] = useState([]);
+    const [showClassificationForm, setShowClassificationForm] = useState(false);
+    const [classificationGroups, setClassificationGroups] = useState([
+        { id: 1, name: '', classifications: [{ id: 1, detail: '' }] }
+    ]);
+    const [selectedCategories, setSelectedCategories] = useState([]);
+    const [images, setImages] = useState([null, null, null]);
+    const fileInputRefs = useRef([]);
 
-    const [name, setName] = useState('');
-    const [category_id, setCategory_id] = useState(1);
-    const [brand_id, setBrand_id] = useState(1);
-    const [qty, setQty] = useState('');
-    const [price, setPrice] = useState('');
-    const [detail, setDetail] = useState('');
+    const toggleClassificationForm = () => {
+        setShowClassificationForm(!showClassificationForm);
+    };
 
-    const [description, setDescription] = useState('');
-    const [metakey, setMetakey] = useState('');
-    const [status, setStatus] = useState(2);
-    const [slug, setSlug] = useState('a');
-    const [metadesc, setMetadesc] = useState('a');
-    const [image, setImage] = useState('');
-    const [created_at, setCreated_at] = useState(1714805879000);
-    const [updated_at, setUpdated_at] = useState(1714805879000);
-    const [created_by, setCreated_by] = useState(0);
-    const [updated_by, setUpdated_by] = useState(0);
+    const handleCategoryChange = (selectedOptions) => {
+        setSelectedCategories(selectedOptions);
+    };
 
-    const navigate = useNavigate();
-    const [tamp, setTamp] = useState();
+    const addClassificationGroup = () => {
+        setClassificationGroups([...classificationGroups,
+        { id: classificationGroups.length + 1, name: '', classifications: [{ id: 1, detail: '' }] }]);
+    };
 
-    useEffect(() => {
-        apiCategory.getAll().then((res) => {
-            try {
-                const data = res.data;
-                const categoryData = data.map((item) => {
-                    // if(item.status === 2){
-                    //     setNameButton('Hien')
-                    // }
-                    return {
-                        id: item.id,
-                        name: item.name,
-                       
-                    }
-                });
-                setCategory(categoryData);
-                // setQtyCat(res.qty_categories);
-                // setQtyTrash(res.qty_trash);
-                setTamp();
-            } catch (e) {
-                console.log(e);
-            }
-        })
-    }, [tamp])
-    useEffect(() => {
-        apiBrand.getAll().then((res) => {
-            try {
-                const data = res.data;
-                const brandData = data.map((item) => {
-                    // if(item.status === 2){
-                    //     setNameButton('Hien')
-                    // }
-                    return {
-                        id: item.id,
-                        name: item.name,
-                    }
-                });
-                setBrand(brandData);
-                console.log(brandData)
-                // setQtyCat(res.qty_categories);
-                // setQtyTrash(res.qty_trash);
-                
-            } catch (e) {
-                console.log(e);
-            }
-        })
-    }, [])
+    const removeClassificationGroup = (groupId) => {
+        setClassificationGroups(classificationGroups.filter(group => group.id !== groupId));
+    };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const image = document.querySelector("#image");
-        if (name !== '') {
-            e.preventDefault();
-            const product = {
-                name: name,
-                category_id: category_id,
-                brand_id: brand_id,
-                detail:detail,
-                qty:qty,
-                price:price,
-                description: description,
-                metakey: metakey,
-                status: status,
-                slug: slug,
-                metadesc: metadesc,
-                created_by: created_by,
-                updated_by: updated_by,
-                image: "",
-            };
-            let file = new FormData();
-            file.append("files", image.files[0]);
-            axiosInstance.enableUploadFile(); 
-            apiUploadFile.uploadFile(file)
-                .then(async (res) => {
-                    let filename = res.data.filename;
-                    product.image = filename;
+    const addClassification = (groupId) => {
+        setClassificationGroups(classificationGroups.map(group =>
+            group.id === groupId ? { ...group, classifications: [...group.classifications, { id: group.classifications.length + 1, detail: '' }] } : group
+        ));
+    };
 
-                    axiosInstance.enableJson();
-                    await apiProduct.createProduct(product).then((res) => {
-                        console.log(res.data)
+    const removeClassification = (groupId, classificationId) => {
+        setClassificationGroups(classificationGroups.map(group =>
+            group.id === groupId ? { ...group, classifications: group.classifications.filter(classification => classification.id !== classificationId) } : group
+        ));
+    };
 
-                        if (res.data != null) {
-                            alert("Thêm dữ liệu thành công !")
-                            navigate('/product/productlist/1/10', { replace: true });
+    const handleInputChange = (groupId, classificationId, field, value) => {
+        setClassificationGroups(classificationGroups.map(group =>
+            group.id === groupId ? {
+                ...group, classifications: group.classifications.map(classification =>
+                    classification.id === classificationId ? { ...classification, [field]: value } : classification
+                )
+            } : group
+        ));
+    };
 
-                        }
-                        else {
-                            alert("Không thành công !")
-                        }
-                    })
-                })
-                .catch(e => console.log(e))
+    const handleGroupNameChange = (groupId, value) => {
+        setClassificationGroups(classificationGroups.map(group =>
+            group.id === groupId ? { ...group, name: value } : group
+        ));
+    };
 
-
-
-
+    const handleImageChange = (index, event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const newImages = [...images];
+            newImages[index] = URL.createObjectURL(file);
+            setImages(newImages);
         }
-        else {
-            e.preventDefault();
-            alert('Vui lòng nhập đầu đủ thông tin !')
-        }
-    }
-   
+    };
+
+    const handleImageClick = (index) => {
+        fileInputRefs.current[index].click();
+    };
+
     return (
         <CRow>
             <CCol xs={12}>
@@ -158,74 +89,160 @@ const CreateProduct = () => {
                         <strong>Thêm Sản phẩm</strong>
                     </CCardHeader>
                     <CCardBody>
-
-
-
-                        <CForm className="row g-3" onSubmit={handleSubmit}>
+                        <CForm className="row g-3">
                             <CCol md={6}>
                                 <CFormLabel htmlFor="inputName">Tên Sản phẩm</CFormLabel>
-                                <CFormInput type="name" id="inputName" value={name} onChange={(e) => setName(e.target.value)} />
+                                <CFormInput type="text" id="inputName" />
                             </CCol>
                             <CCol md={6}>
-                                <CFormLabel htmlFor="inputState">Danh mục</CFormLabel>
-                                <CFormSelect id="inputState" onChange={(e) => setCategory_id(e.target.value)} value={category_id}>
-                                {categorys.map((item, index) => {
-                                        return (
-                                            <option value={item.id} key={index}>{item.name}</option>
-                                        )
-                                    })}
-                                </CFormSelect>
+                                <CFormLabel htmlFor="inputCategory">Danh mục</CFormLabel>
+                                <Select
+                                    id="inputCategory"
+                                    isMulti
+                                    options={[
+                                        { value: '1', label: 'Sữa rửa mặt' },
+                                        { value: '2', label: 'Nước tẩy trang' }
+                                    ]}
+                                    value={selectedCategories}
+                                    onChange={handleCategoryChange}
+                                />
                             </CCol>
                             <CCol xs={3}>
-                                <CFormLabel htmlFor="inputAddress">Giá</CFormLabel>
-                                <CFormInput id="inputName" value={price} onChange={(e) => setPrice(e.target.value)} />
+                                <CFormLabel htmlFor="inputPrice">Giá</CFormLabel>
+                                <CFormInput type="number" id="inputPrice" />
                             </CCol>
                             <CCol xs={3}>
-                                <CFormLabel htmlFor="inputAddress">Số lượng</CFormLabel>
-                                <CFormInput id="inputPhone" value={qty} onChange={(e) => setQty(e.target.value)} />
+                                <CFormLabel htmlFor="inputQuantity">Số lượng</CFormLabel>
+                                <CFormInput type="number" id="inputQuantity" />
                             </CCol>
                             <CCol md={6}>
-                                <CFormLabel htmlFor="inputState">Thương hiệu</CFormLabel>
-                                <CFormSelect id="inputState" onChange={(e) => setSortOrder(e.target.value)} value={brand_id}>
-                                    {brands.map((item1, index) => {
-                                        return (
-                                            <option value={item1.id } key={index}> {item1.name}</option>
-                                        )
-                                    })}
+                                <CFormLabel htmlFor="inputBrand">Thương hiệu</CFormLabel>
+                                <CFormSelect id="inputBrand">
+                                    <option value="1">hasaki</option>
                                 </CFormSelect>
                             </CCol>
                             <CCol md={6}>
-                                <CFormLabel htmlFor="inputCity">Chi tiết</CFormLabel>
+                                <CFormLabel htmlFor="inputDetails">Chi tiết</CFormLabel>
                                 <CFormTextarea
-                                    id="exampleFormControlTextarea1"
+                                    id="inputDetails"
                                     rows={3}
-                                    value={detail} onChange={(e) => setDetail(e.target.value)}
                                 ></CFormTextarea>
                             </CCol>
                             <CCol md={3}>
-                                <CFormLabel htmlFor="formFile">Hình ảnh</CFormLabel>
-                                <CFormInput type="file" id="image" onChange={(e) => setImage(e.target.files[0])} />
+                                <CFormLabel htmlFor="inputUnit">Đơn vị</CFormLabel>
+                                <CFormSelect id="inputUnit">
+                                    <option value="1">Cái</option>
+                                    <option value="2">Hộp</option>
+                                    </CFormSelect>
                             </CCol>
-
                             <CCol md={3}>
-                                <CFormLabel htmlFor="inputState">Trang thái</CFormLabel>
-                                <CFormSelect id="inputState" value={status} onChange={(e) => setStatus(e.target.value)}>
-                                    <option value="1">Xuất bản</option>
-                                    <option value="2">Chưa xuất bản</option>
+                                <CFormLabel htmlFor="inputWeight">Khối lượng</CFormLabel>
+                                <CFormSelect id="inputWeight">
+                                    <option value="1">50 ml</option>
+                                    <option value="2">150 ml</option>
                                 </CFormSelect>
                             </CCol>
-                            <CCol xs={12}>
-                                <CButton color="primary" type="submit">
-                                    Lưu
-                                </CButton>
-                            </CCol>
+                           
                         </CForm>
-
+                        <br />
+                        <CCol xs={12} className="d-grid gap-2 col-6 mx-auto ">
+                            <CButton type="button" color="outline-secondary" onClick={toggleClassificationForm}>
+                                Phân loại sản phẩm
+                            </CButton>
+                        </CCol>
+                        {showClassificationForm && (
+                            <div className="mt-3">
+                                {classificationGroups.map(group => (
+                                    <CCard className="mb-4" key={group.id}>
+                                        <CCardHeader className="d-flex justify-content-between">
+                                            <strong>Nhóm phân loại {group.id}</strong>
+                                            <CButton type="button" color="danger" onClick={() => removeClassificationGroup(group.id)}>
+                                                Xóa nhóm
+                                            </CButton>
+                                        </CCardHeader>
+                                        <CCardBody>
+                                            <CForm>
+                                                <CCol md={10}>
+                                                    <CFormLabel htmlFor={`groupName-${group.id}`}>Tên loại</CFormLabel>
+                                                    <CFormInput
+                                                        id={`groupName-${group.id}`}
+                                                        value={group.name}
+                                                        onChange={(e) => handleGroupNameChange(group.id, e.target.value)}
+                                                    />
+                                                </CCol>
+                                                {group.classifications.map((classification, index) => (
+                                                    <CRow key={classification.id} className="mb-3">
+                                                        <CCol md={10}>
+                                                            <CFormLabel htmlFor={`classificationDetail-${group.id}-${classification.id}`}>Phân loại</CFormLabel>
+                                                            <CFormInput
+                                                                id={`classificationDetail-${group.id}-${classification.id}`}
+                                                                value={classification.detail}
+                                                                onChange={(e) => handleInputChange(group.id, classification.id, 'detail', e.target.value)}
+                                                            />
+                                                        </CCol>
+                                                        {index !== 0 && (
+                                                            <CCol md={2} className="d-flex align-items-end">
+                                                                <CButton type="button" color="danger" onClick={() => removeClassification(group.id, classification.id)}>
+                                                                    Xóa
+                                                                </CButton>
+                                                            </CCol>
+                                                        )}
+                                                    </CRow>
+                                                ))}
+                                                <CCol xs={12} className="d-grid gap-2 col-6 mx-auto">
+                                                    <CButton type="button" color="outline-secondary" onClick={() => addClassification(group.id)}>
+                                                        Thêm Phân loại
+                                                    </CButton>
+                                                </CCol>
+                                            </CForm>
+                                        </CCardBody>
+                                    </CCard>
+                                ))}
+                                <CCol xs={12} className="d-grid gap-2 col-6 mx-auto mt-2 ">
+                                    <CButton type="button" color="outline-secondary" onClick={addClassificationGroup}>
+                                        Thêm nhóm phân loại
+                                    </CButton>
+                                </CCol>
+                            </div>
+                        )}
                     </CCardBody>
                 </CCard>
+                <table className="table mb-4">
+                    <thead>
+                        <tr>
+                            <th scope="col">Hình ảnh</th>
+                            <th scope="col">Loại da</th>
+                            <th scope="col">Chức năng</th>
+                            <th scope="col">Giá</th>
+                            <th scope="col">Số lượng</th>
+                        </tr>
+                    </thead>
+                    <tbody className="table-group-divider">
+                        {['Da khô', 'Da dầu', 'Da hỗn hợp'].map((skinType, index) => (
+                            <tr key={index}>
+                                <td>
+                                    <div onClick={() => handleImageClick(index)} style={{ border: '1px solid #ccc', padding: '10px', textAlign: 'center', cursor: 'pointer' }}>
+                                        {images[index] ? <img src={images[index]} alt="Selected" style={{ maxWidth: '100px', maxHeight: '100px' }} /> : 'Chọn ảnh'}
+                                    </div>
+                                    <CFormInput
+                                        type="file"
+                                        id={`image-${index}`}
+                                        onChange={(event) => handleImageChange(index, event)}
+                                        style={{ display: 'none' }}
+                                        ref={(el) => (fileInputRefs.current[index] = el)}
+                                    />
+                                </td>
+                                <td >{skinType}</td>
+                                <td style={{textAlign: 'center'}}>{skinType === 'Da khô' ? 'Dưỡng ẩm' : skinType === 'Da dầu' ? 'Làm sạch' : 'Ngăn ngừa mụn'}</td>
+                                <td><CFormInput type="number" id={`inputPrice-${index}`} /></td>
+                                <td><CFormInput type="number" id={`inputQuantity-${index}`} /></td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </CCol>
         </CRow>
-    )
-}
+    );
+};
 
-export default CreateProduct
+export default CreateProduct;

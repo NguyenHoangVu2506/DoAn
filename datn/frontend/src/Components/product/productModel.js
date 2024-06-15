@@ -176,7 +176,7 @@ function ProductModel() {
                                                                     <button
                                                                         key={index}
                                                                         className={`btn ${size.size === selectedSize.size ? 'btn-outline-primary btn-square-md' : 'btn-outline-secondary  btn-square-md'} mx-1`}
-                                                                        
+
                                                                         onClick={() => handleSizeChange(size)}
                                                                     >
                                                                         {size.size}

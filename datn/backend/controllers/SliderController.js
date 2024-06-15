@@ -44,7 +44,7 @@ class SliderController{
     }
     pulishSlider = async (req, res, next) => {
         new SuccessResponse({
-            message: 'publish brand success',
+            message: 'publish Slider success',
             metaData: await SliderService.pulishSlider(req.body)
         }).send(res)
     }

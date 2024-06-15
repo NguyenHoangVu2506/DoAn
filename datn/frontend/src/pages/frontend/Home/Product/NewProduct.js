@@ -16,7 +16,6 @@ export default function NewProduct() {
         console.log('allProducts<home',allProducts);
     }, [allProducts]);
 
-
     return (
         <section>
             <div class="container my-5">
