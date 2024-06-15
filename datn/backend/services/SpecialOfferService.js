@@ -78,7 +78,7 @@ class SpecialOfferService {
     async findSpecialOfferBetweenStartDateAndEndByDate({ special_offer_is_active = true, date = Date.now() }) {
         let now = new Date(date);
         console.log(now)
-        const special = await specialOffer.find({
+        const special = await specialOffer.findOne({
             special_offer_is_active,
             special_offer_start_date: { $lte: now },
             special_offer_end_date: { $gte: now }

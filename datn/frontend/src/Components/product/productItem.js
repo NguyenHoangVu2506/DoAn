@@ -161,7 +161,7 @@ export default function ProductItem({ product }) {
                                                                             <div className="col-12 mb-3">
                                                                                 <label className="mb-2">Variations:</label>
                                                                                 <div>
-                                                                                    {spuInfo.sku_list.map((variation, index) => (
+                                                                                    {product.product_variations.map((variation, index) => (
                                                                                         variation.options.map((option, optIndex) => (
                                                                                             <button key={optIndex} className="btn btn-outline-secondary mx-1 my-1">
                                                                                                 {option}

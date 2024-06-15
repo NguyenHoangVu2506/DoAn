@@ -118,16 +118,16 @@ const isFindProductsByAttributes = async ({ limit = 50, sort = 'ctime', page = 1
     })
 }
 
-const isFindProductByFilter = async ({ limit = 50, sort = 'ctime', page = 1,
-    filter = {
-        isPublished: true, product_attributes, product_category: '',
-        product_brand: [], product_price: { min_price: 0, max_price: 99999999 }
-    } }) => {
-    return await spu_repo.findProductByFilter({
-        limit, sort, page, filter,
-        select: ['product_name', 'product_thumb', 'product_price']
-    })
-}
+// const isFindProductByFilter = async ({ limit = 50, sort = 'ctime', page = 1,
+//     filter = {
+//         isPublished: true, product_attributes, product_category: '',
+//         product_brand: [], product_price: { min_price: 0, max_price: 99999999 }
+//     } }) => {
+//     return await spu_repo.findProductByFilter({
+//         limit, sort, page, filter,
+//         select: ['product_name', 'product_thumb', 'product_price']
+//     })
+// }
 
 const isFindProduct = async ({ product_id }) => {
     return await spu_repo.findProduct({ product_id, unSelect: ['__v', 'product_thumb', 'product_price'] })
@@ -242,5 +242,5 @@ const checkProductByServer = async (products) => {
 module.exports = {
     newSpu, oneSpu, isPublishProduct, isUnPublishProduct, isFindProductsByAttributes, isFindProduct,
     isfindAllProducts,
-    findProductDetail, isFindProductByFilter, getProductDetails, findProductsByCategory, checkProductByServer
+    findProductDetail, getProductDetails, findProductsByCategory, checkProductByServer
 }
