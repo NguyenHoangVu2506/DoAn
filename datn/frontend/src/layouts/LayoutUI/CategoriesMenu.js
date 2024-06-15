@@ -26,11 +26,12 @@ const Categories = () => {
 
     useEffect(() => {
         all_category && (!categoryParentNull && setCategoryParentNull(all_category.filter((category) => category.parent_id == null)))
+        console.log(categoryParentNull)
         categoryParentNull && (!activeTab && setActiveTab(categoryParentNull[0]._id))
     }, [all_category]);
 
     const handleDropdownMouseLeave = () => {
-        setIsDropdownOpen(false);
+        setIsDropdownOpen(true);
     };
     const handleTabMouseEnter = (tabId) => {
         setActiveTab(tabId);
@@ -103,9 +104,11 @@ const Categories = () => {
                                         <div class="tab-content" id="nav-tabContent">
                                             {categoryParentNull && categoryParentNull.map((catParentNull, index) => {
                                                 return (
-                                                    <div className={`tab-pane fade d-flex flex-row justify-content-start bg-white ${activeTab == catParentNull._id ? 'show active' : ''}`}
+                                                    <div className={`tab-pane fade justify-content-start bg-white ${activeTab == catParentNull._id ? 'show active' : ''}`}
                                                      id={catParentNull._id} role="tabpanel" aria-labelledby="list-home-list" key={index}>
+                                                        <div className="row">
                                                         <CategoryItem catParentNull={catParentNull} all_category={all_category} key={index} />
+                                                        </div>
                                                     </div>
                                                 )
                                             })}

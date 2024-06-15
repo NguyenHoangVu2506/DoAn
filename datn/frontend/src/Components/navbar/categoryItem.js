@@ -18,15 +18,21 @@ export default function CategoryItem({ catParentNull, all_category }) {
         <>
             {categoryItem && categoryItem.map((category, index) => {
                 return (
-                    <div className="d-flex flex-column justify-content-center align-items-center " key={index}>
-                        <button className="btn btn-primary " style={{ textTransform: "uppercase" }}>{category.category_name}</button>
-                        <CategoryChildItem child_category={category} all_category={all_category} key={index} />
+                    
+                    <div className="col-md">
+                        <div className="d-flex flex-column align-items-start" key={index}>
+                            <div className="category-name fw-bold" style={{ textTransform: "uppercase" }}>{category.category_name}</div>
+                            <CategoryChildItem child_category={category} all_category={all_category} />
+                        </div>
                     </div>
+                    
                 )
             })}
+
 
         </>
 
     );
 
 }
+

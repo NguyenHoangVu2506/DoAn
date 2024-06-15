@@ -19,6 +19,7 @@ import Wishlist from './pages/frontend/wishlist';
 import PostDetailItem from './pages/frontend/blog/postItemDetail';
 import Contact from './pages/frontend/contact';
 import Collections from './pages/frontend/product/Collections';
+import ProductModel from './Components/product/productModel';
 
 
 function App() {
@@ -46,6 +47,10 @@ function App() {
           <Route path='/' element={<CheckAuth/>}>
             <Route path='/checkout' element={<Checkout />} />
             <Route path='/profile' element={<UserAccount />} />
+
+
+            <Route path='/test' element={<ProductModel />} />
+
           </Route>
 
         </Route>
