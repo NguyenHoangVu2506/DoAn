@@ -16,6 +16,9 @@ const Categories = () => {
     const dispatch = useDispatch();
 
     const { all_category } = useSelector((state) => state.categoryReducer);
+    const { productByCategory } = useSelector((state) => state.productReducer);
+
+    
     const [categoryParentNull, setCategoryParentNull] = useState(null)
 
     useEffect(() => {

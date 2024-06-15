@@ -33,7 +33,7 @@ const ProductReducer = (state = initialState, action) => {
         case Action.GET_SPU_INFO:
             return {
                 ...state,
-                spuInfo: action.payload.metaData
+                spuInfo: action?.payload?.metaData
             }
         default:
             return state;

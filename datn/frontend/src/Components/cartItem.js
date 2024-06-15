@@ -33,8 +33,9 @@ export default function CartItem({ product, special_offer_today, update }) {
             setSelected(respon.payload.metaData?.sku_list?.length > 0 ? (respon.payload.metaData?.sku_list.find(
                 (item) => item._id?.toString() === product.sku_id?.toString()
             )?.sku_tier_idx) : null);
-            setPrice(respon.payload.metaData.spu_info.product_price)
+            // setPrice(respon.payload.metaData?.sku_list?.length > 0? )
         }
+        ///
 
 
     };
