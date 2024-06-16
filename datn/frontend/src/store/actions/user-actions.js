@@ -67,9 +67,7 @@ export const onLoginWithGoogle = ({ userId, provider }) => async (dispatch) => {
   try {
     console.log(' userId, provider', userId + provider)
 
-    const response = await PostData('/auth/google/login-success', {
-      userId, provider
-    });
+    const response = await PostData('/auth/google/login-success', {userId, provider});
     const tokens = await response.data.metaData.tokens
     console.log("tokens", tokens)
     await SetAuthToken(tokens);
@@ -98,10 +96,10 @@ export const onViewProfile = () => async (dispatch) => {
   }
 };
 
-export const onLogout = () => async (dispatch) => {
+export const onLogout = ({ userId, provider }) => async (dispatch) => {
 
   try {
-    const response = await PostData('/user/logout', {});
+    const response = await PostData('/user/logout', {userId, provider});
     return dispatch({ type: Action.LOGOUT, payload: response.data });
   } catch (err) {
     console.log(err)

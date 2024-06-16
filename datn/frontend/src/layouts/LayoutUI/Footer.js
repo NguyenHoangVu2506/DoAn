@@ -134,14 +134,14 @@ export default function Footer({ }) {
             {/* <!-- Left --> */}
 
             {/* <!-- Right --> */}
-            <div class="col-md-6 col-sm-12 float-center">
+            {/* <div class="col-md-6 col-sm-12 float-center">
               <div class="float-md-end">
                 <a class="btn btn-icon btn-light text-secondary px-3 border" title="Facebook" target="_blank" href="#"><i class="fab fa-facebook-f fa-lg"></i></a>
                 <a class="btn btn-icon btn-light text-secondary px-3 border" title="Instagram" target="_blank" href="#"><i class="fab fa-instagram fa-lg"></i></a>
                 <a class="btn btn-icon btn-light text-secondary px-3 border" title="Youtube" target="_blank" href="#"><i class="fab fa-youtube fa-lg"></i></a>
                 <a class="btn btn-icon btn-light text-secondary px-3 border" title="Twitter" target="_blank" href="#"><i class="fab fa-twitter fa-lg"></i></a>
               </div>
-            </div>
+            </div> */}
             {/* <!-- Right --> */}
           </div>
         </div>
@@ -150,21 +150,22 @@ export default function Footer({ }) {
 
       {/* <!-- Section: Links  --> */}
       <section class="">
-        <div class="container text-center text-md-start mt-5 mb-4">
+        <div class="container text-center text-md-start  mb-4 " style={{borderBottom: '1px'}}>
           {/* <!-- Grid row --> */}
           <div class="row mt-3">
             {/* <!-- Grid column --> */}
             <div class="col-12 col-lg-3 col-sm-12">
-              {/* <!-- Content --> */}
               <Link to={"/"} target="_blank" class="ms-md-2 text-dark">
-              <h2 >HIBEAUTY</h2>
+              <h4 className='text-uppercase text-dark fw-bold mb-2'></h4>
 
               </Link>
               {info && (
                 <ul class="list-unstyled mb-4" >
                   <li><a class="text-muted" href="#">{info.info_name}</a></li>
-                  <li><a class="text-muted" href="#">Categories</a></li>
-                  <li><a class="text-muted" href="#">Blogs</a></li>
+                  <li><a class="text-muted" href="#">{info.info_mail}</a></li>
+                  <li><a class="text-muted" href="#">{info.info_website}</a></li>
+                  <li><a class="text-muted" href="#">{info.info_phone}</a></li>
+
                 </ul>
               )
               }
@@ -174,13 +175,13 @@ export default function Footer({ }) {
             {/* <!-- Grid column --> */}
 
             {/* <!-- Grid column --> */}
-            <div class="col-6 col-sm-4 col-lg-2">
+            <div class="col-8 col-sm-4 col-lg-3">
               {/* <!-- Links --> */}
-              <h6 class="text-uppercase text-dark fw-bold mb-2">
-                Store
+              <h6 class="text-dark fw-bold mb-2">
+                 Chính Sách Và Dịch Vụ
               </h6>
               <ul class="list-unstyled mb-4">
-                <li><a class="text-muted" href="#">About us</a></li>
+                <li><a class="text-muted mb-2 color-hover" href="#">About us</a></li>
                 <li><a class="text-muted" href="#">Find store</a></li>
                 <li><a class="text-muted" href="#">Categories</a></li>
                 <li><a class="text-muted" href="#">Blogs</a></li>
@@ -189,9 +190,9 @@ export default function Footer({ }) {
             {/* <!-- Grid column -->
 
         <!-- Grid column --> */}
-            <div class="col-6 col-sm-4 col-lg-2">
+            <div class="col-8 col-sm-4 col-lg-3">
               {/* <!-- Links --> */}
-              <h6 class="text-uppercase text-dark fw-bold mb-2">
+              <h6 class=" text-dark fw-bold mb-2">
                 Information
               </h6>
               <ul class="list-unstyled mb-4">
@@ -204,10 +205,10 @@ export default function Footer({ }) {
             {/* <!-- Grid column -->
 
         <!-- Grid column --> */}
-            <div class="col-6 col-sm-4 col-lg-2">
+            <div class="col-8 col-sm-4 col-lg-3">
               {/* <!-- Links --> */}
-              <h6 class="text-uppercase text-dark fw-bold mb-2">
-                Support
+              <h6 class=" text-dark fw-bold mb-2">
+                Hỗ trợ khách hàng
               </h6>
               <ul class="list-unstyled mb-4">
                 <li><a class="text-muted" href="#">Help center</a></li>
@@ -219,69 +220,16 @@ export default function Footer({ }) {
             {/* <!-- Grid column -->
 
         <!-- Grid column --> */}
-            <div class="col-12 col-sm-12 col-lg-3">
-              {/* <!-- Links --> */}
+            {/* <div class="col-12 col-sm-12 col-lg-3">
               <h6 class="text-uppercase text-dark fw-bold mb-2">Our apps</h6>
               <a href="#" class="mb-2 d-inline-block"> <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/misc/btn-appstore.webp" height="38" /></a>
               <a href="#" class="mb-2 d-inline-block"> <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/misc/btn-market.webp" height="38" /></a>
-            </div>
+            </div> */}
             {/* <!-- Grid column --> */}
           </div>
           {/* <!-- Grid row --> */}
         </div>
       </section>
-      {/* <!-- Section: Links  --> */}
-      <div class="container">
-        <div class="py-4 border-top">
-          <div class="d-flex justify-content-between">
-            {/* <!--- payment ---> */}
-            <div class="text-dark">
-              <i class="fab fa-lg fa-cc-visa"></i>
-              <i class="fab fa-lg fa-cc-amex"></i>
-              <i class="fab fa-lg fa-cc-mastercard"></i>
-              <i class="fab fa-lg fa-cc-paypal"></i>
-            </div>
-            {/* <!--- payment ---> */}
-
-            {/* <!--- language selector ---> */}
-            <div class="dropdown dropup">
-              <a class="dropdown-toggle text-dark" href="#" id="Dropdown" role="button" data-mdb-toggle="dropdown" aria-expanded="false"> <i class="flag-united-kingdom flag m-0"></i> English </a>
-
-              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="Dropdown">
-                <li>
-                  <a class="dropdown-item" href="#"><i class="flag-united-kingdom flag"></i>English <i class="fa fa-check text-success ms-2"></i></a>
-                </li>
-                <li><hr class="dropdown-divider" /></li>
-                <li>
-                  <a class="dropdown-item" href="#"><i class="flag-poland flag"></i>Polski</a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#"><i class="flag-china flag"></i>中文</a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#"><i class="flag-japan flag"></i>日本語</a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#"><i class="flag-germany flag"></i>Deutsch</a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#"><i class="flag-france flag"></i>Français</a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#"><i class="flag-spain flag"></i>Español</a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#"><i class="flag-russia flag"></i>Русский</a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#"><i class="flag-portugal flag"></i>Português</a>
-                </li>
-              </ul>
-            </div>
-            {/* <!--- language selector ---> */}
-          </div>
-        </div>
-      </div>
     </footer>
     // <!-- Footer -->
   );

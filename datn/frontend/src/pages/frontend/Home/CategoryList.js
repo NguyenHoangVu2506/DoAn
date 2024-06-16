@@ -14,9 +14,11 @@ export default function CategoryList({ category_parent, all_product_category, al
   useEffect(() => {
     !category_childrent && setCattagoryChildrent(all_category.filter((cat, index) => cat.parent_id == category_parent._id))
   }, []);
+  
   useEffect(() => {
     category_childrent && setSelectedCategory(category_childrent[0])
   }, [category_childrent]);
+
   useEffect(() => {
     selectedCategory && setProductByCategory(all_product_category?.filter((product) => product.product_category.includes(selectedCategory._id)))
   }, [selectedCategory]);

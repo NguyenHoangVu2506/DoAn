@@ -10,14 +10,14 @@ class UserController {
     }
     signUp = async (req, res, next) => {
         return new successResponse.SuccessResponse({
-            message: "created success",
+            message: "Tạo thành công",
             metaData: await this.service.signUp(req.body)
         }).send(res)
     }
 
     login = async (req, res, next) => {
         return new successResponse.SuccessResponse({
-            message: "login success",
+            message: "Đăng nhập thành công",
             metaData: await this.service.login(req.body)
         }).send(res)
     }
@@ -25,14 +25,14 @@ class UserController {
     logout = async (req, res, next) => {
         console.log("req.keyStore:", req.keyStore)
         return new successResponse.SuccessResponse({
-            message: "logout success",
+            message: "Đăng Xuất Thành Công",
             metaData: await this.service.logout(req.keyStore)
         }).send(res)
     }
 
     insertAddress = async (req, res, next) => {
         return new successResponse.SuccessResponse({
-            message: "insert success",
+            message: "Thêm địa chỉ thành công",
             metaData: await this.service.insertAddress(req.body)
         }).send(res)
     }

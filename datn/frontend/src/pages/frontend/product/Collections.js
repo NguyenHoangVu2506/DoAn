@@ -1,32 +1,78 @@
 import { useDispatch, useSelector } from "react-redux";
-import { AllCategory, getAllAttribute, getAttribute, getCategoryByParentId, onAllProduct } from "../../../store/actions";
+import { AllCategory, getAllAttribute, getAttribute, getCategoryByParentId, getProductByCatId, onAllProduct } from "../../../store/actions";
 import ProductListItem from "../../../Components/product/productListItem";
 import React, { useEffect, useState } from "react";
 import ProductItem from "../../../Components/product/productItem";
 import { getListBrand } from "../../../store/actions/brand-actions";
+import { Link } from "react-router-dom";
 
 function Collections() {
   const dispatch = useDispatch();
   const [isList, setIsList] = useState(false)
+
   const { allProducts } = useSelector((state) => state.productReducer);
   const { all_brand } = useSelector((state) => state.brandReducer);
-  const { current_category } = useSelector((state) => state.categoryReducer);
   const { all_category } = useSelector((state) => state.categoryReducer);
   const { all_attribute } = useSelector((state) => state.attributeReducer);
-  const { onAttribute } = useSelector((state) => state.attributeReducer);
 
 
+  const [categoriesParentNull, setCategoriesParentNull] = useState([])
+  const [productByFilter, setProductByFilter] = useState([])
 
+  const [selectedBrand, setSelectedBrand] = useState([])
+  const [selectedAttribute, setSelectedAttribute] = useState([])
 
   const [categoryCollapsed, setCategoryCollapsed] = useState(0);
   const [categoryCollapsedStatus, setCategoryCollapsedStatus] = useState(false);
   const [brandCollapsed, setBrandCollapsed] = useState(false);
   const [attributeCollapsed, setAttributeCollapsed] = useState(false);
   const [attributeCollapsedStatus, setAttributeCollapsedStatus] = useState(false);
-
   const [priceCollapsed, setPriceCollapsed] = useState(false);
   const [ratingCollapsed, setRatingCollapsed] = useState(false);
 
+
+  useEffect(() => {
+    all_category && setCategoriesParentNull(all_category?.filter((cat) => cat.parent_id == null))
+  }, [all_category])
+
+  const changeSelectedCategory = async (category) => {
+  }
+  const handleChangeBrand = async (checked, brand_id) => {
+    if (checked === true) {
+      setSelectedBrand([...selectedBrand, brand_id])
+
+    }
+    if (checked === false) {
+      setSelectedBrand(selectedBrand.length > 0 && selectedBrand?.filter((brandId) => brandId != brand_id))
+    }
+  }
+  const loadData = async () => {
+    const filterByBrand =await allProducts?.length > 0 ? allProducts?.filter((prod) => selectedBrand.includes(prod.product_brand)===true) : []
+
+    const filterByAttribute =await allProducts?.length > 0 ? allProducts?.map(({ product_attributes }) => {
+      return product_attributes.map(({ attribute_value }) => {
+        return attribute_value.map(({ value_id }) => selectedAttribute.includes(value_id)===true)
+      })
+    }) : []
+    const arrConcat = filterByBrand.concat(...filterByAttribute)
+    // const uniqueProduct = new Set(...arrConcat)
+    console.log(arrConcat)
+    // setProductByFilter([...uniqueProduct])
+  }
+
+  useEffect(() => {
+    loadData()
+  }, [selectedBrand, selectedAttribute])
+
+
+  const handleChangeAtribute = async (checked, attribute_value_id) => {
+    if (checked === true) {
+      setSelectedAttribute([...selectedAttribute, attribute_value_id])
+    }
+    if (checked === false) {
+      setSelectedAttribute(selectedAttribute?.filter((attribute) => attribute != attribute_value_id))
+    }
+  }
 
   const toggleBrandCollapse = () => {
     setBrandCollapsed(!brandCollapsed);
@@ -51,25 +97,17 @@ function Collections() {
     setRatingCollapsed(!ratingCollapsed);
   };
 
-
   useEffect(() => {
     if (!allProducts) {
       dispatch(onAllProduct({ limit: 50, sort: 'ctime', page: 1, filter: { isPublished: true } }));
     }
-  }, [allProducts]);
-
+  }, [allProducts])
 
   React.useEffect(() => {
     dispatch(getListBrand({ isPublished: true }))
     dispatch(AllCategory())
-    dispatch(getCategoryByParentId({ parent_id: null }))
     dispatch(getAllAttribute({ isPublished: true }))
-    dispatch(getAttribute({ attribute_id: null }))
-  }, []);
-
-
-  console.log(current_category, "current_category")
-
+  }, [])
 
   return (
     <>
@@ -93,7 +131,8 @@ function Collections() {
               {/*<!-- Collapsible wrapper -->*/}
               <div class="collapse card d-lg-block mb-5" id="navbarSupportedContent">
                 <div class="accordion" id="accordionPanelsStayOpenExample">
-                  {current_category && current_category?.map((categoryParentnull, index) => {
+
+                  {categoriesParentNull && categoriesParentNull?.map((categoryParentnull, index) => {
                     return (
                       <div class="accordion-item" key={index}>
                         <h2 class="accordion-header" id={categoryParentnull._id}>
@@ -113,9 +152,10 @@ function Collections() {
                             <div className="d-flex flex-column justify-content-start ">
                               {all_category && all_category?.map((category) => {
                                 if (category.parent_id == categoryParentnull._id) {
-                                  return (<li className="list-unstyled" style={{ textTransform: "uppercase" }}>
-                                    {category.category_name}
-                                  </li>
+                                  return (
+                                    <div onClick={() => changeSelectedCategory(category._id)} className="d-flex flex-column justify-content-start " >
+                                      {category.category_name}
+                                    </div>
                                   )
                                 }
                               })}
@@ -140,20 +180,15 @@ function Collections() {
                       id="panelsStayOpen-collapseTwo"
                       className={`accordion-collapse collapse ${brandCollapsed ? "show" : ""}`}
                       aria-labelledby="headingTwo"
-                    >                      <div class="accordion-body">
+                    >
+                      <div class="accordion-body">
                         <div>
-                          {/* <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked1" checked />
-                            <label class="form-check-label" for="flexCheckChecked1">Mercedes</label>
-                            <span class="badge badge-secondary float-end">120</span>
-                          </div> */}
-
                           <div class="form-check">
                             {all_brand && all_brand.map((brand, index) => {
                               return (
                                 <div key={index}>
-                                  <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
-                                  <label class="form-check-label" for="flexCheckDefault">{brand.brand_name}</label>
+                                  <input class="form-check-input" type="checkbox" value={brand._id} id={index} onChange={(e) => handleChangeBrand(e.target.checked, brand._id)} />
+                                  <label class="form-check-label" for={index}>{brand.brand_name}</label>
                                 </div>
 
                               )
@@ -256,7 +291,7 @@ function Collections() {
                             {attribute?.attribute_value?.map((attribute_value) => {
                               return (
                                 <div class="form-check">
-                                  <input class="form-check-input" type="checkbox" value="" id={attribute_value._id} />
+                                  <input class="form-check-input" type="checkbox" value={attribute_value._id} id={attribute_value._id} onChange={(e) => handleChangeAtribute(e.target.checked, attribute_value._id)} />
                                   <label class="form-check-label" for={attribute_value._id}>{attribute_value.attribute_value}</label>
                                 </div>
                               )
@@ -324,8 +359,10 @@ function Collections() {
               </div>
             </div>
             {/*<!-- sidebar -->*/}
+
             {/*<!-- content -->*/}
             <div class="col-lg-9">
+
               <header class="d-sm-flex align-items-center border-bottom mb-4 pb-3">
                 <strong class="d-block py-2">32 Items found </strong>
                 <div class="ms-auto">
@@ -347,17 +384,17 @@ function Collections() {
               </header>
 
               <div class="row justify-content-start mb-3">
-                {allProducts && allProducts.map((product, index) => {
-                  return (
-                    isList
-                      ? <ProductListItem product={product} key={index} />
-                      : <ProductItem product={product} key={index} />
-                  )
 
-                })}
-
-
-
+                <>
+                  {productByFilter.length > 0 ? productByFilter.map((product, index) => {
+                    return <ProductItem product={product} key={index} />
+                  }) :
+                    <div>
+                      <div className="card-body pt-3 text-center">
+                        <p style={{ color: '#545453' }}>Không có sản phẩm</p>
+                      </div>
+                    </div>}
+                </>
               </div>
 
               {/* <div class="row justify-content-center mb-3">

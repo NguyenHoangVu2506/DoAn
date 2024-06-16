@@ -12,8 +12,6 @@ export default function CategoryItem({ catParentNull, all_category }) {
     useEffect(() => {
         getCategoryItem()
     }, []);
-
-
     return (
         <>
             {categoryItem && categoryItem.map((category, index) => {
@@ -22,7 +20,7 @@ export default function CategoryItem({ catParentNull, all_category }) {
                     <div className="col-md">
                         <div className="d-flex flex-column align-items-start" key={index}>
                             <div className="category-name fw-bold" style={{ textTransform: "uppercase" }}>{category.category_name}</div>
-                            <CategoryChildItem child_category={category} all_category={all_category} />
+                            <CategoryChildItem catParentNull={catParentNull} child_category={category} all_category={all_category} />
                         </div>
                     </div>
                     

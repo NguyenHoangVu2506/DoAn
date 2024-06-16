@@ -31,9 +31,10 @@ body {
 }body {
     background-color: #fbfbfb;
 }
-a.mb-2.link-dark:hover {
-    color: #ff6800;
-}
+
+
+a.color-hover:hover,a.color-hover:active {color: #ff6800;font-size: 100%;}
+
 /* Sidebar */
 .sidebar {
     position: fixed;
@@ -55,6 +56,7 @@ a.mb-2.link-dark:hover {
     overflow-x: hidden;
     overflow-y: auto;
 }
+
 
 @media (min-width: 991.98px) {
     .sidebar {

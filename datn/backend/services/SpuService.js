@@ -10,6 +10,7 @@ const { getBrandById } = require('./BrandService')
 const { findSpecialOfferBySpuId } = require('./SpecialOfferService')
 const { findCategoryByIdList } = require('./CategoryService')
 const { findAttributesByProductAttributes } = require('./AttributeService')
+const SpuModel = require('../models/SpuModel')
 
 const newSpu = async ({
     product_name,
@@ -134,10 +135,26 @@ const isFindProduct = async ({ product_id }) => {
 }
 
 const isfindAllProducts = async ({ limit = 50, sort = 'ctime', page = 1, filter = { isPublished: true } }) => {
-    return await spu_repo.findAllProducts({
-        limit, sort, page, filter,
-        select: ['product_name', 'product_thumb', 'product_price', 'product_slug','product_category','product_quantity','product_variations','sku_list']
+
+    let product_list = await SPU_MODEL.spu.find().lean()
+    if (product_list.length == 0) return null
+    let brand_list = []
+    let special_offer = []
+    let sku_list = []
+    for (let index = 0; index < product_list.length; index++) {
+        const brand = await getBrandById({ brand_id: product_list[index].product_brand })
+        brand_list.push(brand)
+        const skulist = await allSkuBySpuId({ product_id: product_list[index]._id })
+        sku_list.push(skulist)
+        console.log("id", product_list[index]._id)
+        const specialoffer = await findSpecialOfferBySpuId({ spu_id: product_list[index]._id.toString(), special_offer_is_active: true })
+        special_offer.push(specialoffer)
+    }
+    const allproduct = await product_list.map((product, index) => {
+        return { ...product, brand: brand_list[index], special_offer: special_offer[index], sku_list: sku_list[index] }
     })
+
+    return allproduct
 }
 
 const findProductsByCategory = async ({ limit = 50, sort = 'ctime', page = 1, filter = { isPublished: true, category_id: null } }) => {

@@ -44,12 +44,12 @@ export default function UserAccount() {
     if (!userInfo) {
       navigate('/');
     }
-  }, [userInfo]);
+  }, []);
 
   const handleSubmit = async () => {
 
     try {
-      const userLogout = await dispatch(onLogout({}))
+      const userInfo = await dispatch(onLogout({}))
       toast.success('logout success')
       navigate('/')
     } catch (error) {

@@ -11,6 +11,8 @@ import SliderReducer from './slider-reducer';
 import BrandReducer from './brand-reducer';
 import AttributeReducer from './attribute-reducer';
 import SpecialOfferReducer from './special_offer-reducer';
+import MenuReducer from './menu-reducer';
+
 
 const reducers = combineReducers({
     userReducer: UserReducer,
@@ -24,7 +26,8 @@ const reducers = combineReducers({
     sliderReducer:SliderReducer,
     brandReducer: BrandReducer,
     attributeReducer: AttributeReducer,
-    specialOfferReducer: SpecialOfferReducer
+    specialOfferReducer: SpecialOfferReducer,
+    menuReducer: MenuReducer
 
 
 })

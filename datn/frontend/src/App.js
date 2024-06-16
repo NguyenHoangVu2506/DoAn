@@ -40,7 +40,7 @@ function App() {
           <Route path='/template' element={<Template />} />
           <Route path='/forgotpassword' element={<ForgotPassword />} />
           <Route path='/blog' element={<Blog />} />
-          <Route path='/contact' element={<Contact />} />
+          <Route path='/lien-he' element={<Contact />} />
           <Route path='/blog/:slug_id' element={<PostDetailItem/>} />
           <Route path='/wish-list' element={<Wishlist />} />
 
