@@ -7,6 +7,7 @@ import ProductRelatedItem from "../../../../Components/product/product_related_i
 import { addCart, addProWishList, removeFromWishList } from "../../../../store/actions";
 import { toast } from 'react-toastify';
 import { addFavoriteToLocalStorage, getFavoritesFromLocalStorage, removeFavoriteFromLocalStorage } from "../../../../utils";
+import { MDBRadio, MDBBtnGroup } from 'mdb-react-ui-kit';
 function ProductDetail({ }) {
     const { product_slug_id } = useParams()
     const spu_id = product_slug_id.split("-").pop()
@@ -18,9 +19,9 @@ function ProductDetail({ }) {
 
     const [activeTab, setActiveTab] = useState("ex1-pills-1");
     const [largeImageSrc, setLargeImageSrc] = useState(productDetail && productDetail.product_detail.product_thumb[0]);
-    const [sku_tier_idx, setSku_tier_idx] = useState([0, 0])
-
-    const [price, setPrice] = useState('');
+    const [sku_tier_idx, setSku_tier_idx] = useState([0])
+    const [sku_list, setSkuList] = useState(null);
+    const [price, setPrice] = useState(0);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [stock, setStock] = useState(null);
@@ -57,8 +58,9 @@ function ProductDetail({ }) {
             console.log(newArr)
             return newArr
         })
-        console.log(indexOption, indexVariation)
     }
+    console.log(sku_tier_idx)
+
     ////addtoCart
     const handleAddToCart = async (userId, { productId, sku_id = null, quantity }) => {
         console.log("productId, sku_id, quantity", productId, sku_id, quantity, userId)
@@ -108,12 +110,18 @@ function ProductDetail({ }) {
         toast.success("Đã xóa sản phẩm ra khỏi mục yêu thích!")
     }
     useEffect(() => {
-        productDetail && (
-            !selected_sku && set_selected_sku(productDetail.sku_list.find((sku) => sku.sku_tier_idx.toString() === sku_tier_idx.toString()))
-        )
-        productDetail && setLargeImageSrc(productDetail.product_detail.product_thumb[0])
-        productDetail && setStock(productDetail.product_detail.product_quantity)
 
+
+        if (productDetail && productDetail.sku_list.length>0) {
+            setSkuList(productDetail.sku_list)
+            !selected_sku && set_selected_sku(productDetail.sku_list[0])
+            setPrice(
+                productDetail.sku_list[0]
+                    ?.sku_price
+            );
+            setLargeImageSrc(productDetail.product_detail.product_thumb[0])
+            setStock(productDetail.sku_list.sku_stock)
+        }
     }, [productDetail, sku_tier_idx])
 
     useEffect(() => {
@@ -124,7 +132,7 @@ function ProductDetail({ }) {
 
     return (
         <>
-            <div className="bg-"style={{backgroundColor: '#f6831f' }} >
+            <div className="bg-" style={{ backgroundColor: '#f6831f' }} >
                 <div className="container py-4 " >
                     {/*<!-- Breadcrumb --> */}
                     <nav className="d-flex" >
@@ -172,11 +180,11 @@ function ProductDetail({ }) {
                                 </h4>
                                 <div className="d-flex flex-row my-3">
                                     <div className="text-warning mb-1 me-2">
-                                        <i className="fa fa-star"style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
-                                        <i className="fa fa-star"style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
-                                        <i className="fa fa-star"style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
-                                        <i className="fa fa-star"style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
-                                        <i className="fas fa-star-half-alt"style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
+                                        <i className="fa fa-star" style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
+                                        <i className="fa fa-star" style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
+                                        <i className="fa fa-star" style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
+                                        <i className="fa fa-star" style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
+                                        <i className="fas fa-star-half-alt" style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
                                         <span className="ms-1">
                                             4.5
                                         </span>
@@ -186,7 +194,7 @@ function ProductDetail({ }) {
                                 </div>
 
                                 <div className="mb-3">
-                                    <span className="h5"> <NumericFormat value={selected_sku ? selected_sku.sku_price : (productDetail && productDetail.product_detail.product_price)} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" /> </span>
+                                    <span className="h5"> <NumericFormat value={price} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" /> </span>
                                     <span className="text-muted">/{productDetail && productDetail.product_detail.product_unit}</span>
                                 </div>
 
@@ -199,35 +207,55 @@ function ProductDetail({ }) {
                                     <dt className="col-3">Thương Hiệu</dt>
                                     <dd className="col-9 fw-bold" style={{ cursor: 'pointer', color: '#f6831f ' }}>{productDetail && productDetail.product_brand.brand_name}</dd>
                                 </div>
-
                                 <hr />
 
                                 <div className="row mb-4">
+                                    {
+                                        productDetail && productDetail.product_detail.product_variations.map((variation, indexVariation) => {
+                                            return (
+                                                <div className="col-12 mb-3" key={indexVariation}>
+                                                    <div>
+                                                        <p className="fw-bold" style={{ cursor: 'pointer', color: '#f6831f ' }}>{variation.name}</p>
 
-                                    {productDetail && productDetail.product_detail.product_variations.map((variation, indexVariation) => {
-                                        return (
-                                            <div className="col-12 mb-3">
-                                                <div key={indexVariation}>
-                                                    <p className="fw-bold"style={{ cursor: 'pointer', color: '#f6831f ' }}>{variation.name}</p>
+                                                        {variation.options.map((option, indexOption) => {
+                                                            return (
+                                                                <div key={indexOption} className="flex flex-row justify-content-around ">
+                                                                    {/* <MDBRadio
+                                                                        btn
+                                                                        btnColor='warning'
+                                                                        id={option}
+                                                                        name={option}
+                                                                        wrapperClass='mx-2'
+                                                                        wrapperTag='span'
+                                                                        label={option}
+                                                                    /> */}
 
-                                                    {variation.options.map((option, indexOption) => {
-                                                        return (
-                                                            <div key={indexOption} >
-                                                                <input type="radio" class="btn btn-check" name="options" id={option} autocomplete="off"
-                                                                    value={indexOption} onClick={() => onChangeVariation(indexOption, indexVariation)} />
-                                                                <label class="btn  mx-1 my-1" for={option} data-mdb-ripple-init>{option}</label>
-                                                            </div>
-                                                        )
-                                                    })}
+                                                                    <input type="radio" className={`btn-check `} name={option} id={option} autocomplete="off" value={indexOption} onClick={() => onChangeVariation(indexOption, indexVariation)} />
+                                                                    <label class={`btn ${productDetail.product_detail.product_variations[indexVariation].options[sku_tier_idx.length == 1 ? sku_tier_idx[0] : `${sku_tier_idx[0]},${sku_tier_idx[1]}`].toString() == option.toString() ? "btn-warning" : "btn-warning-outlined"}`} for={option}>{option}</label>
 
+                                                                    {/* 
+                                                                  <button type="radio" className={`btn btn-`}
+                                                                        name="options" id={option} autocomplete="off"
+                                                                        value={indexOption} onClick={() => onChangeVariation(indexOption, indexVariation)} >
+                                                                        <label class="btn mx-1 my-1" for={option} data-mdb-ripple-init>{option}</label> 
+                                                                        </button> */}
+
+                                                                </div>
+                                                            )
+                                                        })}
+
+                                                    </div>
                                                 </div>
-                                            </div>
 
-                                        )
-                                    })}
+                                            )
+                                        })
+                                    }
+
+
+
                                     {/*<!-- col.// --> */}
 
-                                    <div className="col-md-4 col-6 mb-3">
+                                    < div className="col-md-4 col-6 mb-3" >
                                         <label className="mb-2 d-block fw-bold" style={{ cursor: 'pointer', color: '#f6831f ' }}>Số Lượng</label>
                                         <div className="input-group mb-3" style={{ width: '170px' }}>
                                             <button className="btn btn-white border border-secondary px-3" type="button" onClick={decreaseQuantity}>
@@ -251,7 +279,7 @@ function ProductDetail({ }) {
 
                                 {productDetail &&
                                     <button className="btn btn-primary shadow-0 me-1"
-                                    style={{ backgroundColor: '#f6831f', color: 'white' }}
+                                        style={{ backgroundColor: '#f6831f', color: 'white' }}
                                         onClick={() =>
                                             handleAddToCart(userInfo, {
                                                 productId:
@@ -276,11 +304,11 @@ function ProductDetail({ }) {
                             </div>
                         </main>
                     </div>
-                </div>
-            </section>
+                </div >
+            </section >
             {/*<!-- content --> */}
 
-            <section className="bg-light border-top py-4">
+            < section className="bg-light border-top py-4" >
                 <div className="container">
                     <div className="row gx-4">
                         <div className="col-lg-8 mb-4">
@@ -505,7 +533,7 @@ function ProductDetail({ }) {
                         </div>
                     </div>
                 </div>
-            </section>
+            </section >
         </>
     );
 }
