@@ -16,7 +16,7 @@ export default function Footer({ }) {
   const logoStyle = {
     height: '50%',
     width: '50%',
-    borderRadius: '100px'
+    borderRadius: '200px'
   };
   return (
     <MDBFooter className='text-center text-lg-start text-light' style={{ backgroundColor: '#f6831f' }}>
@@ -38,13 +38,12 @@ export default function Footer({ }) {
                 </h6>
 
                 <p>
-                  Here you can use rows and columns to organize your footer content. Lorem ipsum dolor sit amet,
-                  consectetur adipisicing elit.
+                 
                 </p>
               </MDBCol>
 
-              <MDBCol md="2" lg="2" xl="2" className='mx-auto mb-4'>
-                <h6 className='text-uppercase fw-bold mb-4'>Products</h6>
+              {/* <MDBCol md="2" lg="2" xl="2" className='mx-auto mb-4'>
+                <h6 className='text-uppercase fw-bold mb-4'>Tin Tức</h6>
                 <p>
                   <a href='#!' className='text-reset'>
                     Angular
@@ -65,28 +64,28 @@ export default function Footer({ }) {
                     Laravel
                   </a>
                 </p>
-              </MDBCol>
+              </MDBCol> */}
 
               <MDBCol md="3" lg="2" xl="2" className='mx-auto mb-4'>
                 <h6 className='text-uppercase fw-bold mb-4'>Chính Sách Và Dịch Vụ</h6>
                 <p>
                   <a href='#!' className='text-reset'>
-                    Pricing
+                    Chính Sách Khuyến Mãi
                   </a>
                 </p>
                 <p>
                   <a href='#!' className='text-reset'>
-                    Settings
+                  Chính Sách Đổi Trả
                   </a>
                 </p>
                 <p>
                   <a href='#!' className='text-reset'>
-                    Orders
+                  Chính Sách Giao Hàng
                   </a>
                 </p>
                 <p>
                   <a href='#!' className='text-reset'>
-                    Help
+                    Trợ Giúp
                   </a>
                 </p>
               </MDBCol>

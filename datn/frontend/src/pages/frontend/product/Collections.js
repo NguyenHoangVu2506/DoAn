@@ -386,14 +386,16 @@ function Collections() {
               <div class="row justify-content-start mb-3">
 
                 <>
-                  {productByFilter.length > 0 ? productByFilter.map((product, index) => {
+                  {allProducts &&  allProducts.map((product, index) => {
                     return <ProductItem product={product} key={index} />
-                  }) :
-                    <div>
-                      <div className="card-body pt-3 text-center">
-                        <p style={{ color: '#545453' }}>Không có sản phẩm</p>
-                      </div>
-                    </div>}
+                  })
+                  //  :
+                  //   <div>
+                  //     <div className="card-body pt-3 text-center">
+                  //       <p style={{ color: '#545453' }}>Không có sản phẩm</p>
+                  //     </div>
+                  //   </div>
+                    }
                 </>
               </div>
 

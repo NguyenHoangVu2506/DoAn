@@ -143,7 +143,7 @@ export default function ProductItem({ product }) {
         openModal();
     };
     useEffect(() => {
-        // Sửa đổi ở đây: Thêm selectedProductId vào dependency của useEffect
+        // Sửa đổi ở đây: Thêm selectedProdu+ctId vào dependency của useEffect
         if (selectedProductId && !spuInfo) {
             dispatch(productById({ spu_id: selectedProductId }));
         }
@@ -218,7 +218,8 @@ export default function ProductItem({ product }) {
                                                                         </div>
                                                                         <div className="mb-3">
                                                                             <>
-                                                                                <h5 className="mb-1 me-1">{accounting.formatNumber(price === 0 ? price_default : price, 0, ".", ",")} <span className="text-muted">đ</span></h5>
+                                                                                <h5 className="mb-1 me-1">
+                                                                                    {accounting.formatNumber(price === 0 ? price_default : price, 0, ".", ",")} <span className="text-muted">đ</span></h5>
                                                                                 {price !== 0 && (
                                                                                     <span className="text-danger"><s>{accounting.formatNumber(price_default, 0, ".", ",")} <span className="text-muted">đ</span></s></span>
                                                                                 )}
@@ -291,7 +292,7 @@ export default function ProductItem({ product }) {
                                                                                     handleAddToCart(userInfo, {
                                                                                         productId:
                                                                                             productDetail?.product_detail?._id,
-                                                                                        sku_id: selected_sku?.sku_id,
+                                                                                        sku_id: selected_sku?._id,
                                                                                         quantity: quantity,
                                                                                     })
                                                                                 }> <i className="me-1 fa fa-shopping-basket"></i> Thêm Vào Giỏ Hàng </button>

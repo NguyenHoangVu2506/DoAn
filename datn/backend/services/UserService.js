@@ -112,7 +112,6 @@ class UserService {
     async getAllUser({ isPublished = true }) {
         const alluser = await UserModel.find({ isPublished }).lean()
         return alluser
-
     }
 
     async updateUser({ user_id, user_name,

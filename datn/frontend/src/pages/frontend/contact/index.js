@@ -8,6 +8,7 @@ import { MDBBtn, MDBCardText, MDBCol, MDBInput, MDBRow, MDBValidationItem } from
 
 export default function Contact() {
     const dispatch = useDispatch();
+    const navigate =useNavigate();
 
     const [contact_user_name, setContactName] = useState('');
     const [contact_user_phone, setContactPhone] = useState('');
@@ -31,6 +32,8 @@ export default function Contact() {
             setContactEmail('')
             setContactTitle('')
             setContactDetail('')
+            toast.success('gửi thành công')
+            navigate('/lien-he');
         } catch (error) {
             console.log(error)
         }
@@ -69,7 +72,6 @@ export default function Contact() {
 
                     <div class="col-md-4 ">
 
-                        <form>
                             <MDBRow className='mb-4'>
                                 <MDBCol>
                                     <MDBValidationItem>
@@ -112,7 +114,6 @@ export default function Contact() {
                             <MDBBtn className='mb-4 btn mr-2 left' type='submit' onClick={() => handleInsert()} style={{ backgroundColor: '#f6831f', color: 'white', textAlign: 'right' }} >
                                 Gửi
                             </MDBBtn>
-                        </form>
 
 
                         {/* <form class="form text-danger" onSubmit={newContact} method="post">

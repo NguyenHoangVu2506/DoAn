@@ -22,6 +22,8 @@ function ProductDetail({ }) {
     const [sku_tier_idx, setSku_tier_idx] = useState([0])
     const [sku_list, setSkuList] = useState(null);
     const [price, setPrice] = useState(0);
+    const [price_default, setprice_default] = useState(0);
+
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [stock, setStock] = useState(null);
@@ -29,8 +31,10 @@ function ProductDetail({ }) {
     const [product_detail, setProductDetail] = useState(null);
     const [product_images, setProductImages] = useState(null);
     const [selected_sku, set_selected_sku] = useState(null);
-    const [spicial_offer, setSpicial_offer] = useState(null);
-    const [sale_sku, setSale_sku] = useState(null);
+    const [selectedProductId, setSelectedProductId] = useState(null);
+    const [sale, setSale] = useState(null);
+
+    const [special_offer, setSpecial_offer] = useState(null);
     const [quantity, setQuantity] = useState(1);
 
     const decreaseQuantity = () => {
@@ -45,21 +49,17 @@ function ProductDetail({ }) {
     const handleTabChange = (tabId) => {
         setActiveTab(tabId);
     };
+    const HandleImageChoose = (e) => {
+        setSelectedImage(e);
+    };
+    const addToCart = (productId) => {
+        setSelectedProductId(productId);
+    };
 
     const changeLargeImage = (newSrc) => {
         setLargeImageSrc(newSrc);
-    };
 
-    /////changeVariation
-    const onChangeVariation = async (indexOption, indexVariation) => {
-        setSku_tier_idx((e) => {
-            const newArr = e.slice();
-            newArr[indexVariation] = indexOption
-            console.log(newArr)
-            return newArr
-        })
-    }
-    console.log(sku_tier_idx)
+    };
 
     ////addtoCart
     const handleAddToCart = async (userId, { productId, sku_id = null, quantity }) => {
@@ -109,21 +109,88 @@ function ProductDetail({ }) {
         setfavoriesProduct(getFavoritesFromLocalStorage())
         toast.success("Đã xóa sản phẩm ra khỏi mục yêu thích!")
     }
+
+
+    /////changeVariation
+    const onChangeVariation = async (indexOption, indexVariation) => {
+        setSku_tier_idx((e) => {
+            const newArr = e.slice();
+            newArr[indexVariation] = indexOption
+            console.log(newArr)
+            return newArr
+        })
+    }
+    console.log(sku_tier_idx)
+
+
     useEffect(() => {
-
-
-        if (productDetail && productDetail.sku_list.length>0) {
-            setSkuList(productDetail.sku_list)
-            !selected_sku && set_selected_sku(productDetail.sku_list[0])
-            setPrice(
-                productDetail.sku_list[0]
-                    ?.sku_price
-            );
-            setLargeImageSrc(productDetail.product_detail.product_thumb[0])
-            setStock(productDetail.sku_list.sku_stock)
+        if (productDetail?.special_offer && productDetail.special_offer?.special_offer_spu_list.length > 0) {
+            productDetail.special_offer.special_offer_spu_list.forEach((spu) => {
+                if (spu.product_id.toString() === productDetail.product_detail._id.toString() && spu.sku_list?.length > 0) {
+                    const min_price = spu.sku_list.flatMap((item) => item.price_sale);
+                    setPrice(Math.min(...min_price));
+                    setSale(spu)
+                } else if (spu.product_id.toString() === productDetail._id.toString()) {
+                    setPrice(spu.price_sale);
+                    setSale(spu)
+                }
+            });
         }
-    }, [productDetail, sku_tier_idx])
+    }, [productDetail]);
 
+    useEffect(() => {
+        if (productDetail) {
+            setProductDetail(
+                productDetail.product_detail?.product_detail
+            );
+            setName(
+                productDetail?.product_detail.product_name
+            );
+            setDescription(
+                productDetail?.product_detail
+                    ?.product_short_description
+            );
+            if (productDetail.sku_list.length > 0) {
+                setSkuList(productDetail.sku_list)
+                !selected_sku && set_selected_sku(productDetail.sku_list[0])
+                setprice_default(
+                    productDetail.sku_list[0]
+                        ?.sku_price
+                );
+                setLargeImageSrc(productDetail.product_detail.product_thumb[0])
+                setStock(productDetail.sku_list[0].sku_stock)
+            } else {
+                setProductImages(
+                    productDetail?.product_detail
+                        .product_thumb[0]
+                );
+                setprice_default(
+                    productDetail?.product_detail
+                        .product_price
+                );
+            }
+
+        }
+
+
+    }, [productDetail, sku_tier_idx])
+    useEffect(() => {
+        if (sku_tier_idx) {
+            set_selected_sku(
+                sku_list?.find(
+                    (sku) =>
+                        sku.sku_tier_idx.toString() === sku_tier_idx.toString()
+                )
+            );
+        }
+    }, [sku_tier_idx]);
+    useEffect(() => {
+        if (selected_sku) {
+            setPrice(selected_sku.sku_price);
+            setStock(selected_sku.sku_stock);
+        }
+    }, [selected_sku]
+    )
     useEffect(() => {
         dispatch(onProductDetail({ spu_id: spu_id }));
     }, [product_slug_id]);
@@ -158,11 +225,25 @@ function ProductDetail({ }) {
                                 </a>
                             </div>
                             <div className="d-flex justify-content-center mb-3">
+                                {/* {product_images &&
+                                    product_images?.map((item, index) => (
+                                        <button
+                                            onClick={() => HandleImageChoose(item)}
+                                            key={index}
+                                            className="h-24 w-24 flex-shrink-0  bg-gray-200 sm:overflow-hidden sm:rounded-lg lg:h-36 lg:w-full"
+                                        >
+                                            <img
+                                                src={item.thumb_url}
+                                                alt={item.thumb_url}
+                                                className="h-full w-full object-fill object-center"
+                                            />
+                                        </button>
+                                    ))} */}
+
                                 {productDetail && productDetail.product_detail.product_thumb.map((img, index) => {
                                     return (
                                         <a key={index} data-fslightbox="mygalley" className="border mx-1 rounded-2" target="_blank" data-type="image"
-                                            onClick={() => changeLargeImage(img)}
-                                        >
+                                            onClick={() => changeLargeImage(img)}>
                                             <img width="60" height="60" className="rounded-2" src={img} />
                                         </a>
                                     )
@@ -189,12 +270,24 @@ function ProductDetail({ }) {
                                             4.5
                                         </span>
                                     </div>
-                                    <span className="text-muted"><i className="fas fa-shopping-basket fa-sm mx-1"></i>154 orders</span>
-                                    <span className="text-success ms-2">In stock : {selected_sku && selected_sku.sku_stock}</span>
+                                    <span className="text-muted"><i className="fas fa-shopping-basket fa-sm mx-1"></i>Đã Mua</span>
+                                    <span className="text-success ms-2">Số Lượng : {selected_sku && selected_sku.sku_stock}</span>
                                 </div>
 
                                 <div className="mb-3">
-                                    <span className="h5"> <NumericFormat value={price} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" /> </span>
+                                    <span className="h5">
+                                        {price > 0 ? (
+                                            <NumericFormat value={price} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
+                                        ) : (<NumericFormat value={price_default} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />)}
+                                        {sale &&
+                                            sale?.sku_id === selected_sku?._id && (
+                                                <span className="rounded-full bg-red-100 px-5 py-2 text-xs font-medium  text-red-800 dark:bg-red-900 dark:text-red-300">
+                                                    Giảm đến{sale.percentage}%
+                                                </span> 
+                                            )}
+                                    </span>
+
+
                                     <span className="text-muted">/{productDetail && productDetail.product_detail.product_unit}</span>
                                 </div>
 
@@ -277,17 +370,31 @@ function ProductDetail({ }) {
                                 </div>
                                 <button href="#" className="btn btn-warning shadow-0 me-1"> Mua Ngay </button>
 
-                                {productDetail &&
+                                {productDetail && productDetail ? (
                                     <button className="btn btn-primary shadow-0 me-1"
                                         style={{ backgroundColor: '#f6831f', color: 'white' }}
                                         onClick={() =>
                                             handleAddToCart(userInfo, {
                                                 productId:
                                                     productDetail?.product_detail?._id,
-                                                sku_id: selected_sku?.sku_id,
+                                                sku_id: selected_sku?._id,
                                                 quantity: quantity,
                                             })
                                         }> <i className="me-1 fa fa-shopping-basket"></i>  Thêm Vào Giỏ Hàng </button>
+                                ) :
+                                    <button className="btn btn-primary shadow-0 me-1"
+                                        style={{ backgroundColor: '#f6831f', color: 'white' }}
+                                        onClick={() =>
+                                            addToCart(
+                                                //     userInfo, {
+                                                //     productId:
+                                                //         productDetail?.product_detail?._id,
+                                                //     sku_id: selected_sku ? selected_sku._id :null,
+                                                //     quantity: quantity,
+                                                // }
+                                            )
+                                        }> <i className="me-1 fa fa-shopping-basket"></i>  Thêm Vào Giỏ Hàng </button>
+
 
                                 }
                                 {productDetail &&
@@ -366,29 +473,29 @@ function ProductDetail({ }) {
                                 {/*<!-- Pills content --> */}
                                 <div className="tab-content" id="ex1-content">
                                     <div className={`tab-pane fade ${activeTab === 'ex1-pills-1' ? 'show active' : ''} `} id="ex1-pills-1" role="tabpanel" aria-labelledby="ex1-tab-1">
-                                        <p>
+                                        {/* <p>
                                             With supporting text below as a natural lead-in to additional content. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
                                             enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
                                             pariatur.
-                                        </p>
+                                        </p> */}
                                         <div className="row mb-2">
                                             <div className="col-12 col-md-6">
-                                                <ul className="list-unstyled mb-0">
+                                                {/* <ul className="list-unstyled mb-0">
                                                     <li><i className="fas fa-check text-success me-2"></i>Some great feature name here</li>
                                                     <li><i className="fas fa-check text-success me-2"></i>Lorem ipsum dolor sit amet, consectetur</li>
                                                     <li><i className="fas fa-check text-success me-2"></i>Duis aute irure dolor in reprehenderit</li>
                                                     <li><i className="fas fa-check text-success me-2"></i>Optical heart sensor</li>
-                                                </ul>
+                                                </ul> */}
                                             </div>
-                                            <div className="col-12 col-md-6 mb-0">
+                                            {/* <div className="col-12 col-md-6 mb-0">
                                                 <ul className="list-unstyled">
                                                     <li><i className="fas fa-check text-success me-2"></i>Easy fast and ver good</li>
                                                     <li><i className="fas fa-check text-success me-2"></i>Some great feature name here</li>
                                                     <li><i className="fas fa-check text-success me-2"></i>Modern style and design</li>
                                                 </ul>
-                                            </div>
+                                            </div> */}
                                         </div>
-                                        <table className="table border mt-3 mb-2">
+                                        {/* <table className="table border mt-3 mb-2">
                                             <tr>
                                                 <th className="py-2">Display:</th>
                                                 <td className="py-2">13.3-inch LED-backlit display with IPS</td>
@@ -409,26 +516,26 @@ function ProductDetail({ }) {
                                                 <th className="py-2">Graphics</th>
                                                 <td className="py-2">Intel Iris Plus Graphics 640</td>
                                             </tr>
-                                        </table>
+                                        </table> */}
                                     </div>
                                     <div className={`tab-pane fade ${activeTab === 'ex1-pills-2' ? 'show active' : ''} mb-2`} id="ex1-pills-2" role="tabpanel" aria-labelledby="ex1-tab-2">
-                                        Tab content or sample information now <br />
+                                        {/* Tab content or sample information now <br />
                                         Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
                                         aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
                                         officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                                        nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                                        nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo */}
                                     </div>
                                     <div className={`tab-pane fade ${activeTab === 'ex1-pills-3' ? 'show active' : ''} mb-2`} id="ex1-pills-3" role="tabpanel" aria-labelledby="ex1-tab-3">
-                                        Another tab content or sample information now <br />
+                                        {/* Another tab content or sample information now <br />
                                         Dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
                                         commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-                                        mollit anim id est laborum.
+                                        mollit anim id est laborum. */}
                                     </div>
                                     <div className={`tab-pane fade ${activeTab === 'ex1-pills-4' ? 'show active' : ''} mb-2`} id="ex1-pills-4" role="tabpanel" aria-labelledby="ex1-tab-4">
-                                        Some other tab content or sample information now <br />
+                                        {/* Some other tab content or sample information now <br />
                                         Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
                                         aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-                                        officia deserunt mollit anim id est laborum.
+                                        officia deserunt mollit anim id est laborum. */}
                                     </div>
                                 </div>
                                 {/*<!-- Pills content --> */}
