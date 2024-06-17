@@ -39,4 +39,15 @@ export const getProductByCatId = (data) => async (dispatch) => {
     return err.response.data
   }
 };
+export const createSpu = (data) => async (dispatch) => {
+  try {
+    const response = await PostData('/spu/new', data);
+    console.log('response:', response)
+    return dispatch({ type: Action.CREATE_PRODUCT, payload: response.data });
 
+  } catch (err) {
+    console.log(err)
+    return err.response.data
+
+  }
+};

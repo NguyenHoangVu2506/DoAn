@@ -14,6 +14,7 @@ import PageReducer from './page-reducer';
 import DiscountReducer from './discount-reducer';
 import OrderReducer from './order-reducer';
 import SpecialReducer from './special-reducer';
+import AttributeReducer from './attributes-reducer';
 
 
 const reducers = combineReducers({
@@ -31,7 +32,9 @@ const reducers = combineReducers({
     pageReducer:PageReducer,
     discountReducer:DiscountReducer,
     orderReducer:OrderReducer,
-    specialReducer:SpecialReducer
+    specialReducer:SpecialReducer,
+    attributeReducer:AttributeReducer,
+
 
 
 })

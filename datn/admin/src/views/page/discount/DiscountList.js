@@ -27,7 +27,7 @@ function DiscountList() {
                         <div className="row">
                             <div className="col-md-12">
                                 <div className="d-grid gap-2 d-md-flex justify-content-md-begin">
-                                    <Link to='/category/createcategory'>
+                                    <Link to='/discount/creatediscount'>
                                         <CButton color="primary" variant="outline" className="me-md-2">
                                             <CIcon icon={cilPlus} title="Store menu" />
                                             Thêm mã giảm giá

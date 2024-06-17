@@ -27,6 +27,11 @@ const ProductReducer = (state = initialState, action) => {
                 ...state,
                 productByCategory: action.payload.metaData
             }
+        case Action.CREATE_PRODUCT:
+            return {
+                ...state,
+                data: action.payload.metaData
+            }
         default:
             return state;
     }

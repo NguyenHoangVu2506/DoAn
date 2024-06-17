@@ -23,6 +23,7 @@ const CreateBrand = () => {
     const { createBrand } = useSelector((state) => state.userReducer);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
+    
     useEffect(() => {
         if (createBrand) {
             navigate('/post/postlist/news/1/10');

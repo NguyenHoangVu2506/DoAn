@@ -13,9 +13,9 @@ class DiscountService {
         } = payload
 
         //kiem tra
-        if (Date.now() > new Date(start_date) || Date.now() > new Date(end_date)) {
-            throw new ForbiddenRequestError('discount code has expired')
-        }
+        // if (Date.now() > new Date(start_date) || Date.now() > new Date(end_date)) {
+        //     throw new ForbiddenRequestError('discount code has expired')
+        // }
 
         if (new Date(start_date) >= new Date(end_date)) {
             throw new ForbiddenRequestError('start date must be before end_date')

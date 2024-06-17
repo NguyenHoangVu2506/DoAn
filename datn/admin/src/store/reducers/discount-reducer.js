@@ -2,7 +2,8 @@ import { Action } from '../actions'
 
 const initialState = {
     discount: null,
-    updateInfo:null
+    updateInfo: null,
+    createDiscount:null
 }
 
 
@@ -14,10 +15,10 @@ const DiscountReducer = (state = initialState, action) => {
                 ...state,
                 discount: action.payload.metaData
             }
-        case Action.UPDATE_INFO:
+        case Action.ADD_DISCOUNT:
             return {
                 ...state,
-                updateInfo: action.payload.metaData
+                createDiscount: action.payload.metaData
             }
 
         default:

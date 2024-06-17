@@ -77,6 +77,7 @@ const ListTrashPage = React.lazy(() => import('./views/page/single/ListTrashPage
 
 ////Discount
 const DiscountList = React.lazy(() => import('./views/page/discount/DiscountList'))
+const DiscountCreate = React.lazy(() => import('./views/page/discount/CreateDiscount'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -161,6 +162,7 @@ const routes = [
 
   //////////discount
   { path: '/discount/discountlist', name: 'DiscountList', element: DiscountList },
+  { path: '/discount/creatediscount', name: 'DiscountCreate', element: DiscountCreate },
 
 
 ]
