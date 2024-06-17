@@ -10,6 +10,8 @@ export * from './slider-actions';
 export * from './brand-actions';
 export * from './attribute-actions';
 export * from './menu-actions';
+export * from './contact-actions';
+
 
 
 
@@ -81,7 +83,10 @@ export const Action = {
 
 
   //menu
-  GET_ALL_MENU: "GET_ALL_MENU"
+  GET_ALL_MENU: "GET_ALL_MENU",
+
+  //contact
+  NEW_CONTACT:"NEW_CONTACT"
 
 
 };

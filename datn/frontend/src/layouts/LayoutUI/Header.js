@@ -22,7 +22,7 @@ const Header = () => {
           <div class="">
             <div class="row gy-3">
               <div class="col-lg-2 col-sm-4 col-4">
-                {/* <img src='../../' alt="" height="100px"
+                {/* <img src='' alt="" height="100px"
                     width="100px"></img>  */}
                 <Link to='/' className="text-dark"><h3>FRUITSTORE</h3></Link>
               </div>
@@ -56,15 +56,16 @@ const Header = () => {
                 </div>
               </div>
 
-              <div class="col-lg-5 col-md-12 col-12">
-                <div class="input-group float-center" >
-                  <div class="form-outline " style={{ background: '#ffd6b2 linear-gradient(180deg, #fff3ea 0%, #ffd6b2 100%)' }}>
-                    <input type="search" id="form1" class="form-control text-dark" />
-                    <label class="form-label  text-dark" for="form1">Search</label>
+              <div class="col-lg-5 col-md-12 col-12"style={{  borderColor:'#f6831f' }}>
+                <div class="input-group float-center"  >
+                  <div class="form-outline " >
+                    <input type="search" id="form1" class="form-control text-dark" style={{ cursor: 'pointer', borderColor:'#f6831f' }} />
+                    <label class="form-label" for="form1" style={{ cursor: 'pointer', color: '#f6831f ' }}>Search</label>
                   </div>
-                  <button type="button" class=" btn btn-rounded" style={{ background: '#f6831f linear-gradient(180deg, #fff3ea 0%, #f6831f 100%)' }}>
-                    <i class="fas fa-search"></i>
+                  <button type="button" class=" btn btn-rounded" style={{ background: '' }}>
+                    <i class="fas fa-search" style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
                   </button>
+                  
                 </div>
               </div>
 

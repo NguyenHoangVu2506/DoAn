@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { addFavoriteToLocalStorage, getFavoritesFromLocalStorage, removeFavoriteFromLocalStorage } from "../../utils";
 import accounting from "accounting";
-import { onProductDetail, productById } from "../../store/actions";
+import { addCart, onProductDetail, productById } from "../../store/actions";
 
 export default function ProductItem({ product }) {
     const navigate = useNavigate();
@@ -14,6 +14,7 @@ export default function ProductItem({ product }) {
     const { userInfo } = useSelector((state) => state.userReducer);
 
     const { spuInfo } = useSelector((state) => state.productReducer);
+    const { productDetail } = useSelector((state) => state.productReducer);
 
 
     const [favories_products, setfavoriesProduct] = useState(getFavoritesFromLocalStorage());
@@ -24,6 +25,47 @@ export default function ProductItem({ product }) {
     const [largeImageSrc, setLargeImageSrc] = useState(product.product_thumb[0]);
     const [spu_id, setSpus_id] = useState(product._id);
     const [selectedProductId, setSelectedProductId] = useState(null);
+    const [quantity, setQuantity] = useState(1);
+    const [stock, setStock] = useState(null);
+    const [selected_sku, set_selected_sku] = useState(null);
+    const [sku_tier_idx, setSku_tier_idx] = useState([0, 0])
+
+    const decreaseQuantity = () => {
+        if (quantity > 1) {
+            setQuantity(quantity - 1);
+        }
+    };
+    const increaseQuantity = () => {
+        setQuantity(quantity + 1);
+    };
+    const handleAddToCart = async (userId, { productId, sku_id = null, quantity }) => {
+        console.log("productId, sku_id, quantity", productId, sku_id, quantity, userId)
+        if (userId) {
+            if (quantity <= stock) {
+                // console.log('selected_sku', sku_id + productId + sku_id)
+                await dispatch(
+                    addCart({
+                        userId: userId._id,
+                        product: {
+                            productId: productId,
+                            sku_id: sku_id,
+                            quantity: quantity,
+                        },
+                    })
+                );
+                toast.success('Đã thêm sản phẩm vào giỏ hàng!');
+                // addCartItemToLocalStorage({
+                //     productId: productId,
+                //     sku_id: sku_id,
+                //     quantity: quantity
+                // })
+            }
+        } else {
+            toast.error('Vui lòng đăng nhập để tiếp tục');
+            navigate('/login');
+        }
+    };
+
 
     const HandleAddToWishList = async ({ userId, productId }) => {
         await dispatch(addProWishList({
@@ -45,6 +87,16 @@ export default function ProductItem({ product }) {
         toast.success("Đã xóa sản phẩm ra khỏi mục yêu thích!");
     };
 
+    const onChangeVariation = async (indexOption, indexVariation) => {
+        setSku_tier_idx((e) => {
+            const newArr = e.slice();
+            newArr[indexVariation] = indexOption
+            console.log(newArr)
+            return newArr
+        })
+        console.log(indexOption, indexVariation)
+    }
+
     useEffect(() => {
         setprice_default(product.product_price);
     }, [product.product_price]);
@@ -61,6 +113,19 @@ export default function ProductItem({ product }) {
             });
         }
     }, [product]);
+
+    useEffect(() => {
+        productDetail && (
+            !selected_sku && set_selected_sku(productDetail.sku_list.find((sku) => sku.sku_tier_idx.toString() === sku_tier_idx.toString()))
+        )
+        productDetail && setLargeImageSrc(productDetail.product_detail.product_thumb[0])
+        productDetail && setStock(productDetail.product_detail.product_quantity)
+
+    }, [productDetail, sku_tier_idx])
+
+    useEffect(() => {
+        dispatch(onProductDetail({ spu_id: spu_id }));
+    }, []);
 
     const handleSizeChange = (thumb) => {
         setLargeImageSrc(thumb);
@@ -96,12 +161,15 @@ export default function ProductItem({ product }) {
                         </div>
                         <p className="card-text">{product.product_name}</p>
                         <div className="d-flex justify-content-around">
+
                             <button className="btn btn-primary shadow-0 px-2 py-2"
                                 style={{ backgroundColor: '#f6831f', color: 'white' }}
-                                // onClick={openModal}
+                                // onClick={openModal} 
                                 onClick={() => addToCart(product._id)}
                             >Thêm vào giỏ</button>
-                            {product.product_variations && product.product_variations.length > 0 ? (
+
+
+                            {productDetail && productDetail.product_detail.product_variations.length > 0 ? (
                                 showModal && (
                                     <div className="modal fade show" style={{ display: "block" }} tabIndex="-1" role="dialog">
                                         <div className="modal-dialog modal-lg" role="document">
@@ -133,13 +201,13 @@ export default function ProductItem({ product }) {
                                                                             {product.product_name}
                                                                         </h4>
                                                                         <div className="d-flex flex-row my-3">
-                                                                            <div className="text-warning mb-1 me-2">
-                                                                                <i className="fa fa-star"></i>
-                                                                                <i className="fa fa-star"></i>
-                                                                                <i className="fa fa-star"></i>
-                                                                                <i className="fa fa-star"></i>
-                                                                                <i className="fas fa-star-half-alt"></i>
-                                                                                <span className="ms-1">
+                                                                            <div className="text-warning mb-1 me-2" style={{ cursor: 'pointer', color: '#f6831f ' }}>
+                                                                                <i className="fa fa-star" style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
+                                                                                <i className="fa fa-star"style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
+                                                                                <i className="fa fa-star"style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
+                                                                                <i className="fa fa-star"style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
+                                                                                <i className="fas fa-star-half-alt"style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
+                                                                                <span className="ms-1" style={{ cursor: 'pointer', color: '#f6831f ' }}>
                                                                                     4.5
                                                                                 </span>
                                                                             </div>
@@ -158,8 +226,8 @@ export default function ProductItem({ product }) {
                                                                         </div>
                                                                         <p>{product.product_description}</p>
                                                                         <div className="row">
-                                                                            <div className="col-12 mb-3">
-                                                                                <label className="mb-2">Variations:</label>
+                                                                            {/* <div className="col-12 mb-3">
+                                                                                <label className="mb-2">Dung Tích:</label>
                                                                                 <div>
                                                                                     {product.product_variations.map((variation, index) => (
                                                                                         variation.options.map((option, optIndex) => (
@@ -169,29 +237,66 @@ export default function ProductItem({ product }) {
                                                                                         ))
                                                                                     ))}
                                                                                 </div>
-                                                                            </div>
+                                                                            </div> */}
+                                                                            {productDetail && productDetail.product_detail.product_variations.map((variation, indexVariation) => {
+                                                                                return (
+                                                                                    <div className="col-12 mb-3">
+                                                                                        <div key={indexVariation}>
+                                                                                            <p class="d-none d-md-block mb-1" style={{ cursor: 'pointer', color: '#f6831f ' }}>{variation.name}</p>
+
+                                                                                            {variation.options.map((option, indexOption) => {
+                                                                                                return (
+                                                                                                    <div key={indexOption} >
+                                                                                                        <input type="radio" class="btn btn-check" name="options" id={option} autocomplete="off"
+                                                                                                            value={indexOption} onClick={() => onChangeVariation(indexOption, indexVariation)} />
+                                                                                                        <label class="btn mx-1 my-1"  for={option} data-mdb-ripple-init>{option}</label>
+                                                                                                    </div>
+                                                                                                )
+                                                                                            })}
+
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                )
+                                                                            })}
+
+
                                                                         </div>
                                                                         <hr />
                                                                         <div className="row mb-2">
-                                                                            <div className="col-md-4 col-6 mb-1">
-                                                                                <label className="mb-2 d-block">Quantity</label>
-                                                                                <div className="input-group mb-1" style={{ width: '170px' }}>
-                                                                                    <button className="btn btn-white border border-secondary px-3" type="button">
+                                                                            <div className="col-md-4 col-6 mb-2">
+                                                                                <p class="d-none d-md-block mb-0" style={{ cursor: 'pointer', color: '#f6831f ' }}>Số Lượng</p>
+                                                                                <div className="input-group mt-3 mb-2" style={{ width: '170px' }}>
+                                                                                    <button className="btn btn-white border border-secondary px-3" type="button" onClick={decreaseQuantity}>
                                                                                         <i className="fas fa-minus"></i>
                                                                                     </button>
                                                                                     <input
-                                                                                        type="number"
+                                                                                        type="text"
                                                                                         className="form-control text-center border border-secondary"
+                                                                                        value={quantity}
                                                                                         aria-label="Example text with button addon"
                                                                                         aria-describedby="button-addon1"
+                                                                                        readOnly
                                                                                     />
-                                                                                    <button className="btn btn-white border border-secondary px-3" type="button">
+                                                                                    <button className="btn btn-white border border-secondary px-3" type="button" onClick={increaseQuantity}>
                                                                                         <i className="fas fa-plus"></i>
                                                                                     </button>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <button className="btn btn-primary shadow-0"> <i className="me-1 fa fa-shopping-basket"></i>Thêm vào giỏ hàng</button>
+                                                                        {productDetail &&
+                                                                            <button className="btn btn-primary shadow-0 mt-1 px-2 py-2"
+                                                                                style={{ backgroundColor: '#f6831f', color: 'white' }}
+                                                                                onClick={() =>
+                                                                                    handleAddToCart(userInfo, {
+                                                                                        productId:
+                                                                                            productDetail?.product_detail?._id,
+                                                                                        sku_id: selected_sku?.sku_id,
+                                                                                        quantity: quantity,
+                                                                                    })
+                                                                                }> <i className="me-1 fa fa-shopping-basket"></i> Thêm Vào Giỏ Hàng </button>
+
+                                                                        }
                                                                     </div>
                                                                 </main>
                                                             </div>

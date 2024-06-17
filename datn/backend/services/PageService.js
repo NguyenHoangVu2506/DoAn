@@ -173,8 +173,5 @@ class PageService {
     static async removePage({ page_id }) {
         return await page.deleteOne({ _id: page_id }).lean()
     }
-
-
-
 }
 module.exports = PageService

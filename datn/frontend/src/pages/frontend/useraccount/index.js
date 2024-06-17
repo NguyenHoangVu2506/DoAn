@@ -47,10 +47,10 @@ export default function UserAccount() {
   }, []);
 
   const handleSubmit = async () => {
-
     try {
-      const userInfo = await dispatch(onLogout({}))
+      await dispatch(onLogout({}))
       toast.success('logout success')
+      window.location.reload()
       navigate('/')
     } catch (error) {
     }
@@ -58,7 +58,7 @@ export default function UserAccount() {
   const handleInsert = async () => {
 
     try {
-      const insertAddress = await dispatch(onInsertAddress({
+      await dispatch(onInsertAddress({
         user_id: userInfo._id,
         phone_number: phone_number, street: street, postal_code: postal_code, city: city, country: country
       }))
@@ -94,25 +94,27 @@ export default function UserAccount() {
   return (
     <>
       <div class="bg-primary">
-        <div class="container py-4">
-          {/*<!-- Breadcrumb -->*/}
-          <nav class="d-flex">
-            <h6 class="mb-0">
-              <a href="" class="text-white-50">Home</a>
-              <span class="text-white-50 mx-2"> - </span>
-              <a href="" class="text-white-50">Profile</a>
-              <span class="text-white-50 mx-2"> - </span>
-              <a href="" class="text-white"><u>Shopping cart</u></a>
-            </h6>
-          </nav>
-          {/*<!-- Breadcrumb -->*/}
+        <div className="bg-" style={{ backgroundColor: '#f6831f' }} >
+          <div className="container py-4 " >
+            {/*<!-- Breadcrumb --> */}
+            <nav className="d-flex" >
+              <h6 className="mb-0">
+                <a href="" className="text-white">Trang chủ</a>
+                <span className="text-white mx-2">/ </span>
+                <a href="" className="text-white">Chi tiết</a>
+
+              </h6>
+            </nav>
+            {/*<!-- Breadcrumb --> */}
+          </div>
         </div>
+
       </div>
       <section class="py-5 bg-light">
         <div class="container">
           <div class="row">
             <div class="col-lg-3 col-xl-3">
-              <nav class="nav flex-lg-column w-100 d-flex nav-pills mb-4">
+              {/* <nav class="nav flex-lg-column w-100 d-flex nav-pills mb-4">
                 <a class="nav-link my-0 active" href="#"><p class="pb-0 mb-0" style={{ width: '100px' }}>Account main</p></a>
                 <a class="nav-link my-0 bg-light" href="#"><p class="pb-0 mb-0" style={{ width: '100px' }}>New orders</p></a>
                 <a class="nav-link my-0 bg-light" href="#"><p class="pb-0 mb-0" style={{ width: '100px' }}>Orders history</p></a>
@@ -120,7 +122,17 @@ export default function UserAccount() {
                 <a class="nav-link my-0 bg-light" href="#"><p class="pb-0 mb-0" style={{ width: '100px' }}>Transactions</p></a>
                 <a class="nav-link my-0 bg-light" href="#"><p class="pb-0 mb-0" style={{ width: '100px' }}>Profile setting</p></a>
                 <button class="nav-link my-0 bg-light"><p class="pb-0 mb-0" style={{ width: '100px' }} onClick={() => handleSubmit()}>Log out</p></button>
-              </nav>
+              </nav> */}
+              <div class="list-group list-group-light">
+                <a href="#" class="list-group-item list-group-item-action px-3 border-0 active" data-mdb-ripple-init
+                  aria-current="true">The current link item with a ripple</a>
+                <a href="#" class="list-group-item list-group-item-action px-3 border-0" data-mdb-ripple-init>A second link item with
+                  a ripple</a>
+                <a href="#" class="list-group-item list-group-item-action px-3 border-0" data-mdb-ripple-init>A third link item with
+                  a ripple</a>
+                <a href="#" class="list-group-item list-group-item-action px-3 border-0" data-mdb-ripple-init>A fourth link item with
+                  a ripple</a>
+              </div>
             </div>
             <main class="col-lg-9 col-xl-9">
               <div class="card p-4 mb-0 shadow-0 border">
@@ -148,7 +160,7 @@ export default function UserAccount() {
                             <b class="mx-2 text-muted"><i class="fa fa-map-marker-alt"></i></b>
                             {address.phone_number}, {address.street}, {address.city}, {address.country}
                           </div>
-                         
+
                         </div>
                       )
                     })}
@@ -276,65 +288,65 @@ export default function UserAccount() {
                         <div>
                           <a href="#" class="btn btn-sm btn-outline-danger">Cancel order</a>
                           <button type="button" className="btn btn-sm btn-outline-warning shadow-0" data-bs-toggle="modal"
-                              data-bs-target={`#exampleModal`}>
-                              <i></i> Thông tin vận chuyển
-                            </button>
-                            <div className="modal fade" id={`exampleModal`} tabIndex="-1" aria-labelledby="exampleModalLabel"
-                              aria-hidden="true">
-                              <div className="modal-dialog">
-                                <div className="modal-content">
-                                  <div className="modal-header border-bottom-0">
-                                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                  </div>
-                                  <div className="modal-body text-start p-4">
-                                    <h5 className="modal-title text-uppercase mb-2" id="exampleModalLabel">test@gmail.com</h5>
-                                    <h4 className="mb-2" style={{ color: '#f37a27' }}>Thông tin đơn hàng</h4>
-                                    <div className="row">
-                                      <div className="col mb-0">
-                                        <p className="small text-muted mb-1">Date</p>
-                                        <p>Date: 16 December 2022</p>
-                                      </div>
-                                      <div className="col mb-3">
-                                        <p className="small text-muted mb-1">Order No.</p>
-                                        <p>06525242</p>
-                                      </div>
+                            data-bs-target={`#exampleModal`}>
+                            <i></i> Thông tin vận chuyển
+                          </button>
+                          <div className="modal fade" id={`exampleModal`} tabIndex="-1" aria-labelledby="exampleModalLabel"
+                            aria-hidden="true">
+                            <div className="modal-dialog">
+                              <div className="modal-content">
+                                <div className="modal-header border-bottom-0">
+                                  <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div className="modal-body text-start p-4">
+                                  <h5 className="modal-title text-uppercase mb-2" id="exampleModalLabel">test@gmail.com</h5>
+                                  <h4 className="mb-2" style={{ color: '#f37a27' }}>Thông tin đơn hàng</h4>
+                                  <div className="row">
+                                    <div className="col mb-0">
+                                      <p className="small text-muted mb-1">Date</p>
+                                      <p>Date: 16 December 2022</p>
                                     </div>
-                                    <hr />
-
-                                   
-                                      <div className="d-flex justify-content-between" >
-                                        <p className="fw-bold mb-0">Test(SL:5)</p>
-                                        <p className="text-muted mb-0">1.953.241đ</p>
-                                      </div>
-                                  
-                                    <hr />
-                                    <div className="d-flex justify-content-between">
-                                      <p className="fw-bold">Tổng cộng</p>
-                                      <p className="fw-bold">1.953.241đ</p>
+                                    <div className="col mb-3">
+                                      <p className="small text-muted mb-1">Order No.</p>
+                                      <p>06525242</p>
                                     </div>
-                                    <h4 className="mb-4" style={{ color: '#f37a27' }}>Tracking Order</h4>
+                                  </div>
+                                  <hr />
 
-                                    <ul id="progressbar-1" className="progressbar">
-                                      <li className={`step0 active : ''}`} id="step1">
-                                        <span>Đã đặt hàng</span>
-                                      </li>
-                                      <li className={`step0 active : ''} text-center`} id="step2">
-                                        <span>Đang chuẩn bị hàng</span>
-                                      </li>
-                                      <li className={`step0 active : ''} text-center`} id="step3">
-                                        <span>Đang giao hàng</span>
-                                      </li>
-                                      <li className={`step0 active : ''} text-muted text-end`} id="step4">
-                                        <span>Đã nhận</span>
-                                      </li>
-                                    </ul>
+
+                                  <div className="d-flex justify-content-between" >
+                                    <p className="fw-bold mb-0">Test(SL:5)</p>
+                                    <p className="text-muted mb-0">1.953.241đ</p>
                                   </div>
-                                  <div className="modal-footer d-flex justify-content-center border-top-0 py-4">
-                                    <p>Want any help? <a href="#!" style={{ color: '#f37a27' }}>Please contact us</a></p>
+
+                                  <hr />
+                                  <div className="d-flex justify-content-between">
+                                    <p className="fw-bold">Tổng cộng</p>
+                                    <p className="fw-bold">1.953.241đ</p>
                                   </div>
+                                  <h4 className="mb-4" style={{ color: '#f37a27' }}>Tracking Order</h4>
+
+                                  <ul id="progressbar-1" className="progressbar">
+                                    <li className={`step0 active : ''}`} id="step1">
+                                      <span>Đã đặt hàng</span>
+                                    </li>
+                                    <li className={`step0 active : ''} text-center`} id="step2">
+                                      <span>Đang chuẩn bị hàng</span>
+                                    </li>
+                                    <li className={`step0 active : ''} text-center`} id="step3">
+                                      <span>Đang giao hàng</span>
+                                    </li>
+                                    <li className={`step0 active : ''} text-muted text-end`} id="step4">
+                                      <span>Đã nhận</span>
+                                    </li>
+                                  </ul>
+                                </div>
+                                <div className="modal-footer d-flex justify-content-center border-top-0 py-4">
+                                  <p>Want any help? <a href="#!" style={{ color: '#f37a27' }}>Please contact us</a></p>
                                 </div>
                               </div>
                             </div>
+                          </div>
                         </div>
                       </header>
                       <hr />

@@ -124,10 +124,10 @@ function ProductDetail({ }) {
 
     return (
         <>
-            <div className="bg-primary">
-                <div className="container py-4">
+            <div className="bg-"style={{backgroundColor: '#f6831f' }} >
+                <div className="container py-4 " >
                     {/*<!-- Breadcrumb --> */}
-                    <nav className="d-flex">
+                    <nav className="d-flex" >
                         <h6 className="mb-0">
                             <a href="" className="text-white-50">Trang chủ</a>
                             <span className="text-white-50 mx-2">/ </span>
@@ -172,11 +172,11 @@ function ProductDetail({ }) {
                                 </h4>
                                 <div className="d-flex flex-row my-3">
                                     <div className="text-warning mb-1 me-2">
-                                        <i className="fa fa-star"></i>
-                                        <i className="fa fa-star"></i>
-                                        <i className="fa fa-star"></i>
-                                        <i className="fa fa-star"></i>
-                                        <i className="fas fa-star-half-alt"></i>
+                                        <i className="fa fa-star"style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
+                                        <i className="fa fa-star"style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
+                                        <i className="fa fa-star"style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
+                                        <i className="fa fa-star"style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
+                                        <i className="fas fa-star-half-alt"style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
                                         <span className="ms-1">
                                             4.5
                                         </span>
@@ -196,8 +196,8 @@ function ProductDetail({ }) {
 
                                 <div className="row">
 
-                                    <dt className="col-3">Xuất xứ</dt>
-                                    <dd className="col-9">{productDetail && productDetail.product_brand.brand_name}</dd>
+                                    <dt className="col-3">Thương Hiệu</dt>
+                                    <dd className="col-9 fw-bold" style={{ cursor: 'pointer', color: '#f6831f ' }}>{productDetail && productDetail.product_brand.brand_name}</dd>
                                 </div>
 
                                 <hr />
@@ -208,14 +208,14 @@ function ProductDetail({ }) {
                                         return (
                                             <div className="col-12 mb-3">
                                                 <div key={indexVariation}>
-                                                    <p>{variation.name}</p>
+                                                    <p className="fw-bold"style={{ cursor: 'pointer', color: '#f6831f ' }}>{variation.name}</p>
 
                                                     {variation.options.map((option, indexOption) => {
                                                         return (
                                                             <div key={indexOption} >
                                                                 <input type="radio" class="btn btn-check" name="options" id={option} autocomplete="off"
                                                                     value={indexOption} onClick={() => onChangeVariation(indexOption, indexVariation)} />
-                                                                <label class="btn btn-outline-primary mx-1 my-1" for={option} data-mdb-ripple-init>{option}</label>
+                                                                <label class="btn  mx-1 my-1" for={option} data-mdb-ripple-init>{option}</label>
                                                             </div>
                                                         )
                                                     })}
@@ -228,7 +228,7 @@ function ProductDetail({ }) {
                                     {/*<!-- col.// --> */}
 
                                     <div className="col-md-4 col-6 mb-3">
-                                        <label className="mb-2 d-block">Quantity</label>
+                                        <label className="mb-2 d-block fw-bold" style={{ cursor: 'pointer', color: '#f6831f ' }}>Số Lượng</label>
                                         <div className="input-group mb-3" style={{ width: '170px' }}>
                                             <button className="btn btn-white border border-secondary px-3" type="button" onClick={decreaseQuantity}>
                                                 <i className="fas fa-minus"></i>
@@ -247,10 +247,11 @@ function ProductDetail({ }) {
                                         </div>
                                     </div>
                                 </div>
-                                <button href="#" className="btn btn-warning shadow-0 me-1"> Buy now </button>
+                                <button href="#" className="btn btn-warning shadow-0 me-1"> Mua Ngay </button>
 
                                 {productDetail &&
                                     <button className="btn btn-primary shadow-0 me-1"
+                                    style={{ backgroundColor: '#f6831f', color: 'white' }}
                                         onClick={() =>
                                             handleAddToCart(userInfo, {
                                                 productId:
@@ -258,7 +259,7 @@ function ProductDetail({ }) {
                                                 sku_id: selected_sku?.sku_id,
                                                 quantity: quantity,
                                             })
-                                        }> <i className="me-1 fa fa-shopping-basket"></i> Add to cart </button>
+                                        }> <i className="me-1 fa fa-shopping-basket"></i>  Thêm Vào Giỏ Hàng </button>
 
                                 }
                                 {productDetail &&
@@ -464,7 +465,7 @@ function ProductDetail({ }) {
                             <div className="px-0 border rounded-2 shadow-0">
                                 <div className="card">
                                     <div className="card-body">
-                                        <h5 className="card-title">Sản phẩm liên</h5>
+                                        <h5 className="card-title">Sản phẩm liên quan</h5>
                                         {productDetail && productDetail.related_products.map((product, index) => {
                                             return (
                                                 <ProductRelatedItem key={index} product={product} />

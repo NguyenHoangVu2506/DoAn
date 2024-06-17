@@ -12,7 +12,7 @@ import BrandReducer from './brand-reducer';
 import AttributeReducer from './attribute-reducer';
 import SpecialOfferReducer from './special_offer-reducer';
 import MenuReducer from './menu-reducer';
-
+import ContactReducer from './contact-reducer';
 
 const reducers = combineReducers({
     userReducer: UserReducer,
@@ -27,8 +27,7 @@ const reducers = combineReducers({
     brandReducer: BrandReducer,
     attributeReducer: AttributeReducer,
     specialOfferReducer: SpecialOfferReducer,
-    menuReducer: MenuReducer
-
-
+    menuReducer: MenuReducer,
+    contactReducer: ContactReducer
 })
 export default reducers

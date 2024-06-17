@@ -22,9 +22,7 @@ const WishlistRouter = require('../routes/WishlistRouter')
 const SliderRouter = require('../routes/SliderRouter')
 const MenuRouter = require('../routes/MenuRouter')
 const PageRouter = require('../routes/PageRouter')
-
-
-
+const ContactRouter = require('../routes/ContactRouter')
 
 const routes = (app) => {
 
@@ -49,6 +47,8 @@ const routes = (app) => {
     app.use('/api/wish_list', WishlistRouter)
     app.use('/api/menu', MenuRouter)
     app.use('/api/page', PageRouter)
+    app.use('/api/contact', ContactRouter)
+
 
 
 
