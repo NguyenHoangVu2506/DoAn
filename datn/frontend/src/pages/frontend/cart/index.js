@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteCartItem, getCart, updateQuantityCart, updateSkuCart, updateSkuFromCartV2 } from "../../../store/actions";
 import CartItem from "../../../Components/cartItem";
 import { specialOfferToday } from "../../../store/actions/special_offer-actions";
+import CouponItem from "./discount";
 
 export default function Cart() {
     const navigate = useNavigate();
@@ -123,11 +124,7 @@ export default function Cart() {
                                 </div>
 
                                 <div class="border-top pt-4 mx-4 mb-4">
-                                    <p><i class="fas fa-truck text-muted fa-lg"></i> Free Delivery within 1-2 weeks</p>
-                                    <p class="text-muted">
-                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                                        aliquip
-                                    </p>
+                                   <CouponItem/>
                                 </div>
                             </div>
                         </div>

@@ -20,6 +20,8 @@ import PostDetailItem from './pages/frontend/blog/postItemDetail';
 import Contact from './pages/frontend/contact';
 import Collections from './pages/frontend/product/Collections';
 import ProductModel from './Components/product/productModel';
+import UserOrder from './pages/frontend/useraccount/userOrder';
+import UserOrderHistory from './pages/frontend/useraccount/userOrderHistory';
 
 
 function App() {
@@ -47,6 +49,8 @@ function App() {
           <Route path='/' element={<CheckAuth/>}>
             <Route path='/checkout' element={<Checkout />} />
             <Route path='/profile' element={<UserAccount />} />
+            <Route path='/userorder' element={<UserOrder />} />
+            <Route path='/userorderhistory' element={<UserOrderHistory />} />
 
 
             <Route path='/test' element={<ProductModel />} />

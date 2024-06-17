@@ -46,7 +46,6 @@ export const PutData = async (endPoint, options) => {
 }
 
 export const DeleteData = async (endPoint) => {
-
   try {
     setHeader();
     const response = await api.delete(endPoint);

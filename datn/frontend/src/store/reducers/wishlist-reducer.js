@@ -23,13 +23,13 @@ const WishListReducer = (state = initialState, action) => {
         case Action.REMOVE_FROM_WISH_LIST:
             return {
                 ...state,
-                update: true
+                delete:  action.payload.metaData
             }
         case Action.DELETE_WISH_LIST:
             localStorage.removeItem("favorites");
             return {
                 ...state,
-                wish_list: { wish_list_products: [] }
+                wish_list1: { wish_list_products: [] }
             }
         default:
             return state;

@@ -31,7 +31,7 @@ export default function Slider() {
     <section className="pt-3">
       <div className="container">
         <div className="row gx-3">
-          <main className="col-lg-9 ">
+          <main className="col-lg-12 ">
             <Carousel autoplay class="card-banner p-4 bg-primary ">
               {allSlider && allSlider.map((slider,index) => (
                 <Link to={slider.slider_link} key={index} >
@@ -40,17 +40,7 @@ export default function Slider() {
               ))}
             </Carousel>
           </main>
-          <aside className="col-lg-3">
-            <div className="card-banners h-100 " >
-              <div className="card-body pb-2">
-                <img src='https://www.guardian.com.vn/media/.renditions/wysiwyg/banner/z5064554484589_f706d7d32beeba7491f1add7f8e5c6ec.jpg' style={{ width: '100%', height: '126px' }}/>
-              </div>
-              <div className="card-body pb-4">
-                <img src='https://www.guardian.com.vn/media/.renditions/wysiwyg/banner/z5064554484589_f706d7d32beeba7491f1add7f8e5c6ec.jpg' style={{ width: '100%', height: '126px' }}/>
-              </div>
-            </div>
-            
-          </aside>
+          
         </div>
       </div>
     </section>

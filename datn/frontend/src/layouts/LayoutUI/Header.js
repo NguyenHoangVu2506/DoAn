@@ -24,7 +24,7 @@ const Header = () => {
               <div class="col-lg-2 col-sm-4 col-4">
                 {/* <img src='' alt="" height="100px"
                     width="100px"></img>  */}
-                <Link to='/' className="text-dark"><h3>FRUITSTORE</h3></Link>
+                <Link to='/' style={{ cursor: 'pointer', color: '#f6831f ' }}><h3>HOANGVU</h3></Link>
               </div>
 
               <div class="order-lg-last col-lg-5 col-sm-8 ">
@@ -49,23 +49,23 @@ const Header = () => {
 
                   </a>
 
-                  <a href="/wish-list" class=" py-1 px-3 nav-link d-flex align-items-center me-1" > 
-                  <i class="fas fa-heart m-1 me-md-2" style={{ cursor: 'pointer', color: '#f6831f' }}></i>
+                  <a href="/wish-list" class=" py-1 px-3 nav-link d-flex align-items-center me-1" >
+                    <i class="fas fa-heart m-1 me-md-2" style={{ cursor: 'pointer', color: '#f6831f' }}></i>
                     <p class="d-none d-md-block mb-0" style={{ cursor: 'pointer', color: '#f6831f' }}>Yêu thích</p>
                   </a>
                 </div>
               </div>
 
-              <div class="col-lg-5 col-md-12 col-12"style={{  borderColor:'#f6831f' }}>
-                <div class="input-group float-center"  >
-                  <div class="form-outline " >
-                    <input type="search" id="form1" class="form-control text-dark" style={{ cursor: 'pointer', borderColor:'#f6831f' }} />
+              <div class="col-lg-5 col-md-12 col-12" >
+                <div class="input-group float-center" style={{ cursor: 'pointer',border:'1px', borderColor: '#f6831f' }}>
+                  <div class="form-outline" data-mdb-input-init>
+                    <input type="text" id="form1" class="form-control text-dark" style={{ cursor: 'pointer',border:'1px', borderColor: '#f6831f' }} />
                     <label class="form-label" for="form1" style={{ cursor: 'pointer', color: '#f6831f ' }}>Search</label>
                   </div>
                   <button type="button" class=" btn btn-rounded" style={{ background: '' }}>
                     <i class="fas fa-search" style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
                   </button>
-                  
+
                 </div>
               </div>
 

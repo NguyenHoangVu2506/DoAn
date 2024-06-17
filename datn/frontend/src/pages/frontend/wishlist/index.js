@@ -1,108 +1,128 @@
 import { useDispatch, useSelector } from "react-redux";
-import { getWishList, onAllProduct } from "../../../store/actions";
-import ProductListItem from "../../../Components/product/productListItem";
+import { addProWishList, getWishList, onAllProduct, onLogout, removeFromWishList } from "../../../store/actions";
 import { useEffect, useState } from "react";
-import { getFavoritesFromLocalStorage } from "../../../utils";
+import { addFavoriteToLocalStorage, getFavoritesFromLocalStorage, removeFavoriteFromLocalStorage } from "../../../utils";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import ProductListItem from "../../../Components/product/productListItem";
 
 export default function Wishlist() {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     const { wish_list } = useSelector((state) => state.wishlistReducer);
     const { userInfo } = useSelector((state) => state.userReducer);
     const { allProducts } = useSelector((state) => state.productReducer);
+    const [favories_products, setfavoriesProduct] = useState(getFavoritesFromLocalStorage());
+
+    const navigate = useNavigate();
+    const handleSubmit = async () => {
+        try {
+            await dispatch(onLogout({}));
+            toast.success('logout success');
+            window.location.reload();
+            navigate('/');
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     useEffect(() => {
-        userInfo && (
-            !wish_list ? dispatch(getWishList({ userId: userInfo._id })) : (wish_list.length != getFavoritesFromLocalStorage().length && dispatch(onAllProduct({ limit: 20, page: 1 })))
-        )
-        !allProducts && dispatch(onAllProduct({ limit: 20, page: 1 }))
-
+        if (userInfo) {
+            if (!wish_list) {
+                dispatch(getWishList({ userId: userInfo._id }));
+            } else if (wish_list.length !== getFavoritesFromLocalStorage().length) {
+                dispatch(onAllProduct({ limit: 20, page: 1 }));
+            }
+        }
+        if (!allProducts) {
+            dispatch(onAllProduct({ limit: 20, page: 1 }));
+        }
     }, [wish_list]);
 
-console.log("wishList, userInfo, allProducts",wish_list, userInfo, allProducts)
+    const HandleAddToWishList = async ({ userId, productId }) => {
+        await dispatch(addProWishList({ userId, productId }));
+        addFavoriteToLocalStorage(productId);
+        setfavoriesProduct(getFavoritesFromLocalStorage());
+        toast.success("Đã thêm sản phẩm vào mục yêu thích!");
+    };
+
+    const HandleRemoveFromWishList = async ({ userId, productId }) => {
+        await dispatch(removeFromWishList({ userId, productId }));
+        removeFavoriteFromLocalStorage(productId);
+        setfavoriesProduct(getFavoritesFromLocalStorage());
+        toast.success("Đã xóa sản phẩm ra khỏi mục yêu thích!");
+    };
 
     return (
         <>
-            <div class="bg-primary">
-                <div class="container py-4">
-                    {/*<!-- Breadcrumb -->*/}
-                    <nav class="d-flex">
-                        <h6 class="mb-0">
-                            <a href="" class="text-white-50">Home</a>
-                            <span class="text-white-50 mx-2"> - </span>
-                            <a href="" class="text-white-50">Profile</a>
-                            <span class="text-white-50 mx-2"> - </span>
-                            <a href="" class="text-white"><u>Shopping cart</u></a>
-                        </h6>
-                    </nav>
-                    {/*<!-- Breadcrumb -->*/}
+            <div className="bg-primary">
+                <div className="bg-2" style={{ backgroundColor: '#f6831f' }}>
+                    <div className="container py-4">
+                        <nav className="d-flex">
+                            <h6 className="mb-0">
+                                <Link to="/" className="text-white">Trang chủ</Link>
+                                <span className="text-white mx-2">/ </span>
+                                <Link to="/account" className="text-white">Quản lý tài khoản</Link>
+                            </h6>
+                        </nav>
+                    </div>
                 </div>
             </div>
-            <section class="py-5 bg-light">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-3 col-xl-3">
-                            <nav class="nav flex-lg-column w-100 d-flex nav-pills mb-4">
-                                <a class="nav-link my-0 " href="#"><p class="pb-0 mb-0" style={{ width: '100px' }}>Account main</p></a>
-                                <a class="nav-link my-0 bg-light" href="#"><p class="pb-0 mb-0" style={{ width: '100px' }}>New orders</p></a>
-                                <a class="nav-link my-0 bg-light" href="#"><p class="pb-0 mb-0" style={{ width: '100px' }}>Orders history</p></a>
-                                <a class="nav-link my-0 bg-light" href="#"><p class="pb-0 mb-0" style={{ width: '100px' }}>My wishlist</p></a>
-                                <a class="nav-link my-0 bg-light" href="#"><p class="pb-0 mb-0" style={{ width: '100px' }}>Transactions</p></a>
-                                <a class="nav-link my-0 bg-light" href="#"><p class="pb-0 mb-0" style={{ width: '100px' }}>Profile setting</p></a>
-                                <button class="nav-link my-0 bg-light"><p class="pb-0 mb-0" style={{ width: '100px' }} o>Log out</p></button>
+            <section className="py-5 bg-light">
+                <div className="container">
+                    <div className="row">
+                        <div className="col-lg-3 col-xl-3">
+                            <nav className="nav flex-lg-column w-100 d-flex nav-pills mb-4">
+                                <Link className="nav-link my-0 bg-light" to="/profile"><p className="pb-0 mb-0" style={{ width: '130px' }}>Tài khoản</p></Link>
+                                <Link className="nav-link my-0 bg-light" to="/userorder"><p className="pb-0 mb-0" style={{ width: '130px' }}>Đơn hàng</p></Link>
+                                <Link className="nav-link my-0 bg-light" to="/userorderhistory"><p className="pb-0 mb-0" style={{ width: '130px' }}>Lịch sử đơn hàng</p></Link>
+                                <Link className="nav-link my-0 active" to="/wish-list"><p className="pb-0 mb-0" style={{ width: '130px', color: '#f6831f' }}>Sản phẩm yêu thích</p></Link>
+                                <button className="nav-link my-0 bg-light" onClick={handleSubmit}><p className="pb-0 mb-0" style={{ width: '100px' }}>Đăng xuất</p></button>
                             </nav>
                         </div>
 
-                        <main class="col-lg-9 col-xl-9">
-                            <div class="card p-4 mb-0 shadow-0 border">
-                                <div class="content-body">
-                                    <div class="col-lg-12">
-
-                                        <div class="row justify-content-center mb-3">
+                        <main className="col-lg-9 col-xl-9">
+                            <div className="card p-4 mb-0 shadow-0 border">
+                                <div className="content-body">
+                                    <div className="col-lg-12">
+                                        <div className="row justify-content-center mb-3">
                                             {wish_list && wish_list.wish_list_products?.length > 0 ? (
                                                 wish_list.wish_list_products.map((product_in_wish_list) => {
-                                                    allProducts && allProducts.map((product, index2) => {
-                                                        if (product_in_wish_list == product._id) {
-                                                            console.log("de vao", product)
-                                                            return (<ProductListItem product={product} />)
+                                                    return allProducts && allProducts.map((product) => {
+                                                        if (product_in_wish_list === product._id) {
+                                                                return (<ProductListItem product={product} />);
+                                                            
                                                         }
-                                                    })
+                                                    });
                                                 })
-                                            ) : <></>}
-
+                                            ) : (
+                                                <p>Chưa có sản phẩm yêu thích nào.</p>
+                                            )}
                                         </div>
-
-
-
                                         <hr />
-
-                                        {/*<!-- Pagination -->*/}
-                                        <nav aria-label="Page navigation example" class="d-flex justify-content-center mt-3">
-                                            <ul class="pagination">
-                                                <li class="page-item disabled">
-                                                    <a class="page-link" href="#" aria-label="Previous">
+                                        <nav aria-label="Page navigation example" className="d-flex justify-content-center mt-3">
+                                            <ul className="pagination">
+                                                <li className="page-item disabled">
+                                                    <a className="page-link" href="#" aria-label="Previous">
                                                         <span aria-hidden="true">&laquo;</span>
                                                     </a>
                                                 </li>
-                                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">4</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">5</a></li>
-                                                <li class="page-item">
-                                                    <a class="page-link" href="#" aria-label="Next">
+                                                <li className="page-item active"><a className="page-link" href="#">1</a></li>
+                                                <li className="page-item"><a className="page-link" href="#">2</a></li>
+                                                <li className="page-item"><a className="page-link" href="#">3</a></li>
+                                                <li className="page-item"><a className="page-link" href="#">4</a></li>
+                                                <li className="page-item"><a className="page-link" href="#">5</a></li>
+                                                <li className="page-item">
+                                                    <a className="page-link" href="#" aria-label="Next">
                                                         <span aria-hidden="true">&raquo;</span>
                                                     </a>
                                                 </li>
                                             </ul>
                                         </nav>
-                                        {/*<!-- Pagination -->*/}
                                     </div>
-
                                 </div>
                             </div>
                         </main>
                     </div>
-
                 </div>
             </section>
         </>
