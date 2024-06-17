@@ -65,7 +65,7 @@ class UserService {
         }
     }
 
-    async insertAddress({ user_id, phone_number, street, postal_code, city, country }) {
+    async insertAddress({ user_id,user_name, phone_number, street, postal_code, city, country }) {
         const foundUser = await this.repository.findByUserId(user_id)
         if (!foundUser) {
             throw new errorResponse.ForbiddenRequestError("auth err")
@@ -73,6 +73,7 @@ class UserService {
         const createAddress = await AddressService.createAddress(
             {
                 user_id: foundUser._id,
+                user_name:user_name,
                 phone_number: phone_number,
                 street: street,
                 postal_code: postal_code,

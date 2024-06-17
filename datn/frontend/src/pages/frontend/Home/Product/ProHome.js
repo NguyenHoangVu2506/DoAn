@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import NewProduct from './NewProduct';
-import BestProduct from './BestSellerProduct';
+// import BestProduct from './BestSellerProduct';
 
 
 
@@ -10,7 +10,7 @@ export default function ProHome() {
     return (
         <>
         <NewProduct/>
-        <BestProduct/>
+        {/* <BestProduct/> */}
         </>
     );
 }

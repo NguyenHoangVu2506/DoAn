@@ -31,6 +31,7 @@ export const Action = {
   PROFILE: "PROFILE",
   ADD_ADDRESS: "ADD_ADDRESS",
   GET_ADDRESS: "GET_ADDRESS",
+  UPDATE_USER:"UPDATE_USER",
 
   /////product
   ALL_PRODUCTS: "ALL_PRODUCTS",

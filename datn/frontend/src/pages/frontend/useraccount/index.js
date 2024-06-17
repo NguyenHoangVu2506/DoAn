@@ -27,16 +27,27 @@ export default function UserAccount() {
   const navigate = useNavigate();
 
   const [basicModal, setBasicModal] = useState(false);
+  const [scrollableModal, setScrollableModal] = useState(false);
+
   const toggleOpen = () => setBasicModal(!basicModal);
+  const openUser = () => setScrollableModal(!scrollableModal);
+
   const [phone_number, setPhone_number] = useState('');
   const [street, setStreet] = useState('');
   const [country, setCountry] = useState('');
   const [postal_code, setPostal_code] = useState('');
   const [city, setCity] = useState('');
-
   const [list_address, setListAddress] = useState(null)
 
   console.log(list_address)
+
+
+  const [user_name, setUser_name] = useState('');
+  const [user_phone, setUser_phone] = useState('');
+  const [user_sex, setUser_sex] = useState('');
+  const [user_avatar, setUser_avatar] = useState('');
+  const [user_date_of_birth, setUser_date_of_birth] = useState('');
+
 
   const { userInfo } = useSelector((state) => state.userReducer);
 
@@ -46,13 +57,14 @@ export default function UserAccount() {
     }
   }, []);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
     try {
-      await dispatch(onLogout({}))
-      toast.success('logout success')
-      window.location.reload()
+      await dispatch(onLogout())
+      toast.success('Đăng Xuất Thành Công')
+
       navigate('/')
     } catch (error) {
+      alert("sss")
     }
   }
   const handleInsert = async () => {
@@ -73,6 +85,25 @@ export default function UserAccount() {
       console.log(error)
     }
   }
+
+  // const handleUpdateUser = async () => {
+
+  //   try {
+  //     await dispatch(updateU({
+  //       user_id: userInfo._id,
+  //       phone_number: phone_number, street: street, postal_code: postal_code, city: city, country: country
+  //     }))
+  //     setCity('')
+  //     setPhone_number('')
+  //     setPostal_code('')
+  //     setCountry('')
+  //     setStreet('')
+  //     setBasicModal(false)
+  //     window.location.reload()
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // }
 
 
   const getAddress = async () => {
@@ -115,11 +146,11 @@ export default function UserAccount() {
           <div class="row">
             <div class="col-lg-3 col-xl-3">
               <nav class="nav flex-lg-column w-100 d-flex nav-pills mb-4">
-                <a class="nav-link my-0 active" href="#"><p class="pb-0 mb-0" style={{ width: '130px',color:'#f6831f' }}>Tài khoản</p></a>
+                <a class="nav-link my-0 active" href="#"><p class="pb-0 mb-0" style={{ width: '130px', color: '#f6831f' }}>Tài khoản</p></a>
                 <a class="nav-link my-0 bg-light" href="/userorder"><p class="pb-0 mb-0" style={{ width: '130px' }}>Đơn hàng</p></a>
                 <a class="nav-link my-0 bg-light" href="/userorderhistory"><p class="pb-0 mb-0" style={{ width: '130px' }}>Lịch sử đơn hàng</p></a>
-                <Link to="/wish-list"class="nav-link my-0 bg-light" ><p class="pb-0 mb-0" style={{ width: '130px' }}>Sản phẩm yêu thích</p></Link>
-                <button class="nav-link my-0 bg-light"><p class="pb-0 mb-0" style={{ width: '100px' }} onClick={() => handleSubmit()}>Đăng xuất</p></button>
+                <Link to="/wish-list" class="nav-link my-0 bg-light" ><p class="pb-0 mb-0" style={{ width: '130px' }}>Sản phẩm yêu thích</p></Link>
+                <button class="nav-link my-0 bg-light"><p class="pb-0 mb-0" style={{ width: '100px' }} onClick={(e) => handleSubmit(e)}>Đăng xuất</p></button>
               </nav>
               {/* <div class="list-group list-group-light">
                 <a href="#" class="list-group-item list-group-item-action px-3 border-0 active" data-mdb-ripple-init
@@ -137,14 +168,49 @@ export default function UserAccount() {
                 <div class="content-body">
                   <div class="d-flex align-items-center">
                     <div class="me-3">
-                      {/* <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/avatars/avatar.webp" class="rounded-circle" style={{height: '60px', width: '60px'}} /> */}
+                      <img src="https://i.pinimg.com/236x/20/f7/49/20f74927b860bb6ac341f541fac9a866.jpg" class="rounded-circle" style={{ height: '60px', width: '60px' }} />
                     </div>
                     <div class="pt-2">
                       <h6 class="pt-2">{userInfo.user_name}</h6>
                       <p>
                         Email:{userInfo.user_email}, Phone: {userInfo.user_phone}
-                        <a href="#" class="px-2"><i class="fa fa-pen"></i></a>
+                        <a href="#" class="px-2"></a>
                       </p>
+                      <MDBBtn style={{ backgroundColor: '#f6831f', color: 'white' }} onClick={(openUser) => setScrollableModal(!scrollableModal)}><i class="fa fa-pen"></i></MDBBtn>
+
+                      <MDBModal open={scrollableModal} onClose={() => setScrollableModal(false)} tabIndex='-1'>
+                        <MDBModalDialog scrollable>
+                          <MDBModalContent>
+                            <MDBModalHeader>
+                              <MDBModalTitle >Thay Đổi Thông Tin</MDBModalTitle>
+                              <MDBBtn
+                                className='btn-close'
+                                color='none'
+                                onClick={(openUser) => setScrollableModal(false)}
+                              ></MDBBtn>
+                            </MDBModalHeader>
+                            <MDBModalBody >
+                              <MDBInput style={{ backgroundColor: 'white', color: '#f6831f', marginBottom: '20px' }} label="Họ Và Tên" id="typeText" type="text" />
+                              <MDBInput style={{ backgroundColor: 'white', color: '#f6831f', marginBottom: '20px' }} label="Nhập Số Điện Thoại" id="typePhone" type="tel" />
+                              <MDBInput style={{ backgroundColor: 'white', color: '#f6831f', marginBottom: '20px' }} label="Địa Chỉ" id="typeText" type="text" />
+                              <MDBInput style={{ backgroundColor: 'white', color: '#f6831f', marginBottom: '20px' }} label="Đường" id="typeText" type="text" />
+                              <MDBInput style={{ backgroundColor: 'white', color: '#f6831f', marginBottom: '20px' }} label="Thành Phố" id="typeText" type="text" />
+                              <MDBInput style={{ backgroundColor: 'white', color: '#f6831f', marginBottom: '20px' }} label="Tỉnh" id="typeText" type="text" />
+
+
+
+
+                            </MDBModalBody>
+                            <MDBModalFooter>
+                              <MDBBtn color='secondary' onClick={(openUser) => setScrollableModal(!setScrollableModal)}>
+                                Đóng
+                              </MDBBtn>
+                              <MDBBtn style={{ backgroundColor: '#f6831f', color: 'white' }}>Thay Đổi</MDBBtn>
+                            </MDBModalFooter>
+                          </MDBModalContent>
+                        </MDBModalDialog>
+                      </MDBModal>
+
                     </div>
                   </div>
 
@@ -168,12 +234,12 @@ export default function UserAccount() {
 
                   {/* ADD DRESS */}
                   <div href="" class="">
-                    <MDBBtn onClick={toggleOpen}> <i class="me-2 fa fa-plus"></i>Add New Address</MDBBtn>
+                    <MDBBtn onClick={toggleOpen} style={{ backgroundColor: '#f6831f', color: 'white' }}> <i class="me-2 fa fa-plus"></i>Thêm Địa Chỉ</MDBBtn>
                     <MDBModal open={basicModal} onClose={() => setBasicModal(false)} tabIndex='-1'>
                       <MDBModalDialog centered>
                         <MDBModalContent>
                           <MDBModalHeader>
-                            <MDBModalTitle>Modal title</MDBModalTitle>
+                            <MDBModalTitle>Thêm địa chỉ mới</MDBModalTitle>
                             <MDBBtn className='btn-close' color='none' onClick={toggleOpen}></MDBBtn>
                           </MDBModalHeader>
                           <MDBModalBody>
@@ -186,7 +252,7 @@ export default function UserAccount() {
                                   onChange={(e) => setPhone_number(e.target.value)}
                                   id='validationCustom01'
                                   required
-                                  label='Phone Number'
+                                  label='Số Điện Thoại'
                                 />
                               </MDBValidationItem>
 
@@ -197,7 +263,7 @@ export default function UserAccount() {
                                   onChange={(e) => setStreet(e.target.value)}
                                   id='validationCustom02'
                                   required
-                                  label='Street'
+                                  label='Đường'
                                 />
                               </MDBValidationItem>
 
@@ -220,7 +286,7 @@ export default function UserAccount() {
                                   onChange={(e) => setCity(e.target.value)}
                                   id='validationCustom03'
                                   required
-                                  label='City'
+                                  label='Thành Phố'
                                 />
                               </MDBValidationItem>
 
@@ -231,7 +297,7 @@ export default function UserAccount() {
                                   onChange={(e) => setPostal_code(e.target.value)}
                                   id='validationCustom05'
                                   required
-                                  label='postal_code'
+                                  label='Số Nhà'
                                 />
                               </MDBValidationItem>
 
@@ -242,7 +308,7 @@ export default function UserAccount() {
                                   onChange={(e) => setCountry(e.target.value)}
                                   id='validationCustom05'
                                   required
-                                  label='country'
+                                  label='Tỉnh'
                                 />
                               </MDBValidationItem>
 
@@ -260,9 +326,9 @@ export default function UserAccount() {
 
                           <MDBModalFooter>
                             <MDBBtn color='secondary' onClick={toggleOpen}>
-                              Close
+                              Đóng
                             </MDBBtn>
-                            <MDBBtn onClick={handleInsert}>Save changes</MDBBtn>
+                            <MDBBtn onClick={handleInsert}>Thêm</MDBBtn>
                           </MDBModalFooter>
                         </MDBModalContent>
                       </MDBModalDialog>

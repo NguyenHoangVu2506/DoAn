@@ -49,6 +49,8 @@ export default function Wishlist() {
         await dispatch(removeFromWishList({ userId, productId }));
         removeFavoriteFromLocalStorage(productId);
         setfavoriesProduct(getFavoritesFromLocalStorage());
+        window.location.reload()
+
         toast.success("Đã xóa sản phẩm ra khỏi mục yêu thích!");
     };
 

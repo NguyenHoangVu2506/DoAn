@@ -31,7 +31,6 @@ const UserReducer = (state = initialState, action) => {
                 userInfo: action.payload
             }
         case Action.LOGOUT:
-            localStorage.removeItem("userInfo");
             return {
                 ...state,
                 userInfo: null
@@ -44,6 +43,12 @@ const UserReducer = (state = initialState, action) => {
 
         case Action.GET_ADDRESS:
             return state
+
+        case Action.UPDATE_USER:
+            return{
+                ...state,
+                userInfo: action.payload.metaData
+            } 
 
 
 

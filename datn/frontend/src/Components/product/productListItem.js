@@ -28,6 +28,8 @@ export default function ProductListItem({ product }) {
             await dispatch(removeFromWishList({ userId,productId}));
             removeFavoriteFromLocalStorage(productId);
             setFavoritesProducts(getFavoritesFromLocalStorage());
+            window.location.reload()
+
             toast.success("Đã xóa sản phẩm ra khỏi mục yêu thích!");
         } catch (error) {
             console.error("Error removing from wishlist:", error);
@@ -62,7 +64,7 @@ export default function ProductListItem({ product }) {
                                         4.5
                                     </span>
                                 </div>
-                                <span className="text-muted">154 orders</span>
+                                <span className="text-muted">Đã Mua: </span>
                             </div>
 
                             <p className="text mb-4 mb-md-0">
@@ -72,11 +74,11 @@ export default function ProductListItem({ product }) {
                         <div className="col-xl-3 col-md-3 col-sm-5">
                             <div className="d-flex flex-row align-items-center mb-1">
                                 <h4 className="mb-1 me-1">{product.product_price}</h4>
-                                <span className="text-danger"><s>$49.99</s></span>
+                                <span className="text-danger"><s></s></span>
                             </div>
-                            <h6 className="text-success">Free shipping</h6>
+                            <h6 className="text-success">Miễn phí ship</h6>
                             <div className="mt-4">
-                                <button className="btn btn-primary shadow-0" type="button">Add to cart</button>
+                                <button className="btn btn-primary shadow-0" style={{ backgroundColor: '#f6831f', color: 'white' }} type="button">Thêm vào giỏ</button>
                                 {product && userInfo ? (
                                     favoritesProducts.some((p_id) => p_id === product._id) ? (
                                         <button
