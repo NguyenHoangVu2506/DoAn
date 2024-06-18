@@ -84,6 +84,9 @@ export const Action = {
 
   //menu
   GET_ALL_MENU: "GET_ALL_MENU",
+  //discount
+  GET_DISCOUNT: "GET_DISCOUNT",
+  AMOUNT: "AMOUNT",
 
   //contact
   NEW_CONTACT:"NEW_CONTACT"

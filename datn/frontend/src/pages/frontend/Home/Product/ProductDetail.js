@@ -74,6 +74,7 @@ function ProductDetail({ }) {
                             productId: productId,
                             sku_id: sku_id,
                             quantity: quantity,
+                            price:price,
                         },
                     })
                 );
@@ -379,6 +380,7 @@ function ProductDetail({ }) {
                                                     productDetail?.product_detail?._id,
                                                 sku_id: selected_sku?._id,
                                                 quantity: quantity,
+                                                price:price,
                                             })
                                         }> <i className="me-1 fa fa-shopping-basket"></i>  Thêm Vào Giỏ Hàng </button>
                                 ) :

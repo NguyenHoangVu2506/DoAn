@@ -1,0 +1,125 @@
+.coupon-item {
+    margin-bottom: 20px;
+    padding: 0 10px;
+}
+
+.coupon-item__inner {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+
+
+.coupon-item__left {
+    width: 100%;
+}
+
+.cp-img {
+    position: relative;
+    height: 50%;
+    padding-bottom: 50%; /* Maintain aspect ratio (1:1 for square images) */
+}
+
+.boxlazy-img__insert {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    overflow: hidden;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.boxlazy-img__insert img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cp-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    padding: 10px;
+    color: #007bff;
+    transition: color 0.2s;
+}
+
+.cp-icon:hover {
+    color: #0056b3;
+}
+
+.cp-top {
+    padding: 15px;
+    border-bottom: 1px solid #e0e0e0;
+    text-align: center;
+}
+
+.cp-top h3 {
+    font-size: 18px;
+    margin: 0;
+    color: #333;
+    font-weight: 600;
+}
+
+.cp-top p {
+    font-size: 14px;
+    margin: 5px 0 0;
+    color: #777;
+}
+
+.cp-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+}
+
+.cp-bottom-detail {
+    flex: 1;
+}
+
+.cp-bottom-detail p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.cp-bottom-detail strong {
+    color: #000;
+}
+
+.cp-bottom-btn {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+.cp-btn {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    outline: none;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.cp-btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.cp-btn.disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
