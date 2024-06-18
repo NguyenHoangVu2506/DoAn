@@ -22,6 +22,7 @@ import Collections from './pages/frontend/product/Collections';
 import ProductModel from './Components/product/productModel';
 import UserOrder from './pages/frontend/useraccount/userOrder';
 import UserOrderHistory from './pages/frontend/useraccount/userOrderHistory';
+import PageSingle from './pages/frontend/page/PageSingle';
 
 
 function App() {
@@ -36,24 +37,21 @@ function App() {
           <Route path='/signup' element={<Register />} />
           <Route path='/product/:product_slug_id' element={<ProductDetail />} />
           {/* <Route path='/product-list' element={<ProList/>} /> */}
-          <Route path='/collections?/:category0_slug?/:category1_slug?/:category2_slug' element={<Collections/>} />
+          <Route path='/collections?/:category0_slug?/:category1_slug?/:category2_slug' element={<Collections />} />
 
-          <Route path='/gio-hang' element={<Cart/>} />
+          <Route path='/gio-hang' element={<Cart />} />
           <Route path='/template' element={<Template />} />
           <Route path='/forgotpassword' element={<ForgotPassword />} />
           <Route path='/blog' element={<Blog />} />
           <Route path='/lien-he' element={<Contact />} />
-          <Route path='/blog/:slug_id' element={<PostDetailItem/>} />
+          <Route path='/blog/:slug_id' element={<PostDetailItem />} />
           <Route path='/wish-list' element={<Wishlist />} />
-
-          <Route path='/' element={<CheckAuth/>}>
+          <Route path='/' element={<CheckAuth />}>
             <Route path='/checkout' element={<Checkout />} />
             <Route path='/profile' element={<UserAccount />} />
             <Route path='/userorder' element={<UserOrder />} />
             <Route path='/userorderhistory' element={<UserOrderHistory />} />
-
-
-            <Route path='/test' element={<ProductModel />} />
+            <Route path='/page/:slug_id' element={<PageSingle />} />
 
           </Route>
 

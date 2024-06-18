@@ -1,5 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getCart, productById } from "../../../store/actions";
+
 function Checkout() {
+
+  const dispatch = useDispatch();
   const inputStyle = {
     border: '1px solid #ced4da',
     borderRadius: '0.25rem',
@@ -13,34 +18,85 @@ function Checkout() {
     ...inputStyle,
     height: '100px'
   };
+
+  const [shippingMethod, setShippingMethod] = useState('normal');
+  const [shippingFee, setShippingFee] = useState(30000);
+  const [product_item, setProductItem] = useState(null);
+  const { cart } = useSelector((state) => state.cartReducer);
+  const { userInfo } = useSelector((state) => state.userReducer);
+  const [_quantity, setQuantity] = useState(null);
+  const [productItems, setProductItems] = useState([]);
+
+  useEffect(() => {
+    if (userInfo) {
+      dispatch(getCart({ userId: userInfo._id }));
+    }
+  }, [userInfo, dispatch]);
+
+  useEffect(() => {
+    if (cart && cart.cart_products && cart.cart_products.length > 0) {
+      fetchProductDetails();
+    }
+  }, [cart]);
+console.log(cart)
+  const fetchProductDetails = async () => {
+    try {
+      const productsWithDetails = await Promise.all(
+        cart.cart_products.map(async (product) => {
+          const response = await dispatch(productById({ spu_id: product.productId }));
+          if (response && response.payload.metaData) {
+            return response.payload.metaData;
+          }
+          return null;
+        })
+      );
+
+      setProductItems(productsWithDetails.filter(product => product !== null));
+    } catch (error) {
+      console.error('Lỗi khi lấy thông tin sản phẩm:', error);
+    }
+  };
+
+  const handleShippingChange = (event) => {
+    const selectedShippingMethod = event.target.value;
+    setShippingMethod(selectedShippingMethod);
+
+    if (selectedShippingMethod === 'normal') {
+      setShippingFee(30000);
+    } else if (selectedShippingMethod === 'express') {
+      setShippingFee(50000);
+    }
+  };
   return (
     <>
-      <div class="bg-primary">
-        <div class="container py-4">
-          {/*<!-- Breadcrumb -->*/}
-          <nav class="d-flex">
-            <h6 class="mb-0">
-              <a href="" class="text-white-50">Home</a>
-              <span class="text-white-50 mx-2"> - </span>
-              <a href="" class="text-white-50">2. Shopping cart</a>
-              <span class="text-white-50 mx-2"> - </span>
-              <a href="" class="text-white"><u>3. Order info</u></a>
-              <span class="text-white-50 mx-2"> - </span>
-              <a href="" class="text-white-50">4. Payment</a>
-            </h6>
-          </nav>
-          {/*<!-- Breadcrumb -->*/}
+      <div className="bg-primary">
+        <div className="bg-2" style={{ backgroundColor: '#f6831f' }}>
+          <div className="container py-4">
+            {/* Breadcrumb */}
+            <nav className="d-flex">
+              <h6 className="mb-0">
+                <a href="" className="text-white-50">Home</a>
+                <span className="text-white-50 mx-2"> - </span>
+                <a href="" className="text-white-50">2. Giỏ hàng</a>
+                <span className="text-white-50 mx-2"> - </span>
+                <a href="" className="text-white"><u>3. Thông tin đơn hàng</u></a>
+                <span className="text-white-50 mx-2"> - </span>
+                <a href="" className="text-white-50">4. Thanh toán</a>
+              </h6>
+            </nav>
+            {/* Breadcrumb */}
+          </div>
         </div>
       </div>
-      <section class="bg-light py-5">
-        <div class="container">
-          <div class="row">
-            <div class="col-xl-8 col-lg-8 mb-4">
 
-              {/*<!-- Checkout -->*/}
-              <div class="card shadow-0 border">
-                <div class="p-4">
-                  <h5 class="card-title mb-3">Thông tin khách hàng</h5>
+      <section className="bg-light py-5">
+        <div className="container">
+          <div className="row">
+            <div className="col-xl-8 col-lg-8 mb-2">
+              {/* Checkout */}
+              <div className="card shadow-0 border">
+                <div className="p-4">
+                  <h5 className="card-title mb-3">Thông tin khách hàng</h5>
                   <div className="row">
                     <div className="col-6 mb-3">
                       <p className="mb-0">Họ và tên</p>
@@ -81,134 +137,103 @@ function Checkout() {
                         <input
                           type="text"
                           className="form-control"
-                          placeholder="Nhập địa chỉ"
+                          placeholder="Nhập ghi chú"
                           style={addressInputStyle}
                         />
                       </div>
                     </div>
                   </div>
-                  <hr class="my-4" />
-
-                  <h5 class="card-title mb-3">Mã giảm giá</h5>
-
-                  <div class="row mb-3">
-                    <div class="col-lg-4 mb-3">
-                      {/*<!-- Default checked radio -->*/}
-                      <div class="form-check h-100 border rounded-3">
-                        <div class="p-3">
-                          <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked />
-                          <label class="form-check-label" for="flexRadioDefault1">
-                            Express delivery 
-                            <br />
-                            <small class="text-muted">3-4 days via Fedex </small>
+                  <hr className="my-4" />
+                  <h5 className="card-title mb-3">Phương thức vận chuyển</h5>
+                  <div className="row mb-3">
+                    <div className="col-lg-4 mb-3">
+                      <div className="form-check h-100 border rounded-3">
+                        <div className="p-3">
+                          <input
+                            className="form-check-input"
+                            type="radio"
+                            name="shippingMethod"
+                            id="flexRadioDefault2"
+                            value="normal"
+                            checked={shippingMethod === 'normal'}
+                            onChange={handleShippingChange}
+                          />
+                          <label className="form-check-label" htmlFor="flexRadioDefault2">
+                            Vận chuyển nhanh <br />
+                            <small className="text-muted">Thời gian từ 4-5 ngày</small>
                           </label>
                         </div>
                       </div>
                     </div>
-                    <div class="col-lg-4 mb-3">
-                      {/*<!-- Default radio -->*/}
-                      <div class="form-check h-100 border rounded-3">
-                        <div class="p-3">
-                          <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" />
-                          <label class="form-check-label" for="flexRadioDefault2">
-                            Post office <br />
-                            <small class="text-muted">20-30 days via post </small>
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-lg-4 mb-3">
-                      {/*<!-- Default radio -->*/}
-                      <div class="form-check h-100 border rounded-3">
-                        <div class="p-3">
-                          <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3" />
-                          <label class="form-check-label" for="flexRadioDefault3">
-                            Self pick-up <br />
-                            <small class="text-muted">Come to our shop </small>
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
 
-                  <hr class="my-4" />
-
-                  <h5 class="card-title mb-3">Phương thức vận chuyển</h5>
-
-                  <div class="row mb-3">
-                    <div class="col-lg-4 mb-3">
-                      {/*<!-- Default checked radio -->*/}
-                      <div class="form-check h-100 border rounded-3">
-                        <div class="p-3">
-                          <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked />
-                          <label class="form-check-label" for="flexRadioDefault1">
-                            Express delivery <br />
-                            <small class="text-muted">3-4 days via Fedex </small>
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-lg-4 mb-3">
-                      {/*<!-- Default radio -->*/}
-                      <div class="form-check h-100 border rounded-3">
-                        <div class="p-3">
-                          <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" />
-                          <label class="form-check-label" for="flexRadioDefault2">
-                            Post office <br />
-                            <small class="text-muted">20-30 days via post </small>
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-lg-4 mb-3">
-                      {/*<!-- Default radio -->*/}
-                      <div class="form-check h-100 border rounded-3">
-                        <div class="p-3">
-                          <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3" />
-                          <label class="form-check-label" for="flexRadioDefault3">
-                            Self pick-up <br />
-                            <small class="text-muted">Come to our shop </small>
+                    <div className="col-lg-4 mb-3">
+                      <div className="form-check h-100 border rounded-3">
+                        <div className="p-3">
+                          <input
+                            className="form-check-input"
+                            type="radio"
+                            name="shippingMethod"
+                            id="flexRadioDefault1"
+                            value="express"
+                            checked={shippingMethod === 'express'}
+                            onChange={handleShippingChange}
+                          />
+                          <label className="form-check-label" htmlFor="flexRadioDefault1">
+                            Vận chuyển hỏa tốc <br />
+                            <small className="text-muted">Thời gian từ 1-2 ngày</small>
                           </label>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <hr class="my-4" />
-                  <h5 class="card-title mb-3">Hình thức thanh toán</h5>
-
-                  <div class="row mb-3">
-                    <div class="col-lg-4 mb-3">
-                      {/*<!-- Default checked radio -->*/}
-                      <div class="form-check h-100 border rounded-3">
-                        <div class="p-3">
-                          <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked />
-                          <label class="form-check-label" for="flexRadioDefault1">
+                  <hr className="my-4" />
+                  <h5 className="card-title mb-3">Hình thức thanh toán</h5>
+                  <div className="row mb-3">
+                    <div className="col-lg-4 mb-3">
+                      <div className="form-check h-100 border rounded-3">
+                        <div className="p-3">
+                          <input
+                            className="form-check-input"
+                            type="radio"
+                            name="paymentMethod"
+                            id="flexRadioDefault3"
+                            checked
+                          />
+                          <label className="form-check-label" htmlFor="flexRadioDefault3">
                             Thanh toán khi nhận hàng <br />
-                            <small class="text-muted">3-4 days via Fedex </small>
+                            <small className="text-muted">3-4 days via Fedex </small>
                           </label>
                         </div>
                       </div>
                     </div>
-                    <div class="col-lg-4 mb-3">
-                      {/*<!-- Default radio -->*/}
-                      <div class="form-check h-100 border rounded-3">
-                        <div class="p-3">
-                          <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" />
-                          <label class="form-check-label" for="flexRadioDefault2">
+                    <div className="col-lg-4 mb-3">
+                      <div className="form-check h-100 border rounded-3">
+                        <div className="p-3">
+                          <input
+                            className="form-check-input"
+                            type="radio"
+                            name="paymentMethod"
+                            id="flexRadioDefault4"
+                          />
+                          <label className="form-check-label" htmlFor="flexRadioDefault4">
                             Thanh toán bằng momo <br />
-                            <small class="text-muted">20-30 days via post </small>
+                            <small className="text-muted">20-30 days via post </small>
                           </label>
                         </div>
                       </div>
                     </div>
-                    <div class="col-lg-4 mb-3">
-                      {/*<!-- Default radio -->*/}
-                      <div class="form-check h-100 border rounded-3">
-                        <div class="p-3">
-                          <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3" />
-                          <label class="form-check-label" for="flexRadioDefault3">
+                    <div className="col-lg-4 mb-3">
+                      <div className="form-check h-100 border rounded-3">
+                        <div className="p-3">
+                          <input
+                            className="form-check-input"
+                            type="radio"
+                            name="paymentMethod"
+                            id="flexRadioDefault5"
+                          />
+                          <label className="form-check-label" htmlFor="flexRadioDefault5">
                             Thanh toán bằng Zalopay <br />
-                            <small class="text-muted">Come to our shop </small>
+                            <small className="text-muted">Come to our shop </small>
                           </label>
                         </div>
                       </div>
@@ -220,88 +245,54 @@ function Checkout() {
                   </div>
                 </div>
               </div>
-              {/*<!-- Checkout -->*/}
+              {/* Checkout */}
             </div>
-            <div class="col-xl-4 col-lg-4 d-flex justify-content-center justify-content-lg-end">
-              <div class="ms-lg-4 mt-4 mt-lg-0" style={{ maxWidth: '320px' }}>
-                <h6 class="mb-3">Summary</h6>
-                <div class="d-flex justify-content-between">
-                  <p class="mb-2">Total price:</p>
-                  <p class="mb-2">$195.90</p>
+            <div className="col-xl-4 col-lg-4 d-flex justify-content-center justify-content-lg-end">
+              <div className="ms-lg-4 mt-4 mt-lg-0" style={{ maxWidth: '320px' }}>
+                <h6 className="mb-3">Summary</h6>
+                <div className="d-flex justify-content-between">
+                  <p className="mb-2">Tổng tiền:</p>
+                  <p className="mb-2">195.90</p>
                 </div>
-                <div class="d-flex justify-content-between">
-                  <p class="mb-2">Discount:</p>
-                  <p class="mb-2 text-danger">- $60.00</p>
+                <div className="d-flex justify-content-between">
+                  <p className="mb-2">Giảm giá:</p>
+                  <p className="mb-2 text-danger">- 60.00</p>
                 </div>
-                <div class="d-flex justify-content-between">
-                  <p class="mb-2">Shipping cost:</p>
-                  <p class="mb-2">+ $14.00</p>
+                <div className="d-flex justify-content-between">
+                  <p className="mb-2">Phí vận chuyển:</p>
+                  <p className="mb-2">{shippingFee === 0 ? 'Miễn phí' : `${shippingFee}`}</p>
                 </div>
                 <hr />
-                <div class="d-flex justify-content-between">
-                  <p class="mb-2">Total price:</p>
-                  <p class="mb-2 fw-bold">$149.90</p>
+                <div className="d-flex justify-content-between">
+                  <p className="mb-2">Tổng tiền:</p>
+                  <p className="mb-2 fw-bold">149.90</p>
                 </div>
-
-                <div class="input-group mt-3 mb-4">
-                  <input type="text" class="form-control border" name="" placeholder="Promo code" />
-                  <button class="btn btn-light text-primary border">Apply</button>
-                </div>
-
                 <hr />
-                <h6 class="text-dark my-4">Items in cart</h6>
+                <h6 className="text-dark my-4">Sản phẩm trong giỏ hàng</h6>
+                {productItems.map((product, index) => (
+                  <div className="d-flex align-items-center mb-4" key={index}>
+                    <div className="me-3 position-relative">
+                      <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-secondary">
+                        1
+                      </span>
+                      <img src={product.spu_info.product_thumb[0]} style={{ height: '96px', width: '96px' }} className="img-sm rounded border" alt="item" />
+                    </div>
+                    <div className="">
+                      <a href="#" className="nav-link">
+                      {product.spu_info.product_name}
+                      </a>
+                      <div className="price text-muted">Giá:  {product.spu_info.product_price}</div>
+                    </div>
+                  </div>
 
-                <div class="d-flex align-items-center mb-4">
-                  <div class="me-3 position-relative">
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-secondary">
-                      1
-                    </span>
-                    <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/7.webp" style={{ height: '96px', width: '96px' }} class="img-sm rounded border" />
-                  </div>
-                  <div class="">
-                    <a href="#" class="nav-link">
-                      Gaming Headset with Mic <br />
-                      Darkblue color
-                    </a>
-                    <div class="price text-muted">Total: $295.99</div>
-                  </div>
-                </div>
-
-                <div class="d-flex align-items-center mb-4">
-                  <div class="me-3 position-relative">
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-secondary">
-                      1
-                    </span>
-                    <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/5.webp" style={{ height: '96px', width: '96px' }} class="img-sm rounded border" />
-                  </div>
-                  <div class="">
-                    <a href="#" class="nav-link">
-                      Apple Watch Series 4 Space <br />
-                      Large size
-                    </a>
-                    <div class="price text-muted">Total: $217.99</div>
-                  </div>
-                </div>
-
-                <div class="d-flex align-items-center mb-4">
-                  <div class="me-3 position-relative">
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-secondary">
-                      3
-                    </span>
-                    <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/1.webp" style={{ height: '96px', width: '96px' }} class="img-sm rounded border" />
-                  </div>
-                  <div class="">
-                    <a href="#" class="nav-link">GoPro HERO6 4K Action Camera - Black</a>
-                    <div class="price text-muted">Total: $910.00</div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
       </section>
-
     </>
   );
 }
+
 export default Checkout;

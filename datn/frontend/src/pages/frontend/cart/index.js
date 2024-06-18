@@ -4,43 +4,42 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteCartItem, getCart, updateQuantityCart, updateSkuCart, updateSkuFromCartV2 } from "../../../store/actions";
 import CartItem from "../../../Components/cartItem";
 import { specialOfferToday } from "../../../store/actions/special_offer-actions";
-import CouponItem from "./discount";
-import { Amount } from "../../../store/actions/discount-actions";
+import { Amount, getAllDiscount } from "../../../store/actions/discount-actions";
+import accounting from "accounting";
+import { Tooltip, initMDB } from "mdb-ui-kit";
 
+initMDB({ Tooltip });
 export default function Cart() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { amount } = useSelector((state) => state.discountReducer)
-    const { userInfo } = useSelector((state) => state.userReducer)
-    const { special_offer } = useSelector((state) => state.specialOfferReducer)
-    const { cart } = useSelector((state) => state.cartReducer)
-    const [price_total, setprice_total] = useState(0)
-    const [special_offer_today, setSpecial_offer_today] = useState(null)
-    const [discountCode, setDiscountCode] = useState('');
-    const [productcart, setProductCart] = useState([]);
+    const { userInfo } = useSelector((state) => state.userReducer);
+    const { special_offer } = useSelector((state) => state.specialOfferReducer);
+    const { cart } = useSelector((state) => state.cartReducer);
+    const { all_discount } = useSelector((state) => state.discountReducer);
+    const [price_total, setPriceTotal] = useState(0);
+    const [price_total_discount, setPriceTotalDiscount] = useState(0);
+    const [special_offer_today, setSpecialOfferToday] = useState(null);
+    const [discountCodeInput, setDiscountCodeInput] = useState('');
+    const [price_discount_amount, setPriceDiscountAmount] = useState(0);
+    const [appliedDiscountCode, setAppliedDiscountCode] = useState(null); // State lưu mã giảm giá đã áp dụng
 
     useEffect(() => {
         if (userInfo) {
-            dispatch(getCart({ userId: userInfo._id }))
+            dispatch(getCart({ userId: userInfo._id }));
             dispatch(specialOfferToday());
         }
-    }, [userInfo, dispatch])
-
+    }, [userInfo, dispatch]);
+    console.log(cart)
     useEffect(() => {
-        if (discountCode && userInfo && cart?.cart_products) {
-            const productcart = cart.cart_products.map(product => ({
-                id: product.productId,
-                quantity: product.quantity,
-                price: price_total
-            }));
-            setProductCart(productcart);
-            dispatch(Amount({ codeId: discountCode, userId: userInfo._id, products: productcart }));
+        if (!all_discount) {
+            dispatch(getAllDiscount({ sort: 'ctime' }));
         }
-    }, [discountCode, userInfo, cart?.cart_products, dispatch]);
-
+    }, [all_discount, dispatch]);
 
     useEffect(() => {
-        special_offer && setSpecial_offer_today(special_offer)
+        if (special_offer) {
+            setSpecialOfferToday(special_offer);
+        }
     }, [special_offer]);
 
     useEffect(() => {
@@ -49,15 +48,14 @@ export default function Cart() {
                 const itemTotal = currentValue.price * currentValue.quantity;
                 return accumulator + itemTotal;
             }, 0);
-            setprice_total(total);
+            setPriceTotal(total);
+            setPriceTotalDiscount(total); // Khởi tạo giá sau giảm giá bằng tổng giá ban đầu
         }
     }, [cart]);
-    console.log(cart)
 
     const handleApplyDiscount = () => {
-        // Trigger useEffect to apply discount
-        setDiscountCode(discountCode);
-    }
+        onSelectedDiscount(discountCodeInput);
+    };
 
     const updateItemFromCart = async (type, data) => {
         if (type === 'deleteItem') {
@@ -94,75 +92,124 @@ export default function Cart() {
         return dispatch(getCart({ userId: userInfo._id }));
     };
 
+    const onSelectedDiscount = async (discount_code) => {
+        if (discount_code) {
+            const productcart = cart.cart_products.map(product => ({
+                id: product.productId,
+                quantity: product.quantity,
+                price: product.price
+            }));
+            const applyDiscount = await dispatch(Amount({
+                userId: userInfo._id,
+                codeId: discount_code,
+                products: productcart
+            }));
+            if (applyDiscount?.payload.status === (200 || 201)) {
+                const { totalCheckout, discount } = applyDiscount.payload.metaData;
+                setPriceTotalDiscount(totalCheckout);
+                setPriceDiscountAmount(discount);
+                setAppliedDiscountCode(discount_code); // Lưu mã giảm giá đã áp dụng
+            }
+        } else {
+            setPriceTotalDiscount(price_total);
+            setPriceDiscountAmount(0);
+            setAppliedDiscountCode(null); // Bỏ lưu mã giảm giá đã áp dụng khi không có mã nào được chọn
+        }
+    };
+
     return (
         <>
             {/* <!-- giỏ hàng + tóm tắt --> */}
-            <section class="bg-light my-5">
-                <div class="container">
-                    <div class="row">
+            <section className="bg-light my-5">
+                <div className="container">
+                    <div className="row">
                         {/* <!-- giỏ hàng --> */}
-                        <div class="col-lg-9">
-                            <div class="card border shadow-0">
-                                <div class="m-4">
-                                    <h4 class="card-title mb-4">Giỏ hàng của bạn</h4>
+                        <div className="col-lg-9">
+                            <div className="card border shadow-0">
+                                <div className="m-4">
+                                    <h4 className="card-title mb-4">Giỏ hàng của bạn</h4>
                                     {cart?.cart_products?.length > 0 && cart.cart_products.map((product, index) => {
                                         return <CartItem product={product} special_offer_today={special_offer_today}
-                                            update={updateItemFromCart} key={index} />
+                                            update={updateItemFromCart} key={index} />;
                                     })}
                                 </div>
-                                <div class="border-top pt-4 mx-4 mb-4">
-                                    <CouponItem />
+                                <div className="border-top pt-4 mx-4 mb-4">
+                                    <div className="row">
+                                        <h5>Khuyến mãi dành cho bạn</h5>
+                                        {Array.isArray(all_discount) && all_discount.map((item, index) => (
+                                            <div className="col-lg-3" key={index}>
+                                                <div className="card shadow-0 border">
+                                                    <div className="card-body">
+                                                        <div className="d-flex justify-content-between">
+                                                            <p className="mb-0 fw-bold">{item.discount_name}</p>
+                                                        </div>
+                                                        <hr />
+                                                        <div className="d-flex justify-content-between">
+                                                            <p className="mb-2">Mã: {item.discount_code}</p>
+                                                        </div>
+                                                        <div className="d-flex justify-content-between">
+                                                            <p className="mb-2">HSD: {item.discount_end_date ? new Date(item.discount_end_date).toLocaleDateString() : ''}</p>
+                                                            <a href="#" data-mdb-tooltip-init title={`Giảm tối đa ${(item.discount_max_value)}đ cho đơn hàng từ  ${(item.discount_min_order_value)}đ`}
+                                                            >!</a>
+                                                        </div>
+                                                        <div className="d-flex justify-content-between">
+                                                            <button
+                                                                className="btn btn-light border"
+                                                                style={{ backgroundColor: '#f6831f', color: 'white' }}
+                                                                onClick={() => onSelectedDiscount(item.discount_code)}
+                                                                disabled={appliedDiscountCode === item.discount_code}
+                                                            >
+                                                                Áp dụng
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                        <div className="col-lg-9"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         {/* <!-- giỏ hàng --> */}
                         {/* <!-- tóm tắt --> */}
-                        <div class="col-lg-3">
-                            <div class="card mb-3 border shadow-0">
-                                <div class="card-body">
-                                    <form onSubmit={(e) => { e.preventDefault(); handleApplyDiscount(); }}>
-                                        <div class="form-group">
-                                            {/* <label class="form-label">Có mã giảm giá?</label> */}
-                                            <div class="input-group">
-                                                <input 
-                                                    type="text" 
-                                                    class="form-control border" 
-                                                    name="discountCode" 
-                                                    placeholder="Mã giảm giá" 
-                                                    value={discountCode}
-                                                    onChange={(e) => setDiscountCode(e.target.value)}
-                                                />
-                                                <button class="btn btn-light border" type="submit">Áp dụng</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                            <div class="card shadow-0 border">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between">
-                                        <p class="mb-2">Tổng giá:</p>
-                                        <p class="mb-2">{price_total}</p>
+                        <div className="col-lg-3">
+                            <div className="card shadow-0 border">
+                                <div className="card-body">
+                                    <div className="d-flex justify-content-between">
+                                        <p className="mb-2">Tổng giá:</p>
+                                        <p className="mb-2">{accounting.formatNumber(price_total, 0, ".", ",")} <span className="text-muted">đ</span></p>
                                     </div>
-                                    <div class="d-flex justify-content-between">
-                                        <p class="mb-2">Giảm giá:</p>
-                                        <p class="mb-2 text-success">-60.000đ</p>
-                                    </div>
-                                    <div class="d-flex justify-content-between">
-                                        <p class="mb-2">Thuế:</p>
-                                        <p class="mb-2">14.000đ</p>
+                                    <div className="d-flex justify-content-between">
+                                        <p className="mb-2">Giảm giá:</p>
+                                        <p className="mb-2 text-success">{accounting.formatNumber(price_discount_amount, 0, ".", ",")} <span className="text-muted">đ</span></p>
                                     </div>
                                     <hr />
-                                    <div class="d-flex justify-content-between">
-                                        <p class="mb-2">Tổng giá:</p>
-                                        <p class="mb-2 fw-bold">283.000đ</p>
+                                    <div className="d-flex justify-content-between">
+                                        <p className="mb-2">Tổng giá:</p>
+                                        <p className="mb-2 fw-bold">{accounting.formatNumber(price_total_discount, 0, ".", ",")} <span className="text-muted">đ</span></p>
                                     </div>
-                                    <div class="mt-3">
-                                        {price_total > 0
-                                            ? <button onClick={() => { navigate('/checkout'); }} disabled={false} class="btn btn-success w-100 shadow-0 mb-2">Thanh toán</button>
-                                            : <button disabled={true} class="btn btn-success w-100 shadow-0 mb-2">Thanh toán</button>
-                                        }
-                                        <Link to={"/"} class="btn btn-light w-100 border mt-2">Quay lại mua sắm</Link>
+                                    <div className="mt-3">
+                                        {price_total > 0 ? (
+                                            <button
+                                                onClick={() => navigate('/checkout')}
+                                                disabled={false}
+                                                className="btn btn-success w-100 shadow-0 mb-2"
+                                                style={{ backgroundColor: '#f6831f ' }}
+                                            >
+                                                Thanh toán
+                                            </button>
+                                        ) : (
+                                            <button
+                                                disabled={true}
+                                                className="btn btn-success w-100 shadow-0 mb-2"
+                                            >
+                                                Thanh toán
+                                            </button>
+                                        )}
+                                        <Link to="/" className="btn btn-light w-100 border mt-2">
+                                            Quay lại mua sắm
+                                        </Link>
                                     </div>
                                 </div>
                             </div>
@@ -173,13 +220,11 @@ export default function Cart() {
             </section>
             {/* <!-- giỏ hàng + tóm tắt --> */}
             <section>
-                <div class="container my-5">
-                    <header class="mb-4">
+                <div className="container my-5">
+                    <header className="mb-4">
                         <h3>Sản phẩm đề xuất</h3>
                     </header>
-                    <div class="row">
-                        {/* Hiển thị các sản phẩm đề xuất ở đây */}
-                    </div>
+                    <div className="row">{/* Hiển thị các sản phẩm đề xuất ở đây */}</div>
                 </div>
             </section>
             {/* <!-- Sản phẩm đề xuất --> */}

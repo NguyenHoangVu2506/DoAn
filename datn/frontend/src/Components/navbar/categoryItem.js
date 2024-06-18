@@ -17,7 +17,7 @@ export default function CategoryItem({ catParentNull, all_category }) {
             {categoryItem && categoryItem.map((category, index) => {
                 return (
                     
-                    <div className="col-md">
+                    <div className="col-md" key={index}>
                         <div className="d-flex flex-column align-items-start" key={index}>
                             <div className="category-name fw-bold" style={{ textTransform: "uppercase" }}>{category.category_name}</div>
                             <CategoryChildItem catParentNull={catParentNull} child_category={category} all_category={all_category} />
