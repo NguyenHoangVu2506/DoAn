@@ -105,7 +105,7 @@ export default function Contact() {
 
 
                         <MDBTextArea id="textAreaExample" rows="{4}"
-                            label='Nhập nội dung' name="content"
+                            label='Nhập nội dung' name="content" wrapperClass='mb-4'
                             value={contact_user_detail}
                             onChange={(e) => setContactDetail(e.target.value)}
                             required
@@ -113,7 +113,7 @@ export default function Contact() {
 
 
 
-                        <MDBBtn className='mb-4 btn mr-2 left' type='submit' onClick={() => handleInsert()} style={{ backgroundColor: '#f6831f', color: 'white', textAlign: 'right' }} >
+                        <MDBBtn className='mt-4 mb-4 btn mr-2 left' type='submit' onClick={() => handleInsert()} style={{ backgroundColor: '#f6831f', color: 'white', textAlign: 'right' }} >
                             Gửi
                         </MDBBtn>
 

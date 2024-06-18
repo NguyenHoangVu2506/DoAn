@@ -12,18 +12,19 @@ export default function ProductItem({ product }) {
     const dispatch = useDispatch();
     const { userInfo } = useSelector((state) => state.userReducer);
 
-    const { spuInfo } = useSelector((state) => state.productReducer);
-    const { productDetail } = useSelector((state) => state.productReducer);
+    // const { spuInfo } = useSelector((state) => state.productReducer);
+    // const { productDetail } = useSelector((state) => state.productReducer);
 
+    const [productItem, setProductItem] = useState(null)
+    const [sku_list, setSku_list] = useState([])
+    const [promotion, setPromotion] = useState(null)
+    const [brand, setBrand] = useState(null)
 
     const [favories_products, setfavoriesProduct] = useState(getFavoritesFromLocalStorage());
     const [price_default, setprice_default] = useState(0);
     const [price, setPrice] = useState(0);
-
     const [showModal, setShowModal] = useState(false);
     const [largeImageSrc, setLargeImageSrc] = useState(product.product_thumb[0]);
-    const [spu_id, setSpus_id] = useState(product._id);
-    const [selectedProductId, setSelectedProductId] = useState(null);
     const [quantity, setQuantity] = useState(1);
     const [stock, setStock] = useState(null);
     const [selected_sku, set_selected_sku] = useState(null);
@@ -37,11 +38,12 @@ export default function ProductItem({ product }) {
     const increaseQuantity = () => {
         setQuantity(quantity + 1);
     };
+
     const handleAddToCart = async (userId, { productId, sku_id = null, quantity }) => {
         console.log("productId, sku_id, quantity", productId, sku_id, quantity, userId)
         if (userId) {
             if (quantity <= stock) {
-                // console.log('selected_sku', sku_id + productId + sku_id)
+                console.log('selected_sku', sku_id + productId + sku_id)
                 await dispatch(
                     addCart({
                         userId: userId._id,
@@ -52,6 +54,7 @@ export default function ProductItem({ product }) {
                         },
                     })
                 );
+                //
                 toast.success('Đã thêm sản phẩm vào giỏ hàng!');
                 // addCartItemToLocalStorage({
                 //     productId: productId,
@@ -60,6 +63,7 @@ export default function ProductItem({ product }) {
                 // })
             }
         } else {
+
             toast.error('Vui lòng đăng nhập để tiếp tục');
             navigate('/login');
         }
@@ -97,12 +101,15 @@ export default function ProductItem({ product }) {
     }
 
     useEffect(() => {
+        setPromotion(product?.special_offer)
+        setSku_list(product.sku_list)
+        setBrand(product.product_brand)
         setprice_default(product.product_price);
     }, [product.product_price]);
 
     useEffect(() => {
-        if (product.special_offer && product.special_offer.special_offer_spu_list.length > 0) {
-            product.special_offer.special_offer_spu_list.forEach((spu) => {
+        if (promotion && promotion?.special_offer_spu_list?.length > 0) {
+            promotion.special_offer_spu_list.forEach((spu) => {
                 if (spu.product_id.toString() === product._id.toString() && spu.sku_list?.length > 0) {
                     const min_price = spu.sku_list.flatMap((item) => item.price_sale);
                     setPrice(Math.min(...min_price));
@@ -114,17 +121,18 @@ export default function ProductItem({ product }) {
     }, [product]);
 
     useEffect(() => {
-        productDetail && (
-            !selected_sku && set_selected_sku(productDetail.sku_list.find((sku) => sku.sku_tier_idx.toString() === sku_tier_idx.toString()))
+        //
+        sku_list && (
+            !selected_sku && set_selected_sku(sku_list.find((sku) => sku.sku_tier_idx.toString() === sku_tier_idx.toString()))
         )
-        productDetail && setLargeImageSrc(productDetail.product_detail.product_thumb[0])
-        productDetail && setStock(productDetail.product_detail.product_quantity)
+        product && setLargeImageSrc(product.product_thumb[0])
+        product && setStock(product.product_quantity)
 
-    }, [productDetail, sku_tier_idx])
+    }, [sku_tier_idx])
 
-    useEffect(() => {
-        dispatch(onProductDetail({ spu_id: spu_id }));
-    }, []);
+    // useEffect(() => {
+    //     dispatch(onProductDetail({ spu_id: spu_id }));
+    // }, []);
 
     const handleSizeChange = (thumb) => {
         setLargeImageSrc(thumb);
@@ -137,21 +145,34 @@ export default function ProductItem({ product }) {
     const closeModal = () => {
         setShowModal(false);
     };
-    const addToCart = (productId) => {
-        setSelectedProductId(productId);
-        openModal();
-    };
-    useEffect(() => {
-        // Sửa đổi ở đây: Thêm selectedProdu+ctId vào dependency của useEffect
-        if (selectedProductId && !spuInfo) {
-            dispatch(productById({ spu_id: selectedProductId }));
+    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", product)
+
+    const addToCart = () => {
+        //
+     if(userInfo){
+        if (product?.product_variations?.length > 0) {
+            openModal();
+        } else {
+            handleAddToCart(userInfo._id, { productId: product.productId , sku_id: null, quantity: quantity })
+
         }
-    }, [selectedProductId]);
+     }else{
+        toast.info('Vui lòng đăng nhập để tiếp tục');
+            navigate('/login');
+     }
+        // setSelectedProductId(productId);
+    };
+    // useEffect(() => {
+    //     // Sửa đổi ở đây: Thêm selectedProdu+ctId vào dependency của useEffect
+    //     if (selectedProductId && !spuInfo) {
+    //         dispatch(productById({ spu_id: selectedProductId }));
+    //     }
+    // }, [selectedProductId]);
     return (
         <>
             <div className="col-lg-3 col-md-6 col-sm-6 d-flex" key={product._id}>
                 <div className="card bg-image hover-zoom ripple rounded ripple-surface w-100 my-2 shadow-2-strong">
-                    <Link to={`/product/${product.product_slug}-${product._id}`}><img src={product.product_thumb[0]} className="card-img-top" alt="product" /></Link>
+                    <Link to={`/product/${product.product_slug}-${product._id}`}><img src={largeImageSrc} className="card-img-top" alt="product" /></Link>
                     <div className="card-body d-flex flex-column">
                         <div className="d-flex flex-row">
                             <h5 className="mb-1 me-1">{price === 0 ? price_default : price}</h5>
@@ -162,13 +183,12 @@ export default function ProductItem({ product }) {
 
                             <button className="btn btn-primary shadow-0 px-2 py-2"
                                 style={{ backgroundColor: '#f6831f', color: 'white' }}
-                                // onClick={openModal} 
-                                onClick={() => addToCart(product._id)}
+                                onClick={() => addToCart()}
                             >Thêm vào giỏ</button>
 
-
-                            {productDetail && productDetail.product_detail.product_variations.length > 0 ? (
-                                showModal && (
+                            { product.product_variations && product.product_variations ? (
+                                showModal &&
+                                (
                                     <div className="modal fade show" style={{ display: "block" }} tabIndex="-1" role="dialog">
                                         <div className="modal-dialog modal-lg" role="document">
                                             <div className="modal-content">
@@ -201,10 +221,10 @@ export default function ProductItem({ product }) {
                                                                         <div className="d-flex flex-row my-3">
                                                                             <div className="text-warning mb-1 me-2" style={{ cursor: 'pointer', color: '#f6831f ' }}>
                                                                                 <i className="fa fa-star" style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
-                                                                                <i className="fa fa-star"style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
-                                                                                <i className="fa fa-star"style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
-                                                                                <i className="fa fa-star"style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
-                                                                                <i className="fas fa-star-half-alt"style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
+                                                                                <i className="fa fa-star" style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
+                                                                                <i className="fa fa-star" style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
+                                                                                <i className="fa fa-star" style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
+                                                                                <i className="fas fa-star-half-alt" style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
                                                                                 <span className="ms-1" style={{ cursor: 'pointer', color: '#f6831f ' }}>
                                                                                     4.5
                                                                                 </span>
@@ -223,7 +243,7 @@ export default function ProductItem({ product }) {
                                                                                 )}
                                                                             </>
                                                                         </div>
-                                                                        <p>{product.product_description}</p>
+                                                                        <p>{product.product_short_description}</p>
                                                                         <div className="row">
                                                                             {/* <div className="col-12 mb-3">
                                                                                 <label className="mb-2">Dung Tích:</label>
@@ -237,7 +257,7 @@ export default function ProductItem({ product }) {
                                                                                     ))}
                                                                                 </div>
                                                                             </div> */}
-                                                                            {productDetail && productDetail.product_detail.product_variations.map((variation, indexVariation) => {
+                                                                            {product && product.product_variations.map((variation, indexVariation) => {
                                                                                 return (
                                                                                     <div className="col-12 mb-3">
                                                                                         <div key={indexVariation}>
@@ -248,7 +268,7 @@ export default function ProductItem({ product }) {
                                                                                                     <div key={indexOption} >
                                                                                                         <input type="radio" class="btn btn-check" name="options" id={option} autocomplete="off"
                                                                                                             value={indexOption} onClick={() => onChangeVariation(indexOption, indexVariation)} />
-                                                                                                        <label class="btn mx-1 my-1"  for={option} data-mdb-ripple-init>{option}</label>
+                                                                                                        <label class="btn mx-1 my-1" for={option} data-mdb-ripple-init>{option}</label>
                                                                                                     </div>
                                                                                                 )
                                                                                             })}
@@ -283,13 +303,13 @@ export default function ProductItem({ product }) {
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        {productDetail &&
+                                                                        {product &&
                                                                             <button className="btn btn-primary shadow-0 mt-1 px-2 py-2"
                                                                                 style={{ backgroundColor: '#f6831f', color: 'white' }}
                                                                                 onClick={() =>
                                                                                     handleAddToCart(userInfo, {
                                                                                         productId:
-                                                                                            productDetail?.product_detail?._id,
+                                                                                            product._id,
                                                                                         sku_id: selected_sku?._id,
                                                                                         quantity: quantity,
                                                                                     })
@@ -306,17 +326,17 @@ export default function ProductItem({ product }) {
                                         </div>
                                     </div>
                                 )
-                            ) : (
-                                <></>
-                            )}
-                            {product &&
+                            ) : (<> </>)}
+
+
+                            {productItem &&
                                 (userInfo ?
                                     (
-                                        favories_products.some((p_id) => p_id === product._id) === true
+                                        favories_products.some((p_id) => p_id === productItem._id) === true
                                             ?
-                                            <button className="btn btn-light border icon-hover  px-2 py-2" onClick={() => HandleRemoveFromWishList({ userId: userInfo._id, productId: product._id })}><i className="fas fa-heart fa-lg text-danger px-1"></i></button>
+                                            <button className="btn btn-light border icon-hover  px-2 py-2" onClick={() => HandleRemoveFromWishList({ userId: userInfo._id, productId: productItem._id })}><i className="fas fa-heart fa-lg text-danger px-1"></i></button>
                                             :
-                                            <button className="btn btn-light border icon-hover  px-2 py-2" onClick={() => HandleAddToWishList({ userId: userInfo._id, productId: product._id })}><i className="fas fa-heart fa-lg text-secondary px-1"></i></button>
+                                            <button className="btn btn-light border icon-hover  px-2 py-2" onClick={() => HandleAddToWishList({ userId: userInfo._id, productId: productItem._id })}><i className="fas fa-heart fa-lg text-secondary px-1"></i></button>
                                     ) : (
                                         <button className="btn btn-light border icon-hover  px-2 py-2"><i className="fas fa-heart fa-lg text-secondary px-1"></i></button>
                                     ))}

@@ -8,7 +8,7 @@ const spu_repo = require('../models/repositories/spu.repo')
 const { Types } = require('mongoose')
 const { getBrandById } = require('./BrandService')
 const { findSpecialOfferBySpuId } = require('./SpecialOfferService')
-const { findCategoryByIdList } = require('./CategoryService')
+const { findCategoryByIdList, getCategoryById } = require('./CategoryService')
 const { findAttributesByProductAttributes } = require('./AttributeService')
 const SpuModel = require('../models/SpuModel')
 
@@ -141,9 +141,14 @@ const isfindAllProducts = async ({ limit = 50, sort = 'ctime', page = 1, filter 
     let brand_list = []
     let special_offer = []
     let sku_list = []
+    //
+    let category_list=[]
+    //
     for (let index = 0; index < product_list.length; index++) {
         const brand = await getBrandById({ brand_id: product_list[index].product_brand })
         brand_list.push(brand)
+        const category = await getCategoryById({category_id: product_list[index].product_category})
+        category_list.push(category)
         const skulist = await allSkuBySpuId({ product_id: product_list[index]._id })
         sku_list.push(skulist)
         console.log("id", product_list[index]._id)
@@ -151,7 +156,7 @@ const isfindAllProducts = async ({ limit = 50, sort = 'ctime', page = 1, filter 
         special_offer.push(specialoffer)
     }
     const allproduct = await product_list.map((product, index) => {
-        return { ...product, brand: brand_list[index], special_offer: special_offer[index], sku_list: sku_list[index] }
+        return { ...product, brand: brand_list[index],category:category_list[index], special_offer: special_offer[index], sku_list: sku_list[index] }
     })
 
     return allproduct

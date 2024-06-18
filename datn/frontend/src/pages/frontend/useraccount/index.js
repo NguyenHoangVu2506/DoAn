@@ -174,20 +174,19 @@ export default function UserAccount() {
               <div class="card p-4 mb-0 shadow-0 border">
                 <div class="content-body">
                   <div class="d-flex align-items-center">
-                    <div class="me-3">
-                      <img src="https://i.pinimg.com/236x/20/f7/49/20f74927b860bb6ac341f541fac9a866.jpg" class="rounded-circle" style={{ height: '60px', width: '60px' }} />
+                    <div class="me-5 ml-5">
+                      <img src="https://i.pinimg.com/236x/20/f7/49/20f74927b860bb6ac341f541fac9a866.jpg" class="rounded-circle" style={{ height: '200px', width: '200px' }} />
                     </div>
-                    <div class="pt-2">
+                    <div class="ms-5 pt-2">
                       <h6 class="pt-2">{userInfo.user_name}</h6>
                       <p>
-                        Email:{userInfo.user_email},
-                        {/* <a href="#" class="px-2"></a> */}
+                        Email: {userInfo.user_email}
                       </p>
                       <p>Phone: {userInfo.user_phone}</p>
                       <p>Giới Tính: {userInfo.user_sex}</p>
-                      <p>Ngày Sinh: {userInfo.user_age}</p>
+                      <p>Tuổi: {userInfo.user_age}</p>
 
-                      <MDBBtn style={{ backgroundColor: '#f6831f', color: 'white' }} onClick={openUser}><i class="fa fa-pen"></i></MDBBtn>
+                      <MDBBtn style={{ backgroundColor: '#f6831f', color: 'white', boxShadow:'6px' }} onClick={openUser}><i class="fa fa-pen"></i></MDBBtn>
                       <MDBModal open={scrollableModal} onClose={() => setScrollableModal(false)} tabIndex='-1'>
                         <MDBModalDialog scrollable>
                           <MDBModalContent>
@@ -229,7 +228,7 @@ export default function UserAccount() {
 
                             </MDBModalBody>
                             <MDBModalFooter>
-                              <MDBBtn color='secondary' onClick={(openUser) => setScrollableModal(!setScrollableModal)}>
+                              <MDBBtn color='danger' onClick={(openUser) => setScrollableModal(!setScrollableModal)}>
                                 Đóng
                               </MDBBtn>
                               <MDBBtn style={{ backgroundColor: '#f6831f', color: 'white' }} onClick={handleUpdate}>Thay Đổi</MDBBtn>
@@ -352,10 +351,10 @@ export default function UserAccount() {
                           </MDBModalBody>
 
                           <MDBModalFooter>
-                            <MDBBtn color='secondary' onClick={toggleOpen}>
+                            <MDBBtn color='danger' onClick={toggleOpen}>
                               Đóng
                             </MDBBtn>
-                            <MDBBtn onClick={handleInsert}>Thêm</MDBBtn>
+                            <MDBBtn style={{ backgroundColor: '#f6831f', color: 'white' }} onClick={handleInsert}>Thêm</MDBBtn>
                           </MDBModalFooter>
                         </MDBModalContent>
                       </MDBModalDialog>

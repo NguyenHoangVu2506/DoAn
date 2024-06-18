@@ -112,6 +112,7 @@ function ProductModel() {
             <button type="button" className="btn btn-primary" onClick={openModal}>
                 Open Modal
             </button>
+            
             {showModal && (
                 <div className="modal fade show" style={{ display: "block" }} tabIndex="-1" role="dialog">
                     <div className="modal-dialog modal-lg" role="document">

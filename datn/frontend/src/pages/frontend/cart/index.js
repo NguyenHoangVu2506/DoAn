@@ -149,7 +149,7 @@ export default function Cart() {
                                                         </div>
                                                         <div className="d-flex justify-content-between">
                                                             <p className="mb-2">HSD: {item.discount_end_date ? new Date(item.discount_end_date).toLocaleDateString() : ''}</p>
-                                                            <a href="#" data-mdb-tooltip-init title={`Giảm tối đa ${(item.discount_max_value)}đ cho đơn hàng từ  ${(item.discount_min_order_value)}đ`}
+                                                            <a href="" data-mdb-tooltip-init title={`Giảm tối đa ${(item.discount_max_value)}đ cho đơn hàng từ  ${(item.discount_min_order_value)}đ`}
                                                             >!</a>
                                                         </div>
                                                         <div className="d-flex justify-content-between">

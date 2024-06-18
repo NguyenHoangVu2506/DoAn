@@ -22,12 +22,8 @@ import Collections from './pages/frontend/product/Collections';
 import ProductModel from './Components/product/productModel';
 import UserOrder from './pages/frontend/useraccount/userOrder';
 import UserOrderHistory from './pages/frontend/useraccount/userOrderHistory';
-<<<<<<< HEAD
 import Brand from './pages/frontend/brand/Brand';
-=======
 import PageSingle from './pages/frontend/page/PageSingle';
->>>>>>> f298dfba56d4679aa3c2baea13ad8ccbd0194b91
-
 
 function App() {
   return (

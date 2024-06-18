@@ -123,7 +123,7 @@ export default function CartItem({ product, special_offer_today, update }) {
     };
     const updateCart = async (type, data) => {
         const { productId, quantity, old_quantity, sku_id = null, sku_id_old } = data;
-        console.log( productId, quantity, old_quantity, sku_id, sku_id_old,"ssssssssssssssssssssssss")
+        // console.log( productId, quantity, old_quantity, sku_id, sku_id_old,"ssssssssssssssssssssssss")
         if (type == 'deleteItem') {
             await update('deleteItem', {
                 productId: productId,

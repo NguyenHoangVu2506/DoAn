@@ -52,7 +52,7 @@ function Login() {
     try {
         // const res = await dispatch(onLoginWithFacebook())
         window.open(`http://localhost:3001/api/auth/facebook`, '_self') 
-        toast.success("Đăng nhập bằng facebook thành công")
+        // toast.success("Đăng nhập bằng facebook thành công")
     } catch (err) {
         toast.error(err?.data?.message || err);
     }
@@ -60,7 +60,7 @@ function Login() {
 const LoginWithGoogle = async () => {
     try {
         window.open(`http://localhost:3001/api/auth/google`, '_self')
-        toast.success("Đăng nhập bằng google thành công")
+        // toast.success("Đăng nhập bằng google thành công")
     } catch (err) {
         toast.error(err?.data?.message || err);
     }
@@ -90,7 +90,7 @@ const LoginWithGoogle = async () => {
 
     try {
       await dispatch(onLogin({ user_email: email, user_password: password }))
-      toast.success('hi')
+      toast.success('Đăng Nhập Thành Công')
     } catch (error) {
       console.log(error)
     }
@@ -148,12 +148,12 @@ const LoginWithGoogle = async () => {
 
               <MDBBtn className="mb-2 w-100" size="lg" style={{ backgroundColor: '#dd4b39' }} onClick={() => LoginWithGoogle()}>
                 <MDBIcon fab icon="google" className="mx-2" />
-                Sign Up With Google
+               Đăng Nhập Bằng Google
               </MDBBtn>
 
               <MDBBtn className="mb-4w-100" size="lg" style={{ backgroundColor: '#3b5998' }}onClick={() => LoginWithFacabook()}>
                 <MDBIcon fab icon="facebook-f" className="mx-2" />
-                Sign Up With FaceBook
+               Đăng Nhập Bằng FaceBook
               </MDBBtn>
             </MDBCardBody>
           </MDBCard>
