@@ -42,7 +42,7 @@ const Categories = () => {
 
 
     return (
-            <nav class="navbar navbar-expand-lg navbar-light bg-white ">
+            <nav class="navbar navbar-expand-lg navbar-light " style={{backgroundColor:'#fef1e6'}}>
                 <div class="container justify-content-center justify-content-md-between">
                     <button className="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarLeftAlignExample"
                         aria-controls="navbarLeftAlignExample" aria-expanded="false" aria-label="Toggle navigation" onClick={() => {
@@ -56,7 +56,7 @@ const Categories = () => {
                                 onMouseEnter={handleDropdownMouseEnter}
                                 onMouseLeave={handleDropdownMouseLeave}
                             >
-                                <button type="button" class="btn btn-light category-name fw-bold me-5 " style={{ cursor: 'pointer', color: '#f6831f', marginRight: '3px' }} >
+                                <button type="button" class="btn btn-light category-name fw-bold me-5 " style={{ cursor: 'pointer', color: '#f6831f', marginRight: '3px',backgroundColor:'#fef1e6' }} >
                                     <i class="fas fa-bars" style={{ cursor: 'pointer', color: '#f6831f', marginRight: '3px' }}></i>
                                     DANH MỤC
                                 </button>

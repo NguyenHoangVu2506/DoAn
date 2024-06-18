@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { onProductDetail, productById } from "../store/actions";
 import { useEffect, useState } from "react";
+import accounting from "accounting";
 
 export default function CartItem({ product, special_offer_today, update }) {
 
@@ -9,21 +10,15 @@ export default function CartItem({ product, special_offer_today, update }) {
     const [selected, setSelected] = useState(null);
     const [selected_sku, setSelected_sku] = useState(null);
     const [_quantity, setQuantity] = useState(null);
-    // sale
     const [sku_sale, setSku_sale] = useState(null);
-
     const [price, setPrice] = useState(0);
 
-    // console log cũ
-    console.log("product", product)
     const [selected_sku_old, setSelected_sku_old] = useState(null);
     const [selected_old, setSelected_old] = useState(null);
-
     const productItemApi = async () => {
         const respon = await dispatch(
             productById({ spu_id: product.productId })
         );
-        console.log('respon', respon);
         if (respon) {
             setProductItem(respon.payload.metaData);
             setSelected_old(respon.payload.metaData?.sku_list?.length > 0 ? (respon.payload.metaData?.sku_list.find(
@@ -33,14 +28,13 @@ export default function CartItem({ product, special_offer_today, update }) {
                 (item) => item._id?.toString() === product.sku_id?.toString()
             )?.sku_tier_idx) : null);
         }
-    };
 
+    };
     useEffect(() => {
         productItemApi();
         setQuantity(product.quantity);
     }, [update]);
-    console.log(_quantity)
-console.log(special_offer_today)
+
     useEffect(() => {
         special_offer_today &&
             special_offer_today?.special_offer_spu_list.length > 0 && special_offer_today?.special_offer_spu_list.filter((spu) => {
@@ -63,7 +57,6 @@ console.log(special_offer_today)
                 }
             });
     }, [selected_sku, special_offer_today]);
-    console.log(sku_sale)
     useEffect(() => {
         special_offer_today &&
             special_offer_today?.special_offer_spu_list.filter((spu) => {
@@ -89,7 +82,7 @@ console.log(special_offer_today)
         product_item &&
             selected &&
             setSelected_sku(
-                product_item.sku_list.find(
+                product_item?.sku_list?.find(
                     (item) =>
                         item.sku_tier_idx.toString() === selected.toString()
                 )
@@ -130,20 +123,22 @@ console.log(special_offer_today)
     };
     const updateCart = async (type, data) => {
         const { productId, quantity, old_quantity, sku_id = null, sku_id_old } = data;
-        if (type === 'deleteItem') {
+        console.log( productId, quantity, old_quantity, sku_id, sku_id_old,"ssssssssssssssssssssssss")
+        if (type == 'deleteItem') {
             await update('deleteItem', {
                 productId: productId,
                 sku_id: sku_id
             })
         }
-        if (type === 'updateItemSku') {
+        if (type == 'updateItemSku') {
             await update('updateItemSku', {
                 productId: productId,
+
                 sku_id: sku_id,
                 sku_id_old: sku_id_old
             })
         }
-        if (type === 'updateItemSkuV2') {
+        if (type == 'updateItemSkuV2') {
             await update('updateItemSkuV2', {
                 productId: productId,
                 quantity: quantity,
@@ -151,7 +146,7 @@ console.log(special_offer_today)
                 sku_id_old: sku_id_old
             })
         }
-        if (type === 'updateItemQuantity') {
+        if (type == 'updateItemQuantity') {
             if (quantity === 0) {
                 await update('deleteItem', {
                     productId: productId,
@@ -168,13 +163,6 @@ console.log(special_offer_today)
             }
         }
     };
-
-    console.log('Selected', selected);
-    console.log('Selected_old', selected_old);
-    console.log('Selected_sku', selected_sku);
-    console.log('Selected_sku_old', selected_sku_old);
-    console.log('price', price);
-
     return (
         <>
             {product_item && (
@@ -184,17 +172,18 @@ console.log(special_offer_today)
                             <div class="d-flex">
                                 <img src={product_item.spu_info.product_thumb[0]} class="border rounded me-3" style={{ width: '96px', height: '96px' }} />
                                 <div class="">
-                                    <text class="h6 text-muted text-nowrap"> {price}/ {product_item.spu_info.product_unit} </text>
+                                    <text class="h6 text-muted text-nowrap"> 
+                                    {accounting.formatNumber(product.price, 0, ".", ",")} <span className="text-muted">đ</span>/ {product_item.spu_info.product_unit} </text>
                                     <p className="text">{product_item.spu_info.product_name}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-2 col-sm-6 col-6 d-flex flex-row flex-lg-column flex-xl-row text-nowrap">
+                    <div class="col-lg-3 col-sm-6 col-6 d-flex flex-row flex-lg-column flex-xl-row text-nowrap">
                         <div className="col-md-4 col-6 mb-3">
                             <label className="mb-2 d-block">Số lượng</label>
                             <div className="input-group mb-3" style={{ width: '170px' }}>
-                                <button className="btn btn-white border border-secondary px-3" type="button" onClick={() => updateCart("updateItemQuantity", { productId: product.productId, quantity: _quantity - 1, old_quantity: _quantity, sku_id: selected_sku?.sku_id })}>
+                                <button className="btn btn-white border border-secondary px-3" type="button" onClick={() => updateCart("updateItemQuantity", { productId: product.productId, quantity: _quantity - 1, old_quantity: _quantity, sku_id: selected_sku?._id })}>
                                     <i className="fas fa-minus"></i>
                                 </button>
                                 <input
@@ -205,17 +194,22 @@ console.log(special_offer_today)
                                     aria-describedby="button-addon1"
                                     readOnly
                                 />
-                                <button className="btn btn-white border border-secondary px-3" type="button" onClick={() => updateCart("updateItemQuantity", { productId: product.productId, quantity: _quantity + 1, old_quantity: _quantity, sku_id: selected_sku?.sku_id })}>
+                                <button className="btn btn-white border border-secondary px-3" type="button" onClick={() => updateCart("updateItemQuantity", { productId: product.productId, quantity: _quantity + 1, old_quantity: _quantity, sku_id: selected_sku?._id })}>
                                     <i className="fas fa-plus"></i>
                                 </button>
                             </div>
                         </div>
+
                     </div>
 
-                    <div class="col-lg col-sm-6 d-flex justify-content-sm-center justify-content-md-start justify-content-lg-center justify-content-xl-end mb-2">
-                        <div className="float-md-end">
-                            <button class="btn btn-light border icon-hover-primary"><i class="fas fa-heart fa-lg text-secondary"></i></button>
-                            <button onClick={() => updateCart('deleteItem', { productId: product.productId, sku_id: selected_sku?.sku_id })} class="btn btn-light border text-danger icon-hover-danger">Xóa</button>
+                    <div class="col-lg-3 d-flex justify-content-md-center mb-2">
+                        <div className="col-md-4 col-12 mb-1">
+                            <br />
+                            <div className="input-group mb-1" style={{ width: '100px' }}>
+                                <button class="btn btn-light border icon-hover-primary"><i class="fas fa-heart fa-lg text-secondary"></i></button>
+                                <button onClick={() => updateCart('deleteItem', { productId: product.productId, sku_id: selected_sku?._id })} class="btn btn-light border text-danger icon-hover-danger">Xóa</button>
+
+                            </div>
                         </div>
                     </div>
                 </div>

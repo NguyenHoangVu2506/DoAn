@@ -22,7 +22,7 @@ export default function CategoryChildItem({ catParentNull, child_category, all_c
             {childrent_category && childrent_category.map((category, index) => {
                 return (
                     <>
-                        <Link to ={`/collections/${catParentNull.category_slug}/${child_category.category_slug}/${category.category_slug}`}className="d-flex flex-column text-dark " style={{color:"dark", hover:"white"}}>
+                        <Link to ={`/collections/${catParentNull.category_slug}/${child_category.category_slug}/${category.category_slug}`}className="d-flex flex-column text-dark " style={{color:"dark", hover:"white"}} key={index}>
                             <p> {category.category_name}</p>
                         </Link>
                     </>

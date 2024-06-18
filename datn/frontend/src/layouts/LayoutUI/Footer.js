@@ -3,6 +3,7 @@ import { MDBFooter, MDBContainer, MDBRow, MDBCol, MDBIcon } from 'mdb-react-ui-k
 import { useDispatch, useSelector } from 'react-redux';
 import { getInfo } from '../../store/actions';
 import { Link } from 'react-router-dom';
+import { getListPage } from '../../store/actions/page-actions';
 
 export default function Footer({ }) {
   const dispatch = useDispatch();
@@ -12,7 +13,12 @@ export default function Footer({ }) {
       dispatch(getInfo({ isPublished: true }))
     }
   }, [info])
-  console.log(info)
+  const { allPage } = useSelector((state) => state.pageReducer);
+  useEffect(() => {
+    if (!allPage) {
+      dispatch(getListPage({ sort: 'ctime' }));
+    }
+  }, [dispatch, allPage]);
   const logoStyle = {
     height: '50%',
     width: '50%',
@@ -38,7 +44,7 @@ export default function Footer({ }) {
                 </h6>
 
                 <p>
-                 
+
                 </p>
               </MDBCol>
 
@@ -67,13 +73,15 @@ export default function Footer({ }) {
               </MDBCol> */}
 
               <MDBCol md="3" lg="2" xl="2" className='mx-auto mb-4'>
-                <h6 className='text-uppercase fw-bold mb-4'>Chính Sách Và Dịch Vụ</h6>
-                <p>
-                  <a href='#!' className='text-reset'>
-                    Chính Sách Khuyến Mãi
-                  </a>
-                </p>
-                <p>
+                <h6 className='text-uppercase fw-bold mb-4'>Chính Sách</h6>
+                {allPage && allPage.map((item, index) => (
+                  <p key={index}>
+                    <Link to={`/page/${item.page_slug}-${item._id}`} className='text-reset'>
+                      {item.page_name}
+                    </Link>
+                  </p>
+                ))}
+                {/* <p>
                   <a href='#!' className='text-reset'>
                   Chính Sách Đổi Trả
                   </a>
@@ -87,7 +95,7 @@ export default function Footer({ }) {
                   <a href='#!' className='text-reset'>
                     Trợ Giúp
                   </a>
-                </p>
+                </p> */}
               </MDBCol>
 
               <MDBCol md="4" lg="3" xl="3" className='mx-auto mb-md-0 mb-4'>

@@ -14,6 +14,7 @@ import SpecialOfferReducer from './special_offer-reducer';
 import MenuReducer from './menu-reducer';
 import ContactReducer from './contact-reducer';
 import DiscountReducer from './discount-reducer';
+import PageReducer from './page-reducer';
 
 const reducers = combineReducers({
     userReducer: UserReducer,
@@ -30,6 +31,7 @@ const reducers = combineReducers({
     specialOfferReducer: SpecialOfferReducer,
     menuReducer: MenuReducer,
     contactReducer: ContactReducer,
-    discountReducer:DiscountReducer
+    discountReducer:DiscountReducer,
+    pageReducer:PageReducer,
 })
 export default reducers

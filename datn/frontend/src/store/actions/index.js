@@ -91,7 +91,9 @@ export const Action = {
   AMOUNT: "AMOUNT",
 
   //contact
-  NEW_CONTACT:"NEW_CONTACT"
-
+  NEW_CONTACT:"NEW_CONTACT",
+////////////
+  GET_PAGE: "GET_PAGE",
+  GET_PAGE_BY_ID: "GET_PAGE_BY_ID",
 
 };
