@@ -23,5 +23,6 @@ router.post('/unpublish/:id', asyncHandler(spuController.unPublishProduct))
 // router.get('/drafts/all', spuController.getAllDrafts)
 // router.get('/published/all', spuController.getAllPublish)
 router.post('/findProductsByCategory', asyncHandler(spuController.findProductsByCategory))
+router.post('/findProductsByBrand', asyncHandler(spuController.findProductsByBrand))
 router.post('/productbyfilter', asyncHandler(spuController.findProductsByFilter))
 module.exports = router

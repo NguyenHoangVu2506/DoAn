@@ -6,7 +6,7 @@ api.defaults.baseURL = "http://localhost:3001/api";
 const setHeader = async () => {
   const tokens = JSON.parse(localStorage.getItem("tokens"))
   const CLIENT_ID = JSON.parse(localStorage.getItem("userInfo"))
-  if (tokens & CLIENT_ID) {
+  if (tokens && CLIENT_ID) {
     api.defaults.headers.common['authorization'] = `${tokens.accessToken}`
     api.defaults.headers.common['x-client-id'] = `${CLIENT_ID._id}`
   }

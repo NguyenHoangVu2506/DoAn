@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-export default function PostItem({blog}) {
+export default function PostItem({ blog }) {
     return (
         <>
             <div class="col-md-6">
@@ -11,8 +11,11 @@ export default function PostItem({blog}) {
                             <a class="text-dark" href="#">{blog.blog_title}</a>
                         </h5>
                     </div>
-                    <img class="card-img-right flex-auto d-none d-md-block" style={{width:"50%",height:"90%"}} src={blog.blog_image} alt="Card image cap" />
-                
+                    <Link to={`/blog/${blog.blog_slug}-${blog._id}`} class="img-fluid">
+                        <img class="rounded w-100" src={blog.blog_image} style={{ objectFit: 'cover', height: "160" }} />
+                    </Link>
+                    {/* <img class="card-img-right flex-auto d-none d-md-block" style={{ width: "50%", height: "90%" }} src={blog.blog_image} alt="Card image cap" /> */}
+
                 </div>
             </div>
 

@@ -3,12 +3,11 @@ import { Action } from '../actions'
 
 
 export const SetAuthToken = async (tokens) => {
- if(tokens){
-  localStorage.setItem("tokens", JSON.stringify(tokens))
- }else{
-  localStorage.clear();
-
- }
+  if (tokens) {
+    localStorage.setItem("tokens", JSON.stringify(tokens))
+  } else {
+    localStorage.clear();
+  }
 
 }
 
@@ -104,7 +103,7 @@ export const onLogout = () => async (dispatch) => {
 
   try {
     const response = await PostData('/user/logout');
-    await SetAuthToken(null)
+    SetAuthToken(null)
     return dispatch({ type: Action.LOGOUT, payload: response.data });
   } catch (err) {
     console.log(err)
@@ -144,10 +143,11 @@ export const updateUser = (data) => async (dispatch) => {
 
   try {
     const response = await PostData('/user/updateUser', data);
+    console.log("response",response)
     return dispatch({ type: Action.UPDATE_USER, payload: response.data });
+ 
   } catch (err) {
     console.log(err)
-    return err.response.data
 
   }
 

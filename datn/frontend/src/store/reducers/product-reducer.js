@@ -4,6 +4,8 @@ const initialState = {
     allProducts: null,
     productDetail: null,
     productByCategory: [],
+    productByBrand: [],
+
     spuInfo:null
 
 
@@ -29,6 +31,11 @@ const ProductReducer = (state = initialState, action) => {
                 ...state,
                 productByCategory: action?.payload?.metaData
             }
+        case Action.GET_PRODUCT_BY_BRAND_ID:
+                return {
+                    ...state,
+                    productByBrand: action?.payload?.metaData
+                }
 
         case Action.GET_SPU_INFO:
             return {

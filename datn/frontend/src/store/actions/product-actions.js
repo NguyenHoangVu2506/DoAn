@@ -36,6 +36,16 @@ export const getProductByCatId = (data) => async (dispatch) => {
     return err.response.data
   }
 };
+export const getProductByBrandId = (data) => async (dispatch) => {
+  try {
+    const response = await PostData('/spu/findProductsByBrand',data);
+    console.log('response:', response)
+    return dispatch({ type: Action.GET_PRODUCT_BY_BRAND_ID, payload: response.data });
+  } catch (err) {
+    console.log(err)
+    return err.response.data
+  }
+};
 
 export const productById = (data) => async (dispatch) => {
   try {

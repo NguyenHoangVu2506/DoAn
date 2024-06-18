@@ -22,6 +22,7 @@ import Collections from './pages/frontend/product/Collections';
 import ProductModel from './Components/product/productModel';
 import UserOrder from './pages/frontend/useraccount/userOrder';
 import UserOrderHistory from './pages/frontend/useraccount/userOrderHistory';
+import Brand from './pages/frontend/brand/Brand';
 
 
 function App() {
@@ -42,6 +43,8 @@ function App() {
           <Route path='/template' element={<Template />} />
           <Route path='/forgotpassword' element={<ForgotPassword />} />
           <Route path='/blog' element={<Blog />} />
+          <Route path='/thuong-hieu' element={<Brand />} />
+
           <Route path='/lien-he' element={<Contact />} />
           <Route path='/blog/:slug_id' element={<PostDetailItem/>} />
           <Route path='/wish-list' element={<Wishlist />} />

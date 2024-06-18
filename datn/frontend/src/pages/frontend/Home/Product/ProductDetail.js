@@ -32,9 +32,9 @@ function ProductDetail({ }) {
     const [product_images, setProductImages] = useState(null);
     const [selected_sku, set_selected_sku] = useState(null);
     const [selectedProductId, setSelectedProductId] = useState(null);
-    const [sale, setSale] = useState(null);
+    const [sale, setSale] = useState(0);
 
-    const [special_offer, setSpecial_offer] = useState(null);
+    // const [special_offer, setSpecial_offer] = useState(null);
     const [quantity, setQuantity] = useState(1);
 
     const decreaseQuantity = () => {
@@ -74,7 +74,7 @@ function ProductDetail({ }) {
                             productId: productId,
                             sku_id: sku_id,
                             quantity: quantity,
-                            price:price,
+                            price: price,
                         },
                     })
                 );
@@ -124,15 +124,34 @@ function ProductDetail({ }) {
     console.log(sku_tier_idx)
 
 
+    // useEffect(() => {
+    //     if (productDetail?.special_offer && productDetail.special_offer?.special_offer_spu_list.length > 0) {
+    //         productDetail.special_offer.special_offer_spu_list.forEach((spu) => {
+    //             if (spu.product_id.toString() === productDetail.product_detail._id.toString() && spu.sku_list?.length > 0) {
+    //                 const min_price = spu.sku_list.flatMap((item) => item.price_sale);
+    //                 setPrice(Math.min(...min_price));
+    //                 setSale(spu)
+    //                 //
+
+    //             } else if (spu.product_id.toString() === productDetail.product_detail._id.toString()) {
+    //                 setPrice(spu.price_sale);
+    //                 setSale(spu)
+    //             }
+    //         });
+    //     }
+    // }, [productDetail]);
+
     useEffect(() => {
         if (productDetail?.special_offer && productDetail.special_offer?.special_offer_spu_list.length > 0) {
             productDetail.special_offer.special_offer_spu_list.forEach((spu) => {
                 if (spu.product_id.toString() === productDetail.product_detail._id.toString() && spu.sku_list?.length > 0) {
                     const min_price = spu.sku_list.flatMap((item) => item.price_sale);
-                    setPrice(Math.min(...min_price));
+                    setPrice(spu.sku_list.price_sale);
                     setSale(spu)
-                } else if (spu.product_id.toString() === productDetail._id.toString()) {
-                    setPrice(spu.price_sale);
+                    //
+
+                } else if (spu.sku_list.sku_id.toString() === productDetail.sku_list._id.toString()) {
+                    setPrice(spu.sku_list.price_sale);
                     setSale(spu)
                 }
             });
@@ -172,8 +191,6 @@ function ProductDetail({ }) {
             }
 
         }
-
-
     }, [productDetail, sku_tier_idx])
     useEffect(() => {
         if (sku_tier_idx) {
@@ -197,7 +214,6 @@ function ProductDetail({ }) {
     }, [product_slug_id]);
     console.log("productDetail", productDetail, selected_sku);
     console.log("pro", selected_sku);
-
     return (
         <>
             <div className="bg-" style={{ backgroundColor: '#f6831f' }} >
@@ -280,20 +296,23 @@ function ProductDetail({ }) {
                                         {price > 0 ? (
                                             <NumericFormat value={price} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
                                         ) : (<NumericFormat value={price_default} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />)}
-                                        {sale &&
-                                            sale?.sku_id === selected_sku?._id && (
-                                                <span className="rounded-full bg-red-100 px-5 py-2 text-xs font-medium  text-red-800 dark:bg-red-900 dark:text-red-300">
-                                                    Giảm đến{sale.percentage}%
-                                                </span> 
-                                            )}
+
+
                                     </span>
-
-
                                     <span className="text-muted">/{productDetail && productDetail.product_detail.product_unit}</span>
                                 </div>
+                                <span>
+                                    Giảm đến 
+                                    {sale   &&
+                                               sale?.sku_id === selected_sku?._id && (
+                                            <span className="rounded-full bg-red-100 px-5 py-2 text-xs font-medium  text-red-800 dark:bg-red-900 dark:text-red-300">
+                                              {sale.quantity}
+                                            </span>
+                                        )}
+                                        </span>
 
                                 <p>
-                                    {productDetail && productDetail.product_detail.product_description}
+                                    {productDetail && productDetail.product_detail.product_short_description}
                                 </p>
 
                                 <div className="row">
@@ -380,7 +399,7 @@ function ProductDetail({ }) {
                                                     productDetail?.product_detail?._id,
                                                 sku_id: selected_sku?._id,
                                                 quantity: quantity,
-                                                price:price,
+                                                price: price,
                                             })
                                         }> <i className="me-1 fa fa-shopping-basket"></i>  Thêm Vào Giỏ Hàng </button>
                                 ) :
@@ -475,50 +494,11 @@ function ProductDetail({ }) {
                                 {/*<!-- Pills content --> */}
                                 <div className="tab-content" id="ex1-content">
                                     <div className={`tab-pane fade ${activeTab === 'ex1-pills-1' ? 'show active' : ''} `} id="ex1-pills-1" role="tabpanel" aria-labelledby="ex1-tab-1">
-                                        {/* <p>
-                                            With supporting text below as a natural lead-in to additional content. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                                            enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-                                            pariatur.
-                                        </p> */}
-                                        <div className="row mb-2">
-                                            <div className="col-12 col-md-6">
-                                                {/* <ul className="list-unstyled mb-0">
-                                                    <li><i className="fas fa-check text-success me-2"></i>Some great feature name here</li>
-                                                    <li><i className="fas fa-check text-success me-2"></i>Lorem ipsum dolor sit amet, consectetur</li>
-                                                    <li><i className="fas fa-check text-success me-2"></i>Duis aute irure dolor in reprehenderit</li>
-                                                    <li><i className="fas fa-check text-success me-2"></i>Optical heart sensor</li>
-                                                </ul> */}
-                                            </div>
-                                            {/* <div className="col-12 col-md-6 mb-0">
-                                                <ul className="list-unstyled">
-                                                    <li><i className="fas fa-check text-success me-2"></i>Easy fast and ver good</li>
-                                                    <li><i className="fas fa-check text-success me-2"></i>Some great feature name here</li>
-                                                    <li><i className="fas fa-check text-success me-2"></i>Modern style and design</li>
-                                                </ul>
-                                            </div> */}
-                                        </div>
-                                        {/* <table className="table border mt-3 mb-2">
-                                            <tr>
-                                                <th className="py-2">Display:</th>
-                                                <td className="py-2">13.3-inch LED-backlit display with IPS</td>
-                                            </tr>
-                                            <tr>
-                                                <th className="py-2">Processor capacity:</th>
-                                                <td className="py-2">2.3GHz dual-core Intel Core i5</td>
-                                            </tr>
-                                            <tr>
-                                                <th className="py-2">Camera quality:</th>
-                                                <td className="py-2">720p FaceTime HD camera</td>
-                                            </tr>
-                                            <tr>
-                                                <th className="py-2">Memory</th>
-                                                <td className="py-2">8 GB RAM or 16 GB RAM</td>
-                                            </tr>
-                                            <tr>
-                                                <th className="py-2">Graphics</th>
-                                                <td className="py-2">Intel Iris Plus Graphics 640</td>
-                                            </tr>
-                                        </table> */}
+
+
+
+
+
                                     </div>
                                     <div className={`tab-pane fade ${activeTab === 'ex1-pills-2' ? 'show active' : ''} mb-2`} id="ex1-pills-2" role="tabpanel" aria-labelledby="ex1-tab-2">
                                         {/* Tab content or sample information now <br />

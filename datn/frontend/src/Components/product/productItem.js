@@ -10,7 +10,6 @@ import { addCart, onProductDetail, productById } from "../../store/actions";
 export default function ProductItem({ product }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    console.log("product", product);
     const { userInfo } = useSelector((state) => state.userReducer);
 
     const { spuInfo } = useSelector((state) => state.productReducer);
@@ -148,7 +147,6 @@ export default function ProductItem({ product }) {
             dispatch(productById({ spu_id: selectedProductId }));
         }
     }, [selectedProductId]);
-    console.log(spuInfo)
     return (
         <>
             <div className="col-lg-3 col-md-6 col-sm-6 d-flex" key={product._id}>

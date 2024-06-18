@@ -188,6 +188,30 @@ const findProductsByCategory = async ({ limit, sort, page, filter }) => {
     return products_category
 }
 
+const findProductsByBrand = async ({ limit, sort, page, filter }) => {
+    const { brand_id, isPublished } = filter
+    const skip = (page - 1) * limit;
+    const sortBy = sort === 'ctime' ? { _id: -1 } : { _id: 1 }
+    if (!brand_id) {
+        const products = await spu.find({
+            isPublished
+        })
+            .sort(sortBy)
+            .lean()
+        return products
+    }
+    const products_brand = await spu.find({
+        isPublished,
+        products_brand: {
+            $in: [brand_id]
+        }
+    }).sort(sortBy)
+        .skip(skip)
+        .limit(limit)
+        .lean()
+    return products_brand
+}
+
 module.exports = {
     getProductById,
     findAllProducts,
@@ -203,5 +227,6 @@ module.exports = {
     isProductByCategory,
     checkProductByServer,
     findProductByFilter,
-    findProductsByCategory
+    findProductsByCategory,
+    findProductsByBrand
 }

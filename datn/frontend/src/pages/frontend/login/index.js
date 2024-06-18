@@ -91,7 +91,6 @@ const LoginWithGoogle = async () => {
     try {
       await dispatch(onLogin({ user_email: email, user_password: password }))
       toast.success('hi')
-      window.location.reload()
     } catch (error) {
       console.log(error)
     }

@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { onGetAddress, onInsertAddress, onLogout } from '../../../store/actions';
+import { onGetAddress, onInsertAddress, onLogout, updateUser } from '../../../store/actions';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import "./UserOrder.css";
@@ -46,7 +46,7 @@ export default function UserAccount() {
   const [user_phone, setUser_phone] = useState('');
   const [user_sex, setUser_sex] = useState('');
   const [user_avatar, setUser_avatar] = useState('');
-  const [user_date_of_birth, setUser_date_of_birth] = useState('');
+  const [user_age, setUser_age] = useState('');
 
 
   const { userInfo } = useSelector((state) => state.userReducer);
@@ -58,21 +58,46 @@ export default function UserAccount() {
   }, []);
 
   const handleSubmit = async (e) => {
+    e.preventDefault()
     try {
       await dispatch(onLogout())
       toast.success('Đăng Xuất Thành Công')
-
       navigate('/')
     } catch (error) {
       alert("sss")
     }
   }
-  const handleInsert = async () => {
 
+  const handleUpdate = async () => {
+    try {
+      await dispatch(updateUser({
+        user_id: userInfo._id,
+        user_name: user_name,
+        user_phone: user_phone,
+        user_sex: user_sex,
+        user_age: user_age
+      }))
+      setUser_name('')
+      setUser_phone('')
+      setUser_sex('')
+      setUser_avatar('')
+      setUser_age('')
+      setScrollableModal(false)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
+  const handleInsert = async () => {
     try {
       await dispatch(onInsertAddress({
         user_id: userInfo._id,
-        phone_number: phone_number, street: street, postal_code: postal_code, city: city, country: country
+        phone_number: phone_number,
+        street: street,
+        city: city,
+        postal_code: postal_code,
+        country: country
       }))
       setCity('')
       setPhone_number('')
@@ -86,24 +111,6 @@ export default function UserAccount() {
     }
   }
 
-  // const handleUpdateUser = async () => {
-
-  //   try {
-  //     await dispatch(updateU({
-  //       user_id: userInfo._id,
-  //       phone_number: phone_number, street: street, postal_code: postal_code, city: city, country: country
-  //     }))
-  //     setCity('')
-  //     setPhone_number('')
-  //     setPostal_code('')
-  //     setCountry('')
-  //     setStreet('')
-  //     setBasicModal(false)
-  //     window.location.reload()
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
 
 
   const getAddress = async () => {
@@ -173,11 +180,14 @@ export default function UserAccount() {
                     <div class="pt-2">
                       <h6 class="pt-2">{userInfo.user_name}</h6>
                       <p>
-                        Email:{userInfo.user_email}, Phone: {userInfo.user_phone}
-                        <a href="#" class="px-2"></a>
+                        Email:{userInfo.user_email},
+                        {/* <a href="#" class="px-2"></a> */}
                       </p>
-                      <MDBBtn style={{ backgroundColor: '#f6831f', color: 'white' }} onClick={(openUser) => setScrollableModal(!scrollableModal)}><i class="fa fa-pen"></i></MDBBtn>
+                      <p>Phone: {userInfo.user_phone}</p>
+                      <p>Giới Tính: {userInfo.user_sex}</p>
+                      <p>Ngày Sinh: {userInfo.user_age}</p>
 
+                      <MDBBtn style={{ backgroundColor: '#f6831f', color: 'white' }} onClick={openUser}><i class="fa fa-pen"></i></MDBBtn>
                       <MDBModal open={scrollableModal} onClose={() => setScrollableModal(false)} tabIndex='-1'>
                         <MDBModalDialog scrollable>
                           <MDBModalContent>
@@ -190,22 +200,39 @@ export default function UserAccount() {
                               ></MDBBtn>
                             </MDBModalHeader>
                             <MDBModalBody >
-                              <MDBInput style={{ backgroundColor: 'white', color: '#f6831f', marginBottom: '20px' }} label="Họ Và Tên" id="typeText" type="text" />
-                              <MDBInput style={{ backgroundColor: 'white', color: '#f6831f', marginBottom: '20px' }} label="Nhập Số Điện Thoại" id="typePhone" type="tel" />
-                              <MDBInput style={{ backgroundColor: 'white', color: '#f6831f', marginBottom: '20px' }} label="Địa Chỉ" id="typeText" type="text" />
-                              <MDBInput style={{ backgroundColor: 'white', color: '#f6831f', marginBottom: '20px' }} label="Đường" id="typeText" type="text" />
-                              <MDBInput style={{ backgroundColor: 'white', color: '#f6831f', marginBottom: '20px' }} label="Thành Phố" id="typeText" type="text" />
-                              <MDBInput style={{ backgroundColor: 'white', color: '#f6831f', marginBottom: '20px' }} label="Tỉnh" id="typeText" type="text" />
-
-
-
+                              <MDBInput style={{ backgroundColor: 'white', color: '#f6831f', marginBottom: '20px' }}
+                                value={user_name}
+                                name='Nhập họ tên'
+                                onChange={(e) => setUser_name(e.target.value)}
+                                required label='Họ và Tên'
+                                id="typeText" type="text" />
+                              <MDBInput style={{ backgroundColor: 'white', color: '#f6831f', marginBottom: '20px' }}
+                                value={user_phone}
+                                name='Nhập SDT'
+                                onChange={(e) => setUser_phone(e.target.value)}
+                                required
+                                label="Số Điện Thoại" id="typePhone" type="tel" />
+                              <MDBInput style={{ backgroundColor: 'white', color: '#f6831f', marginBottom: '20px' }}
+                                value={user_sex}
+                                name='Nhập'
+                                onChange={(e) => setUser_sex(e.target.value)}
+                                required
+                                label="Giới Tính" id="typeText" type="text" />
+                              <MDBInput style={{ backgroundColor: 'white', color: '#f6831f', marginBottom: '20px' }}
+                                value={user_age}
+                                name='Nhập'
+                                onChange={(e) => setUser_age(e.target.value)}
+                                required
+                                label="Tuổi" id="typeText" type="text" />
+                              {/* <MDBInput style={{ backgroundColor: 'white', color: '#f6831f', marginBottom: '20px' }} label="Thành Phố" id="typeText" type="text" />
+                              <MDBInput style={{ backgroundColor: 'white', color: '#f6831f', marginBottom: '20px' }} label="Tỉnh" id="typeText" type="text" /> */}
 
                             </MDBModalBody>
                             <MDBModalFooter>
                               <MDBBtn color='secondary' onClick={(openUser) => setScrollableModal(!setScrollableModal)}>
                                 Đóng
                               </MDBBtn>
-                              <MDBBtn style={{ backgroundColor: '#f6831f', color: 'white' }}>Thay Đổi</MDBBtn>
+                              <MDBBtn style={{ backgroundColor: '#f6831f', color: 'white' }} onClick={handleUpdate}>Thay Đổi</MDBBtn>
                             </MDBModalFooter>
                           </MDBModalContent>
                         </MDBModalDialog>
@@ -222,7 +249,7 @@ export default function UserAccount() {
                         <div class="col-md-6" key={index}>
                           <div class=" border p-3 rounded-3 bg-light">
                             <b class="mx-2 text-muted"><i class="fa fa-map-marker-alt"></i></b>
-                            {address.phone_number}, {address.street}, {address.city}, {address.country}
+                            {address.phone_number},{address.postal_code}, {address.street}, {address.city}, {address.country}
                           </div>
 
                         </div>

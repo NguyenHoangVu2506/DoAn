@@ -115,23 +115,21 @@ class UserService {
         return alluser
     }
 
-    async updateUser({ user_id, user_name,
-        user_salf,
+    async updateUser({ user_id,
+        user_name,
         user_phone,
         user_sex,
-        user_avatar,
-        user_date_of_birth
+        // user_avatar,
+        user_age
     }) {
         try {
             const query = { _id: user_id }
             const updates = {
                 $set: {
                     user_name: user_name,
-                    user_salf: user_salf,
                     user_phone: user_phone,
                     user_sex: user_sex,
-                    user_avatar: user_avatar,
-                    user_date_of_birth: user_date_of_birth
+                    user_age: user_age
                 }
             }, options = {
                 returnNewDocument: true,

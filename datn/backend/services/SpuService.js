@@ -202,7 +202,7 @@ const findProductDetail = async ({ spu_id, isPublished = true }) => {
         product.product_detail = spu_info ? spu_info : {}
         product.sku_list = sku_list ? sku_list : []
         product.product_brand = await getBrandById({ brand_id: spu_info.product_brand })
-        product.special_offer = await findSpecialOfferBySpuId({ spu_id: product.product_detail._id, special_offer_is_active: true })
+        product.special_offer = await findSpecialOfferBySpuId({ spu_id: spu_info._id.toString(), special_offer_is_active: true })
         const categories = await findCategoryByIdList({
             isPublished: true,
             category_id_list: spu_info.product_category
@@ -256,8 +256,37 @@ const checkProductByServer = async (products) => {
     }))
 }
 
+const findProductsByBrand = async ({ limit = 50, sort = 'ctime', page = 1, filter = { isPublished: true, brand_id: null } }) => {
+
+    let product_list = {
+        productsByBrand: [],
+    }
+    const productsByBrand = await spu_repo.findProductsByBrand({
+        limit, sort, page, filter
+    })
+    if (productsByBrand.length == 0) return null
+    let brand_list = []
+    let special_offer = []
+    let sku_list = []
+    console.log("productsByBrand", productsByBrand)
+    for (let index = 0; index < productsByBrand.length; index++) {
+        const brand = await getBrandById({ brand_id: productsByBrand[index].product_brand })
+        brand_list.push(brand)
+        const skulist = await allSkuBySpuId({ product_id: productsByBrand[index]._id })
+        sku_list.push(skulist)
+        console.log("id", productsByBrand[index]._id)
+        const specialoffer = await findSpecialOfferBySpuId({ spu_id: productsByBrand[index]._id.toString(), special_offer_is_active: true })
+        special_offer.push(specialoffer)
+    }
+    product_list.productsByBrand = await productsByBrand.map((product, index) => {
+        return { ...product, brand: brand_list[index], special_offer: special_offer[index], sku_list: sku_list[index] }
+    })
+
+    return product_list.productsByBrand
+}
+
 module.exports = {
     newSpu, oneSpu, isPublishProduct, isUnPublishProduct, isFindProductsByAttributes, isFindProduct,
     isfindAllProducts,
-    findProductDetail, getProductDetails, findProductsByCategory, checkProductByServer
+    findProductDetail, getProductDetails, findProductsByCategory, checkProductByServer, findProductsByBrand
 }

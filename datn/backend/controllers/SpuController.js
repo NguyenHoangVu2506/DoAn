@@ -152,6 +152,13 @@ class SpuController {
         }).send(res)
     }
 
+    findProductsByBrand = async (req, res, next) => {
+        new SuccessResponse({
+            message: 'get find findProductsByBrand ',
+            metaData: await SpuService.findProductsByBrand(req.body)
+        }).send(res)
+    }
+
     findProductDetail = async (req, res, next) => {
         new SuccessResponse({
             message: 'get find ProductDetail',
