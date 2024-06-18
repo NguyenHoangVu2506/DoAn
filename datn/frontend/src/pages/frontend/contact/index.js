@@ -3,12 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { newContact } from "../../../store/actions";
 import { toast } from 'react-toastify';
-import { MDBBtn, MDBCardText, MDBCol, MDBInput, MDBRow, MDBValidationItem } from "mdb-react-ui-kit";
+import { MDBBtn, MDBCardText, MDBCol, MDBInput, MDBRow, MDBTextArea, MDBValidationItem } from "mdb-react-ui-kit";
 
 
 export default function Contact() {
     const dispatch = useDispatch();
-    const navigate =useNavigate();
+    const navigate = useNavigate();
 
     const [contact_user_name, setContactName] = useState('');
     const [contact_user_phone, setContactPhone] = useState('');
@@ -72,48 +72,50 @@ export default function Contact() {
 
                     <div class="col-md-4 ">
 
-                            <MDBRow className='mb-4'>
-                                <MDBCol>
-                                    <MDBValidationItem>
-                                        <MDBInput id='form6Example1'
-                                            value={contact_user_name}
-                                            name='Nhập họ tên'
-                                            onChange={(e) => setContactName(e.target.value)}
-                                            required label='Họ và Tên' />
-                                    </MDBValidationItem>
+                        <MDBRow className='mb-4'>
+                            <MDBCol>
+                                <MDBValidationItem>
+                                    <MDBInput id='form6Example1'
+                                        value={contact_user_name}
+                                        name='Nhập họ tên'
+                                        onChange={(e) => setContactName(e.target.value)}
+                                        required label='Họ và Tên' />
+                                </MDBValidationItem>
 
-                                </MDBCol>
+                            </MDBCol>
 
-                            </MDBRow>
-                            <MDBValidationItem>
-                                <MDBInput wrapperClass='mb-4 ' type='email' id='form6Example5' label='Email' value={contact_user_email}
-                                    name='Nhập email'
-                                    onChange={(e) => setContactEmail(e.target.value)}
-                                    required /></MDBValidationItem>
-
-                            <MDBValidationItem> <MDBInput wrapperClass='mb-4' type='tel' id='form6Example6' label='Số Điện Thoại' value={contact_user_phone}
-                                name='Nhập sđt'
-                                onChange={(e) => setContactPhone(e.target.value)}
-                                required
-                            /></MDBValidationItem>
-
-
-                            <MDBValidationItem> <MDBInput wrapperClass='mb-4' id='form6Example4' label='Chủ đề' value={contact_user_tilte}
-                                name='Nhập chủ đề'
-                                onChange={(e) => setContactTitle(e.target.value)}
+                        </MDBRow>
+                        <MDBValidationItem>
+                            <MDBInput wrapperClass='mb-4 ' type='email' id='form6Example5' label='Email' value={contact_user_email}
+                                name='Nhập email'
+                                onChange={(e) => setContactEmail(e.target.value)}
                                 required /></MDBValidationItem>
 
-                            <MDBValidationItem> <MDBInput wrapperClass='mb-4 ' textarea id='form6Example7'
-                                label='Nhập nội dung' name="content"
-                                value={contact_user_detail}
-                                onChange={(e) => setContactDetail(e.target.value)}
-                                required ></MDBInput></MDBValidationItem>
+                        <MDBValidationItem> <MDBInput wrapperClass='mb-4' type='tel' id='form6Example6' label='Số Điện Thoại' value={contact_user_phone}
+                            name='Nhập sđt'
+                            onChange={(e) => setContactPhone(e.target.value)}
+                            required
+                        /></MDBValidationItem>
+
+
+                        <MDBValidationItem> <MDBInput wrapperClass='mb-4' id='form6Example4' label='Chủ đề' value={contact_user_tilte}
+                            name='Nhập chủ đề'
+                            onChange={(e) => setContactTitle(e.target.value)}
+                            required /></MDBValidationItem>
+
+
+                        <MDBTextArea id="textAreaExample" rows="{4}"
+                            label='Nhập nội dung' name="content"
+                            value={contact_user_detail}
+                            onChange={(e) => setContactDetail(e.target.value)}
+                            required
+                        />
 
 
 
-                            <MDBBtn className='mb-4 btn mr-2 left' type='submit' onClick={() => handleInsert()} style={{ backgroundColor: '#f6831f', color: 'white', textAlign: 'right' }} >
-                                Gửi
-                            </MDBBtn>
+                        <MDBBtn className='mb-4 btn mr-2 left' type='submit' onClick={() => handleInsert()} style={{ backgroundColor: '#f6831f', color: 'white', textAlign: 'right' }} >
+                            Gửi
+                        </MDBBtn>
 
 
                         {/* <form class="form text-danger" onSubmit={newContact} method="post">

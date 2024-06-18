@@ -3,8 +3,12 @@ import { Action } from '../actions'
 
 
 export const SetAuthToken = async (tokens) => {
+ if(tokens){
+  localStorage.setItem("tokens", JSON.stringify(tokens))
+ }else{
+  localStorage.clear();
 
-  tokens ? localStorage.setItem("tokens", JSON.stringify(tokens)) : localStorage.clear();
+ }
 
 }
 
@@ -67,7 +71,7 @@ export const onLoginWithGoogle = ({ userId, provider }) => async (dispatch) => {
   try {
     console.log(' userId, provider', userId + provider)
 
-    const response = await PostData('/auth/google/login-success', {userId, provider});
+    const response = await PostData('/auth/google/login-success', { userId, provider });
     const tokens = await response.data.metaData.tokens
     console.log("tokens", tokens)
     await SetAuthToken(tokens);
@@ -96,14 +100,14 @@ export const onViewProfile = () => async (dispatch) => {
   }
 };
 
-export const onLogout = ({ userId, provider }) => async (dispatch) => {
+export const onLogout = () => async (dispatch) => {
 
   try {
-    const response = await PostData('/user/logout', {userId, provider});
+    const response = await PostData('/user/logout');
+    await SetAuthToken(null)
     return dispatch({ type: Action.LOGOUT, payload: response.data });
   } catch (err) {
     console.log(err)
-    return err.response.data
 
   }
 
@@ -127,6 +131,20 @@ export const onGetAddress = (data) => async (dispatch) => {
   try {
     const response = await PostData('/user/get_address', data);
     return dispatch({ type: Action.GET_ADDRESS, payload: response.data });
+  } catch (err) {
+    console.log(err)
+    return err.response.data
+
+  }
+
+};
+
+
+export const updateUser = (data) => async (dispatch) => {
+
+  try {
+    const response = await PostData('/user/updateUser', data);
+    return dispatch({ type: Action.UPDATE_USER, payload: response.data });
   } catch (err) {
     console.log(err)
     return err.response.data
