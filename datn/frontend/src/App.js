@@ -19,11 +19,14 @@ import Wishlist from './pages/frontend/wishlist';
 import PostDetailItem from './pages/frontend/blog/postItemDetail';
 import Contact from './pages/frontend/contact';
 import Collections from './pages/frontend/product/Collections';
-import ProductModel from './Components/product/productModel';
 import UserOrder from './pages/frontend/useraccount/userOrder';
 import UserOrderHistory from './pages/frontend/useraccount/userOrderHistory';
 import Brand from './pages/frontend/brand/Brand';
 import PageSingle from './pages/frontend/page/PageSingle';
+
+
+
+
 
 function App() {
   return (

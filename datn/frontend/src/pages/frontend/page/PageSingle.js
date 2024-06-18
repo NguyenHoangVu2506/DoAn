@@ -9,12 +9,10 @@ export default function PageSingle() {
   const dispatch = useDispatch();
   const page_id = slug_id.split('-').pop();
   const { listPageById } = useSelector((state) => state.pageReducer);
-
+  console.log(slug_id)
   useEffect(() => {
-    if (!listPageById) {
-      dispatch(getPageById({ page_id }));
-    }
-  }, [dispatch, listPageById, page_id]);
+    dispatch(getPageById({ page_id }));
+  }, [dispatch, page_id]);
 
   const toggleRatingCollapse = () => {
     setRatingCollapsed(!ratingCollapsed);
@@ -24,19 +22,20 @@ export default function PageSingle() {
     <div className="container">
       <div className="row">
         <div className="col-lg-9">
-          <div className="blog-post">
-            {listPageById && (
-              <div className="blog-post">
-                <h5 className="pb-3 mb-2 blog-post-title border-bottom py-4" style={{ fontSize: '24px' }}>
-                  {listPageById.page_name}
-                </h5>
-                <p>
-                  <span style={{ fontSize: '16px' }}>{listPageById.page_title}</span>
-                </p>
-                <div dangerouslySetInnerHTML={{ __html: listPageById.page_detail }} />
-              </div>
-            )}
-          </div>
+          {listPageById && (
+            <div className="blog-post">
+              <h5 className="pb-3 mb-2 blog-post-title border-bottom py-4" style={{ fontSize: '24px' }}>
+                {listPageById.page_name}
+              </h5>
+              <p>
+                <span style={{ fontSize: '16px' }}>{listPageById.page_title}</span>
+              </p>
+              <div dangerouslySetInnerHTML={{ __html: listPageById.page_detail }} />
+
+
+              
+            </div>
+          )}
         </div>
         <div className="col-lg-3 py-4">
           <div className="collapse card d-lg-block" id="navbarSupportedContent">
