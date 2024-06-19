@@ -17,7 +17,7 @@ class CheckoutService {
         // if (!foundCart) {
         //     throw new BadRequestError('cart does not exists!')
         // }
-        const checkout_oder = {
+        const checkout_order = {
             totalPrice: 0,
             feeShip: 0,//phi ship
             totalSpecialOffer: 0,//tong discount
@@ -39,7 +39,7 @@ class CheckoutService {
             return acc + (product.quantity * product.price)
         }, 0)
         //tong tien truoc khi xuly
-        checkout_oder.totalPrice = + checkoutPrice
+        checkout_order.totalPrice = + checkoutPrice
         const itemCheckout = {
             shop_discounts,//hmmmm
             priceRaw: checkoutPrice,//tien truoc khi giam gia
@@ -79,25 +79,31 @@ class CheckoutService {
             const { discount = 0 } = await getDiscountAmount({
                 codeId: shop_discounts[0].codeId,
                 userId,
-                products: checkProductServerSpecialOffer.length>0?checkProductServerSpecialOffer:checkProductServer
+                products: checkProductServerSpecialOffer.length > 0 ? checkProductServerSpecialOffer : checkProductServer
             })
             //tong discount 
-            checkout_oder.totalDiscount += discount
+            checkout_order.totalDiscount += discount
             //neu tien giam gia >0
             if (discount > 0) {
 
                 itemCheckout.priceApplyDiscount = checkoutPrice - discount
             }
         }
-        checkout_oder.totalSpecialOffer = itemCheckout.priceApplySpecialOffer
+        checkout_order.totalSpecialOffer = itemCheckout.priceApplySpecialOffer
         //tong thanh toan
-        checkout_oder.totalCheckout += (itemCheckout.priceApplySpecialOffer - checkout_oder.totalDiscount)
+        if (itemCheckout.priceApplySpecialOffer === 0) {
+            checkout_order.totalCheckout += (itemCheckout.priceApplySpecialOffer - checkout_order.totalDiscount) + checkout_order.totalPrice
+
+        } else {
+            checkout_order.totalCheckout += (itemCheckout.priceApplySpecialOffer - checkout_order.totalDiscount)
+
+        }
         order_ids_new.push(itemCheckout)
 
         return {
             order_ids,
             order_ids_new,
-            checkout_oder
+            checkout_order
         }
     }
 
@@ -108,7 +114,7 @@ class CheckoutService {
         user_address = {},
         user_payment = {}
     }) {
-        const { order_ids_new, checkout_oder } = await this.checkoutReview({
+        const { order_ids_new, checkout_order } = await this.checkoutReview({
             cartId, userId, order_ids
         })
         //check lai xem co vuot ton kho hay k
@@ -125,8 +131,6 @@ class CheckoutService {
         //     if (keyLock) {
         //         await releaseLock(keyLock)
         //     }
-
-
         // }
 
         //check
@@ -135,7 +139,7 @@ class CheckoutService {
         // }
         const newOrder = await order.create({
             order_userId: userId,
-            order_checkout: checkout_oder,
+            order_checkout: checkout_order,
             order_shipping: user_address,
             order_product: order_ids_new,
             order_payment: user_payment

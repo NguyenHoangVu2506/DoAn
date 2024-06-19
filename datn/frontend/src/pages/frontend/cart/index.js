@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
-import { deleteCartItem, getCart, updateQuantityCart, updateSkuCart, updateSkuFromCartV2 } from "../../../store/actions";
+import { deleteCartItem, getCart, updateQuantityCart, updateSkuCart, updateSkuFromCartV2, checkoutReview } from "../../../store/actions";
 import CartItem from "../../../Components/cartItem";
 import { specialOfferToday } from "../../../store/actions/special_offer-actions";
 import { Amount, getAllDiscount } from "../../../store/actions/discount-actions";
@@ -13,49 +13,53 @@ export default function Cart() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { userInfo } = useSelector((state) => state.userReducer);
-    const { special_offer } = useSelector((state) => state.specialOfferReducer);
-    const { cart } = useSelector((state) => state.cartReducer);
-    const { all_discount } = useSelector((state) => state.discountReducer);
     const [price_total, setPriceTotal] = useState(0);
-    const [price_total_discount, setPriceTotalDiscount] = useState(0);
+    const [price_total_discount, setPriceTotalApplyDiscount] = useState(0);
+    const [discounts, setDiscounts] = useState([])
+    const [cart_products, setCart] = useState([])
+
     const [special_offer_today, setSpecialOfferToday] = useState(null);
     const [discountCodeInput, setDiscountCodeInput] = useState('');
     const [price_discount_amount, setPriceDiscountAmount] = useState(0);
     const [appliedDiscountCode, setAppliedDiscountCode] = useState(null); // State lưu mã giảm giá đã áp dụng
 
+    const fetchDataCart = async () => {
+
+        const resultCart = await dispatch(getCart({ userId: userInfo._id }));
+        setCart(resultCart.payload.metaData.cart_products)
+        const resultPromotion = await dispatch(specialOfferToday());
+        setSpecialOfferToday(resultPromotion?.payload?.metaData)
+        const resultDiscount = await dispatch(getAllDiscount({ sort: 'ctime' }));
+        setDiscounts(resultDiscount?.payload?.metaData)
+
+    }
+
     useEffect(() => {
         if (userInfo) {
-            dispatch(getCart({ userId: userInfo._id }));
-            dispatch(specialOfferToday());
+            fetchDataCart()
         }
-    }, [userInfo, dispatch]);
-    console.log(cart)
+    }, []);
+    const loadPrice = async () => {
+        const applyDiscount = await dispatch(checkoutReview({
+            // cartId: cart?._id,
+            userId: userInfo._id,
+            order_ids: {
+                shop_discounts: [],
+                item_products: cart_products
+            }
+        }));
+        console.log("///", applyDiscount)
+        setPriceTotal(applyDiscount?.payload.metaData.checkout_order?.totalPrice);
+        setPriceTotalApplyDiscount(applyDiscount?.payload.metaData.checkout_order?.totalPrice); // Khởi tạo giá sau giảm giá bằng tổng giá ban đầu
+    }
     useEffect(() => {
-        if (!all_discount) {
-            dispatch(getAllDiscount({ sort: 'ctime' }));
-        }
-    }, [all_discount, dispatch]);
-
-    useEffect(() => {
-        if (special_offer) {
-            setSpecialOfferToday(special_offer);
-        }
-    }, [special_offer]);
-
-    useEffect(() => {
-        if (cart?.cart_products?.length > 0) {
-            const total = cart.cart_products.reduce((accumulator, currentValue) => {
-                const itemTotal = currentValue.price * currentValue.quantity;
-                return accumulator + itemTotal;
-            }, 0);
-            setPriceTotal(total);
-            setPriceTotalDiscount(total); // Khởi tạo giá sau giảm giá bằng tổng giá ban đầu
-        }
-    }, [cart]);
+        cart_products.length > 0 && loadPrice()
+    }, [cart_products])
 
     const handleApplyDiscount = () => {
         onSelectedDiscount(discountCodeInput);
     };
+
 
     const updateItemFromCart = async (type, data) => {
         if (type === 'deleteItem') {
@@ -94,24 +98,25 @@ export default function Cart() {
 
     const onSelectedDiscount = async (discount_code) => {
         if (discount_code) {
-            const productcart = cart.cart_products.map(product => ({
-                id: product.productId,
-                quantity: product.quantity,
-                price: product.price
-            }));
-            const applyDiscount = await dispatch(Amount({
+            const applyDiscount = await dispatch(checkoutReview({
+                // cartId: cart?._id,
                 userId: userInfo._id,
-                codeId: discount_code,
-                products: productcart
+                order_ids: {
+                    shop_discounts: [{
+                        discountId: discount_code._id,
+                        codeId: discount_code.discount_code
+                    }],
+                    item_products: cart_products
+                }
             }));
             if (applyDiscount?.payload.status === (200 || 201)) {
-                const { totalCheckout, discount } = applyDiscount.payload.metaData;
-                setPriceTotalDiscount(totalCheckout);
-                setPriceDiscountAmount(discount);
+                const { checkout_order } = applyDiscount.payload.metaData;
+                setPriceTotalApplyDiscount(checkout_order.totalCheckout);
+                setPriceDiscountAmount(checkout_order.totalDiscount);
                 setAppliedDiscountCode(discount_code); // Lưu mã giảm giá đã áp dụng
             }
         } else {
-            setPriceTotalDiscount(price_total);
+            setPriceTotalApplyDiscount(price_total);
             setPriceDiscountAmount(0);
             setAppliedDiscountCode(null); // Bỏ lưu mã giảm giá đã áp dụng khi không có mã nào được chọn
         }
@@ -128,7 +133,7 @@ export default function Cart() {
                             <div className="card border shadow-0">
                                 <div className="m-4">
                                     <h4 className="card-title mb-4">Giỏ hàng của bạn</h4>
-                                    {cart?.cart_products?.length > 0 && cart.cart_products.map((product, index) => {
+                                    {cart_products?.length > 0 && cart_products.map((product, index) => {
                                         return <CartItem product={product} special_offer_today={special_offer_today}
                                             update={updateItemFromCart} key={index} />;
                                     })}
@@ -136,7 +141,7 @@ export default function Cart() {
                                 <div className="border-top pt-4 mx-4 mb-4">
                                     <div className="row">
                                         <h5>Khuyến mãi dành cho bạn</h5>
-                                        {Array.isArray(all_discount) && all_discount.map((item, index) => (
+                                        {discounts?.length > 0 && discounts.map((item, index) => (
                                             <div className="col-lg-3" key={index}>
                                                 <div className="card shadow-0 border">
                                                     <div className="card-body">
@@ -156,8 +161,9 @@ export default function Cart() {
                                                             <button
                                                                 className="btn btn-light border"
                                                                 style={{ backgroundColor: '#f6831f', color: 'white' }}
-                                                                onClick={() => onSelectedDiscount(item.discount_code)}
-                                                                disabled={appliedDiscountCode === item.discount_code}
+                                                                onClick={() => onSelectedDiscount(item)}
+
+                                                                disabled={appliedDiscountCode?.discount_code == item?.discount_code ? true : false}
                                                             >
                                                                 Áp dụng
                                                             </button>

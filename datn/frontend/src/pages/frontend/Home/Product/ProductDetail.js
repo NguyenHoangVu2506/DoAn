@@ -29,7 +29,7 @@ function ProductDetail() {
     const [detail, setDetail] = useState('');
     const [stock, setStock] = useState(null);
     const [selectedImage, setSelectedImage] = useState(null);
-    const [productDetail, setproduct_detail] = useState(null);
+    const [productDetail, setproduct_detail] = useState(null); 
     const [product_images, setProductImages] = useState([]);
     const [selected_sku, set_selected_sku] = useState(null);
     const [sale, setSale] = useState(null);
@@ -49,8 +49,8 @@ function ProductDetail() {
     const handleTabChange = (tabId) => {
         setActiveTab(tabId);
     };
-    const HandleImageChoose = (e) => {
-        setSelectedImage(e);
+    const HandleImageChoose = (thumb) => {
+        setSelectedImage(thumb);
     };
 
 
@@ -62,7 +62,7 @@ function ProductDetail() {
                 // console.log('selected_sku', sku_id + productId + sku_id)
                 await dispatch(
                     addCart({
-                        userId: userId._id,
+                        userId: userId,
                         product: {
                             productId: productId,
                             sku_id: sku_id,
@@ -164,7 +164,9 @@ function ProductDetail() {
             if (productDetail?.sku_list?.length > 0) {
                 setSkuList(productDetail?.sku_list)
                 set_selected_sku(productDetail?.sku_list[0])
-                setSelectedImage(product_images[0]?.thumb_url)
+                setSelectedImage(productDetail?.product_images[0]?.thumb_url)
+                //
+                setProductImages(productDetail?.product_images[0]?.thumb_url)
                 setStock(productDetail.sku_list[0]?.sku_stock)
                 setPrice(productDetail.sku_list[0]?.sku_price)
             } else {
@@ -190,6 +192,7 @@ function ProductDetail() {
         if (selected_sku) {
             setPrice(selected_sku.sku_price);
             setStock(selected_sku.sku_stock);
+            setSelectedImage(productDetail?.product_images?.length > 0 && productDetail.product_images?.find((item) =>item.sku_id === selected_sku._id)?.thumb_url);
         }
     }, [selected_sku])
 
@@ -210,6 +213,8 @@ function ProductDetail() {
 
     console.log("product_detail", productDetail, selected_sku);
     console.log("pro", selected_sku);
+
+
     return (
         <>
             <div className="bg-" style={{ backgroundColor: '#f6831f' }} >
@@ -239,11 +244,11 @@ function ProductDetail() {
                             </div>
                             <div className="d-flex justify-content-center mb-3">
 
-                                {productDetail?.product_detail?.product_thumb?.map((img, index) => {
+                                {productDetail?.product_images?.map((thumb, index) => {
                                     return (
                                         <a key={index} data-fslightbox="mygalley" className="border mx-1 rounded-2" target="_blank" data-type="image"
-                                            onClick={() => HandleImageChoose(img)}>
-                                            <img width="60" height="60" className="rounded-2" src={img} />
+                                            onClick={() => HandleImageChoose(thumb.thumb_url)}>
+                                            <img width="60" height="60" className="rounded-2" src={thumb.thumb_url} />
                                         </a>
                                     )
                                 })}
@@ -274,7 +279,7 @@ function ProductDetail() {
                                 </div>
 
                                 <div className="mb-3">
-                                    <span className="h5">
+                                    <span className="h4 fw-bold">
                                         {(price_sku > 0
                                             ? (sale ? <NumericFormat value={sale.price_sale} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
                                                 : <NumericFormat value={price_sku} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
@@ -282,7 +287,7 @@ function ProductDetail() {
                                             : <NumericFormat value={price_default} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
                                         )}                                    </span>
                                     <span className="text-muted">/{productDetail && productDetail.product_detail.product_unit}</span>
-                                    <span className="text-danger ms-3">
+                                    <span className="h5 text-danger ms-3" >
                                         <s>
                                             {sale && (price_sku > 0
                                                 ? <NumericFormat value={price_sku} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
@@ -291,16 +296,16 @@ function ProductDetail() {
                                     </span>
                                 </div>
                                 <span>
-                                    Giảm đến
                                     {sale && sale?.sku_id === selected_sku?._id && (
-                                        <span className="rounded-full bg-red-100 px-5 py-2 text-xs font-medium  text-red-800 dark:bg-red-900 dark:text-red-300">
-                                            {sale?.percentage}%
-                                        </span>
+                                        <button className="fw-bold" 
+                                        style={{backgroundColor:"white" ,color:"red", cursor: 'pointer', borderRadius:'10px', borderColor:'red'}}>
+                                            Giảm đến {sale?.percentage}%
+                                        </button>
                                     )}
                                 </span>
 
-                                <p>
-                                    {productDetail && productDetail.product_detail.product_short_description}
+                                <p className="pt-3 text-dark">
+                                    Mô tả: {productDetail && productDetail.product_detail.product_short_description}
                                 </p>
 
                                 <div className="row">

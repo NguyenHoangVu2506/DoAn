@@ -12,6 +12,7 @@ export * from './attribute-actions';
 export * from './menu-actions';
 export * from './contact-actions';
 export * from './gallery-actions';
+export * from './checkout-actions';
 
 
 
@@ -97,5 +98,7 @@ export const Action = {
   GET_PAGE: "GET_PAGE",
   GET_PAGE_BY_ID: "GET_PAGE_BY_ID",
 //
-GET_IMAGE_LIST:"GET_IMAGE_LIST"
+GET_IMAGE_LIST:"GET_IMAGE_LIST",
+CHECKOUT_REVIEW:"CHECKOUT_REVIEW"
+
 };

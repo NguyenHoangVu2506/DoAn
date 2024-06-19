@@ -43,7 +43,6 @@ const CartReducer = (state = initialState, action) => {
                 cart: action.payload.metaData
             }
 
-
         default:
             return state;
     }

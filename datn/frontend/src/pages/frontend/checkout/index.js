@@ -18,12 +18,13 @@ function Checkout() {
     ...inputStyle,
     height: '100px'
   };
+  
+  const { cart } = useSelector((state) => state.cartReducer);
+  const { userInfo } = useSelector((state) => state.userReducer);
 
   const [shippingMethod, setShippingMethod] = useState('normal');
   const [shippingFee, setShippingFee] = useState(30000);
   const [product_item, setProductItem] = useState(null);
-  const { cart } = useSelector((state) => state.cartReducer);
-  const { userInfo } = useSelector((state) => state.userReducer);
   const [_quantity, setQuantity] = useState(null);
   const [productItems, setProductItems] = useState([]);
 
@@ -268,6 +269,7 @@ console.log(cart)
                   <p className="mb-2 fw-bold">149.90</p>
                 </div>
                 <hr />
+                
                 <h6 className="text-dark my-4">Sản phẩm trong giỏ hàng</h6>
                 {productItems.map((product, index) => (
                   <div className="d-flex align-items-center mb-4" key={index}>

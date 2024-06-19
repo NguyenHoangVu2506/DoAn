@@ -50,7 +50,7 @@ export default function ProductItem({ product }) {
                 console.log('selected_sku', sku_id + productId + sku_id)
                 await dispatch(
                     addCart({
-                        userId: userId._id,
+                        userId: userId,
                         product: {
                             productId: productId,
                             sku_id: sku_id,
@@ -119,6 +119,8 @@ export default function ProductItem({ product }) {
                 product?.product_thumb[0]
             );
             setProduct_image(product?.product_thumb[0])
+            setStock(product.product_quantity)
+
 
         }
     }, [product]);
@@ -176,8 +178,9 @@ export default function ProductItem({ product }) {
         if (userInfo) {
             if (product?.product_variations?.length > 0) {
                 openModal();
-            } else {
-                handleAddToCart(userInfo._id, { productId: product.productId, sku_id: null, quantity: quantity })
+            } 
+            else {
+                handleAddToCart(userInfo._id, { productId: product._id, sku_id: null, quantity: quantity })
             }
         } else {
             toast.info('Vui lòng đăng nhập để tiếp tục');
@@ -289,7 +292,8 @@ export default function ProductItem({ product }) {
                                                                             </div> */}
                                                                             {product && product.product_variations.map((variation, indexVariation) => {
                                                                                 return (
-                                                                                    <div className="col-12 mb-3">
+                                                                                    <div className="row mb-2">
+                                                                                    <div className="col-md-4 mb-3">
                                                                                         <div key={indexVariation}>
                                                                                             <p class="d-none d-md-block mb-1" style={{ cursor: 'pointer', color: '#f6831f ' }}>{variation.name}</p>
 
@@ -298,14 +302,16 @@ export default function ProductItem({ product }) {
                                                                                                     <div key={indexOption} >
                                                                                                         <input type="radio" class="btn btn-check" name="options" id={option} autocomplete="off"
                                                                                                             value={indexOption} onClick={() => onChangeVariation(indexOption, indexVariation)} />
-                                                                                                        <label class="btn mx-1 my-1" for={option} data-mdb-ripple-init>{option}</label>
+                                                                                                        <label class={`btn ${product.product_variations[indexVariation].options[sku_tier_idx.length == 1 ? sku_tier_idx[0] : `${sku_tier_idx[0]},${sku_tier_idx[1]}`].toString() == option.toString() ? "btn-warning" : "btn-warning-outlined"}`} for={option}>{option}</label>
+
+                                                                                                        {/* <label class="btn mx-1 my-1" for={option} data-mdb-ripple-init>{option}</label> */}
                                                                                                     </div>
                                                                                                 )
                                                                                             })}
 
                                                                                         </div>
                                                                                     </div>
-
+                                                                                    </div>
                                                                                 )
                                                                             })}
 
@@ -356,8 +362,7 @@ export default function ProductItem({ product }) {
                                         </div>
                                     </div>
                                 )
-                            ) : (<> </>)}
-
+                            ) : (<></>)}
 
                             {product &&
                                 (userInfo ?

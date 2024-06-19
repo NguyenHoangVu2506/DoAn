@@ -87,20 +87,20 @@ const oneSpu = async ({ spu_id }) => {
         return null
     }
 }
-const getProductDetails = async ({ spu_id }) => {
-    let spuDetail = {
-        spu: {},
-        product_brand: {},
-        productByCategory: []
-    }
-    spuDetail.spu = await oneSpu({ spu_id })
-    const brand_id = spuDetail.spu.spu_info.product_brand
-    const category_id = spuDetail.spu.spu_info.product_category[0]
-    spuDetail.product_brand = await getBrandById({ brand_id })
-    spuDetail.productByCategory = await isProductsByCategory({ filter: { product_category: category_id } })
+// const getProductDetails = async ({ spu_id }) => {
+//     let spuDetail = {
+//         spu: {},
+//         product_brand: {},
+//         productByCategory: []
+//     }
+//     spuDetail.spu = await oneSpu({ spu_id })
+//     const brand_id = spuDetail.spu.spu_info.product_brand
+//     const category_id = spuDetail.spu.spu_info.product_category[0]
+//     spuDetail.product_brand = await getBrandById({ brand_id })
+//     spuDetail.productByCategory = await isProductsByCategory({ filter: { product_category: category_id } })
 
-    return spuDetail
-}
+//     return spuDetail
+// }
 
 const isPublishProduct = async ({ product_id }) => {
     console.log(product_id)
@@ -204,6 +204,7 @@ const findProductDetail = async ({ spu_id, isPublished = true }) => {
             product_detail: {},
             special_offer: {},
             sku_list: [],
+            product_images : [],
             product_brand: {},
             product_categories: [],
             product_attributes: [],
@@ -212,6 +213,8 @@ const findProductDetail = async ({ spu_id, isPublished = true }) => {
         }
         product.product_detail = spu_info ? spu_info : {}
         product.sku_list = sku_list ? sku_list : []
+        //
+        product.product_images = await getImageBySpuId({ spu_id: spu_info._id })
         product.product_brand = await getBrandById({ brand_id: spu_info.product_brand })
         product.special_offer = await findSpecialOfferBySpuId({ spu_id: spu_info._id.toString(), special_offer_is_active: true })
         const categories = await findCategoryByIdList({
@@ -299,5 +302,5 @@ const findProductsByBrand = async ({ limit = 50, sort = 'ctime', page = 1, filte
 module.exports = {
     newSpu, oneSpu, isPublishProduct, isUnPublishProduct, isFindProductsByAttributes, isFindProduct,
     isfindAllProducts,
-    findProductDetail, getProductDetails, findProductsByCategory, checkProductByServer, findProductsByBrand
+    findProductDetail, findProductsByCategory, checkProductByServer, findProductsByBrand
 }
