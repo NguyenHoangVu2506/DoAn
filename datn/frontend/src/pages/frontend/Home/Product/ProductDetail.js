@@ -1,38 +1,38 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { onProductDetail } from "../../../../store/actions/product-actions";
 import { useNavigate, useParams } from "react-router-dom";
 import { NumericFormat } from "react-number-format";
 import ProductRelatedItem from "../../../../Components/product/product_related_item";
-import { addCart, addProWishList, removeFromWishList } from "../../../../store/actions";
+import { addCart, addProWishList, removeFromWishList, productImageList, onProductDetail } from "../../../../store/actions";
 import { toast } from 'react-toastify';
 import { addFavoriteToLocalStorage, getFavoritesFromLocalStorage, removeFavoriteFromLocalStorage } from "../../../../utils";
-import { MDBRadio, MDBBtnGroup } from 'mdb-react-ui-kit';
-function ProductDetail({ }) {
+
+function ProductDetail() {
+
     const { product_slug_id } = useParams()
     const spu_id = product_slug_id.split("-").pop()
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { productDetail } = useSelector((state) => state.productReducer);
+
     const { userInfo } = useSelector((state) => state.userReducer);
     const [favories_products, setfavoriesProduct] = useState(getFavoritesFromLocalStorage)
+    const [special_offer, setSpecial_offer] = useState([])
 
     const [activeTab, setActiveTab] = useState("ex1-pills-1");
-    const [largeImageSrc, setLargeImageSrc] = useState(productDetail && productDetail.product_detail.product_thumb[0]);
     const [sku_tier_idx, setSku_tier_idx] = useState([0])
     const [sku_list, setSkuList] = useState(null);
-    const [price, setPrice] = useState(0);
+    const [price_sku, setPrice] = useState(0);
     const [price_default, setprice_default] = useState(0);
 
     const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
+    const [detail, setDetail] = useState('');
     const [stock, setStock] = useState(null);
     const [selectedImage, setSelectedImage] = useState(null);
-    const [product_detail, setProductDetail] = useState(null);
-    const [product_images, setProductImages] = useState(null);
+    const [productDetail, setproduct_detail] = useState(null);
+    const [product_images, setProductImages] = useState([]);
     const [selected_sku, set_selected_sku] = useState(null);
-    const [selectedProductId, setSelectedProductId] = useState(null);
-    const [sale, setSale] = useState(0);
+    const [sale, setSale] = useState(null);
 
     // const [special_offer, setSpecial_offer] = useState(null);
     const [quantity, setQuantity] = useState(1);
@@ -52,14 +52,7 @@ function ProductDetail({ }) {
     const HandleImageChoose = (e) => {
         setSelectedImage(e);
     };
-    const addToCart = (productId) => {
-        setSelectedProductId(productId);
-    };
 
-    const changeLargeImage = (newSrc) => {
-        setLargeImageSrc(newSrc);
-
-    };
 
     ////addtoCart
     const handleAddToCart = async (userId, { productId, sku_id = null, quantity }) => {
@@ -74,7 +67,6 @@ function ProductDetail({ }) {
                             productId: productId,
                             sku_id: sku_id,
                             quantity: quantity,
-                            price: price,
                         },
                     })
                 );
@@ -125,73 +117,64 @@ function ProductDetail({ }) {
 
 
     // useEffect(() => {
-    //     if (productDetail?.special_offer && productDetail.special_offer?.special_offer_spu_list.length > 0) {
-    //         productDetail.special_offer.special_offer_spu_list.forEach((spu) => {
-    //             if (spu.product_id.toString() === productDetail.product_detail._id.toString() && spu.sku_list?.length > 0) {
+    //     if (product_detail?.special_offer && product_detail.special_offer?.special_offer_spu_list.length > 0) {
+    //         product_detail.special_offer.special_offer_spu_list.forEach((spu) => {
+    //             if (spu.product_id.toString() === product_detail.product_detail._id.toString() && spu.sku_list?.length > 0) {
     //                 const min_price = spu.sku_list.flatMap((item) => item.price_sale);
     //                 setPrice(Math.min(...min_price));
     //                 setSale(spu)
     //                 //
 
-    //             } else if (spu.product_id.toString() === productDetail.product_detail._id.toString()) {
+    //             } else if (spu.product_id.toString() === product_detail.product_detail._id.toString()) {
     //                 setPrice(spu.price_sale);
     //                 setSale(spu)
     //             }
     //         });
     //     }
-    // }, [productDetail]);
+    // }, [product_detail]);
 
     useEffect(() => {
-        if (productDetail?.special_offer && productDetail.special_offer?.special_offer_spu_list.length > 0) {
-            productDetail.special_offer.special_offer_spu_list.forEach((spu) => {
+        if (special_offer && special_offer?.special_offer_spu_list?.length > 0) {
+            special_offer.special_offer_spu_list.forEach((spu) => {
                 if (spu.product_id.toString() === productDetail.product_detail._id.toString() && spu.sku_list?.length > 0) {
-                    const min_price = spu.sku_list.flatMap((item) => item.price_sale);
-                    setPrice(spu.sku_list.price_sale);
-                    setSale(spu)
+                    const sku = spu.sku_list.find((item) => item?.sku_tier_idx?.toString() === sku_tier_idx.toString());
+                    setSale(sku)
                     //
-
-                } else if (spu.sku_list.sku_id.toString() === productDetail.sku_list._id.toString()) {
-                    setPrice(spu.sku_list.price_sale);
+                } else if (spu.product_id.toString() === productDetail.product_detail._id.toString()) {
                     setSale(spu)
                 }
             });
         }
-    }, [productDetail]);
+    }, [productDetail, sku_tier_idx]);
 
     useEffect(() => {
         if (productDetail) {
-            setProductDetail(
-                productDetail.product_detail?.product_detail
-            );
+            setSpecial_offer(productDetail?.special_offer)
+
             setName(
-                productDetail?.product_detail.product_name
+                productDetail?.product_detail?.product_name
             );
-            setDescription(
-                productDetail?.product_detail
-                    ?.product_short_description
+            setDetail(
+                productDetail?.product_detail?.product_detail
             );
-            if (productDetail.sku_list.length > 0) {
-                setSkuList(productDetail.sku_list)
-                !selected_sku && set_selected_sku(productDetail.sku_list[0])
-                setprice_default(
-                    productDetail.sku_list[0]
-                        ?.sku_price
-                );
-                setLargeImageSrc(productDetail.product_detail.product_thumb[0])
-                setStock(productDetail.sku_list[0].sku_stock)
+            setprice_default(
+                productDetail.product_detail
+                    .product_price
+            );
+            if (productDetail?.sku_list?.length > 0) {
+                setSkuList(productDetail?.sku_list)
+                set_selected_sku(productDetail?.sku_list[0])
+                setSelectedImage(product_images[0]?.thumb_url)
+                setStock(productDetail.sku_list[0]?.sku_stock)
+                setPrice(productDetail.sku_list[0]?.sku_price)
             } else {
-                setProductImages(
-                    productDetail?.product_detail
-                        .product_thumb[0]
-                );
-                setprice_default(
-                    productDetail?.product_detail
-                        .product_price
+                setSelectedImage(
+                    productDetail?.product_detail?.product_thumb[0]
                 );
             }
-
         }
-    }, [productDetail, sku_tier_idx])
+    }, [productDetail, product_images])
+
     useEffect(() => {
         if (sku_tier_idx) {
             set_selected_sku(
@@ -202,17 +185,30 @@ function ProductDetail({ }) {
             );
         }
     }, [sku_tier_idx]);
+
     useEffect(() => {
         if (selected_sku) {
             setPrice(selected_sku.sku_price);
             setStock(selected_sku.sku_stock);
         }
-    }, [selected_sku]
-    )
+    }, [selected_sku])
+
+
+
+    const fetchDataDetail = async () => {
+        const detail = await dispatch(onProductDetail({ spu_id: spu_id }));
+        setproduct_detail(
+            detail?.payload.metaData
+        );
+        const images = await dispatch(productImageList({ spu_id: spu_id }))
+        setProductImages(images?.payload?.metaData)
+    }
+
     useEffect(() => {
-        dispatch(onProductDetail({ spu_id: spu_id }));
+        fetchDataDetail()
     }, [product_slug_id]);
-    console.log("productDetail", productDetail, selected_sku);
+
+    console.log("product_detail", productDetail, selected_sku);
     console.log("pro", selected_sku);
     return (
         <>
@@ -238,29 +234,15 @@ function ProductDetail({ }) {
                                 <a data-fslightbox="mygalley" className="rounded-4" target="_blank" data-type="image"
                                 >
                                     <img style={{ maxWidth: '100%', maxHeight: '100vh', margin: 'auto' }} className="rounded-4 fit"
-                                        src={largeImageSrc} />
+                                        src={selectedImage} />
                                 </a>
                             </div>
                             <div className="d-flex justify-content-center mb-3">
-                                {/* {product_images &&
-                                    product_images?.map((item, index) => (
-                                        <button
-                                            onClick={() => HandleImageChoose(item)}
-                                            key={index}
-                                            className="h-24 w-24 flex-shrink-0  bg-gray-200 sm:overflow-hidden sm:rounded-lg lg:h-36 lg:w-full"
-                                        >
-                                            <img
-                                                src={item.thumb_url}
-                                                alt={item.thumb_url}
-                                                className="h-full w-full object-fill object-center"
-                                            />
-                                        </button>
-                                    ))} */}
 
-                                {productDetail && productDetail.product_detail.product_thumb.map((img, index) => {
+                                {productDetail?.product_detail?.product_thumb?.map((img, index) => {
                                     return (
                                         <a key={index} data-fslightbox="mygalley" className="border mx-1 rounded-2" target="_blank" data-type="image"
-                                            onClick={() => changeLargeImage(img)}>
+                                            onClick={() => HandleImageChoose(img)}>
                                             <img width="60" height="60" className="rounded-2" src={img} />
                                         </a>
                                     )
@@ -274,7 +256,7 @@ function ProductDetail({ }) {
                         <main className="col-lg-6">
                             <div className="ps-lg-3">
                                 <h4 className="title text-dark">
-                                    {productDetail && productDetail.product_detail.product_name}
+                                    {name}
                                 </h4>
                                 <div className="d-flex flex-row my-3">
                                     <div className="text-warning mb-1 me-2">
@@ -293,23 +275,29 @@ function ProductDetail({ }) {
 
                                 <div className="mb-3">
                                     <span className="h5">
-                                        {price > 0 ? (
-                                            <NumericFormat value={price} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
-                                        ) : (<NumericFormat value={price_default} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />)}
-
-
-                                    </span>
+                                        {(price_sku > 0
+                                            ? (sale ? <NumericFormat value={sale.price_sale} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
+                                                : <NumericFormat value={price_sku} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
+                                            )
+                                            : <NumericFormat value={price_default} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
+                                        )}                                    </span>
                                     <span className="text-muted">/{productDetail && productDetail.product_detail.product_unit}</span>
+                                    <span className="text-danger ms-3">
+                                        <s>
+                                            {sale && (price_sku > 0
+                                                ? <NumericFormat value={price_sku} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
+                                                : <NumericFormat value={price_default} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
+                                            )}</s>
+                                    </span>
                                 </div>
                                 <span>
-                                    Giảm đến 
-                                    {sale   &&
-                                               sale?.sku_id === selected_sku?._id && (
-                                            <span className="rounded-full bg-red-100 px-5 py-2 text-xs font-medium  text-red-800 dark:bg-red-900 dark:text-red-300">
-                                              {sale.quantity}
-                                            </span>
-                                        )}
+                                    Giảm đến
+                                    {sale && sale?.sku_id === selected_sku?._id && (
+                                        <span className="rounded-full bg-red-100 px-5 py-2 text-xs font-medium  text-red-800 dark:bg-red-900 dark:text-red-300">
+                                            {sale?.percentage}%
                                         </span>
+                                    )}
+                                </span>
 
                                 <p>
                                     {productDetail && productDetail.product_detail.product_short_description}
@@ -390,7 +378,7 @@ function ProductDetail({ }) {
                                 </div>
                                 <button href="#" className="btn btn-warning shadow-0 me-1"> Mua Ngay </button>
 
-                                {productDetail && productDetail ? (
+                                {productDetail ? (
                                     <button className="btn btn-primary shadow-0 me-1"
                                         style={{ backgroundColor: '#f6831f', color: 'white' }}
                                         onClick={() =>
@@ -399,22 +387,12 @@ function ProductDetail({ }) {
                                                     productDetail?.product_detail?._id,
                                                 sku_id: selected_sku?._id,
                                                 quantity: quantity,
-                                                price: price,
                                             })
                                         }> <i className="me-1 fa fa-shopping-basket"></i>  Thêm Vào Giỏ Hàng </button>
                                 ) :
                                     <button className="btn btn-primary shadow-0 me-1"
                                         style={{ backgroundColor: '#f6831f', color: 'white' }}
-                                        onClick={() =>
-                                            addToCart(
-                                                //     userInfo, {
-                                                //     productId:
-                                                //         productDetail?.product_detail?._id,
-                                                //     sku_id: selected_sku ? selected_sku._id :null,
-                                                //     quantity: quantity,
-                                                // }
-                                            )
-                                        }> <i className="me-1 fa fa-shopping-basket"></i>  Thêm Vào Giỏ Hàng </button>
+                                    > <i className="me-1 fa fa-shopping-basket"></i>  Thêm Vào Giỏ Hàng </button>
 
 
                                 }
@@ -497,7 +475,7 @@ function ProductDetail({ }) {
 
 
 
-
+                                        {detail}
 
                                     </div>
                                     <div className={`tab-pane fade ${activeTab === 'ex1-pills-2' ? 'show active' : ''} mb-2`} id="ex1-pills-2" role="tabpanel" aria-labelledby="ex1-tab-2">

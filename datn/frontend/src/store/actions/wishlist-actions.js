@@ -27,11 +27,11 @@ export const getWishList = (data) => async (dispatch) => {
 
 export const removeFromWishList = (data) => async (dispatch) => {
   try {
-    const response = await DeleteData('/wish_list/deleteToWishListItem',data);
-    console.log('response:', data)
+    const response = await PostData('/wish_list/deleteToWishListItem', data);
+
     console.log('response:', response)
 
-    return dispatch({ type: Action.DELETE_WISH_LIST, payload: response.data });
+    return dispatch({ type: Action.REMOVE_FROM_WISH_LIST, payload: response.data });
     // dispatch(getWishList({ sort: 'ctime' }));
 
   } catch (err) {

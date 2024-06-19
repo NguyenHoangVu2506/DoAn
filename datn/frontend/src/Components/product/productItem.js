@@ -5,7 +5,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { addFavoriteToLocalStorage, getFavoritesFromLocalStorage, removeFavoriteFromLocalStorage } from "../../utils";
 import accounting from "accounting";
-import { addCart, onProductDetail, productById } from "../../store/actions";
+import { addCart } from "../../store/actions";
+import { NumericFormat } from "react-number-format";
 
 export default function ProductItem({ product }) {
     const navigate = useNavigate();
@@ -15,20 +16,23 @@ export default function ProductItem({ product }) {
     // const { spuInfo } = useSelector((state) => state.productReducer);
     // const { productDetail } = useSelector((state) => state.productReducer);
 
-    const [productItem, setProductItem] = useState(null)
     const [sku_list, setSku_list] = useState([])
     const [promotion, setPromotion] = useState(null)
+    const [min_price_sku, setMin_price_sku] = useState(null)
     const [brand, setBrand] = useState(null)
+    const [product_image, setProduct_image] = useState([])
+
+    const [sale, setSale] = useState(null)
 
     const [favories_products, setfavoriesProduct] = useState(getFavoritesFromLocalStorage());
     const [price_default, setprice_default] = useState(0);
     const [price, setPrice] = useState(0);
     const [showModal, setShowModal] = useState(false);
-    const [largeImageSrc, setLargeImageSrc] = useState(product.product_thumb[0]);
+    const [selectedImage, setSelectedImage] = useState(null);
     const [quantity, setQuantity] = useState(1);
     const [stock, setStock] = useState(null);
     const [selected_sku, set_selected_sku] = useState(null);
-    const [sku_tier_idx, setSku_tier_idx] = useState([0, 0])
+    const [sku_tier_idx, setSku_tier_idx] = useState([0])
 
     const decreaseQuantity = () => {
         if (quantity > 1) {
@@ -75,7 +79,7 @@ export default function ProductItem({ product }) {
             userId: userId,
             productId: productId
         }));
-        await addFavoriteToLocalStorage(productId);
+        addFavoriteToLocalStorage(productId);
         setfavoriesProduct(getFavoritesFromLocalStorage());
         toast.success("Đã thêm sản phẩm vào mục yêu thích!");
     };
@@ -85,7 +89,7 @@ export default function ProductItem({ product }) {
             userId: userId,
             productId: productId
         }));
-        await removeFavoriteFromLocalStorage(productId);
+        removeFavoriteFromLocalStorage(productId);
         setfavoriesProduct(getFavoritesFromLocalStorage());
         toast.success("Đã xóa sản phẩm ra khỏi mục yêu thích!");
     };
@@ -97,45 +101,66 @@ export default function ProductItem({ product }) {
             console.log(newArr)
             return newArr
         })
-        console.log(indexOption, indexVariation)
     }
 
     useEffect(() => {
         setPromotion(product?.special_offer)
-        setSku_list(product.sku_list)
         setBrand(product.product_brand)
         setprice_default(product.product_price);
-    }, [product.product_price]);
+        if (product?.sku_list?.length > 0) {
+            setSku_list(product?.sku_list)
+            set_selected_sku(product?.sku_list[0])
+            setSelectedImage(product?.product_images[0]?.thumb_url)
+            setProduct_image(product?.product_images[0]?.thumb_url)
+            setStock(product.sku_list[0]?.sku_stock)
+            setPrice(product.sku_list[0]?.sku_price)
+        } else {
+            setSelectedImage(
+                product?.product_thumb[0]
+            );
+            setProduct_image(product?.product_thumb[0])
 
-    useEffect(() => {
-        if (promotion && promotion?.special_offer_spu_list?.length > 0) {
-            promotion.special_offer_spu_list.forEach((spu) => {
-                if (spu.product_id.toString() === product._id.toString() && spu.sku_list?.length > 0) {
-                    const min_price = spu.sku_list.flatMap((item) => item.price_sale);
-                    setPrice(Math.min(...min_price));
-                } else if (spu.product_id.toString() === product._id.toString()) {
-                    setPrice(spu.price_sale);
-                }
-            });
         }
     }, [product]);
 
     useEffect(() => {
-        //
-        sku_list && (
-            !selected_sku && set_selected_sku(sku_list.find((sku) => sku.sku_tier_idx.toString() === sku_tier_idx.toString()))
-        )
-        product && setLargeImageSrc(product.product_thumb[0])
-        product && setStock(product.product_quantity)
+        if (promotion && promotion?.special_offer_spu_list?.length > 0) {
+            promotion.special_offer_spu_list?.forEach((spu) => {
+                if (spu.product_id.toString() === product._id.toString() && spu.sku_list?.length > 0) {
 
-    }, [sku_tier_idx])
+                    const min_price = spu.sku_list.flatMap((item) => item.price_sale);
 
-    // useEffect(() => {
-    //     dispatch(onProductDetail({ spu_id: spu_id }));
-    // }, []);
+                    setMin_price_sku(Math.min(...min_price))
+                    const sku = spu.sku_list.find((item) => item?.sku_tier_idx?.toString() === sku_tier_idx.toString());
+                    setSale(sku)
+                } else if (spu.product_id.toString() === product._id.toString()) {
+                    setSale(spu)
+                }
+            });
+        }
+    }, [product, sku_tier_idx, promotion]);
+
+    useEffect(() => {
+        if (sku_tier_idx) {
+            set_selected_sku(
+                sku_list?.find(
+                    (sku) =>
+                        sku.sku_tier_idx.toString() === sku_tier_idx.toString()
+                )
+            );
+        }
+    }, [sku_tier_idx]);
+
+    useEffect(() => {
+        if (selected_sku) {
+            setPrice(selected_sku.sku_price);
+            setStock(selected_sku.sku_stock);
+            setSelectedImage(product?.product_images?.length > 0 && product.product_images?.find((item) => item.sku_id === selected_sku._id)?.thumb_url);
+        }
+    }, [selected_sku])
 
     const handleSizeChange = (thumb) => {
-        setLargeImageSrc(thumb);
+        setSelectedImage(thumb);
     };
 
     const openModal = () => {
@@ -145,38 +170,33 @@ export default function ProductItem({ product }) {
     const closeModal = () => {
         setShowModal(false);
     };
-    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", product)
 
     const addToCart = () => {
         //
-     if(userInfo){
-        if (product?.product_variations?.length > 0) {
-            openModal();
+        if (userInfo) {
+            if (product?.product_variations?.length > 0) {
+                openModal();
+            } else {
+                handleAddToCart(userInfo._id, { productId: product.productId, sku_id: null, quantity: quantity })
+            }
         } else {
-            handleAddToCart(userInfo._id, { productId: product.productId , sku_id: null, quantity: quantity })
-
-        }
-     }else{
-        toast.info('Vui lòng đăng nhập để tiếp tục');
+            toast.info('Vui lòng đăng nhập để tiếp tục');
             navigate('/login');
-     }
-        // setSelectedProductId(productId);
+        }
     };
-    // useEffect(() => {
-    //     // Sửa đổi ở đây: Thêm selectedProdu+ctId vào dependency của useEffect
-    //     if (selectedProductId && !spuInfo) {
-    //         dispatch(productById({ spu_id: selectedProductId }));
-    //     }
-    // }, [selectedProductId]);
+
     return (
         <>
             <div className="col-lg-3 col-md-6 col-sm-6 d-flex" key={product._id}>
                 <div className="card bg-image hover-zoom ripple rounded ripple-surface w-100 my-2 shadow-2-strong">
-                    <Link to={`/product/${product.product_slug}-${product._id}`}><img src={largeImageSrc} className="card-img-top" alt="product" /></Link>
+                    <Link to={`/product/${product.product_slug}-${product._id}`}><img src={product_image} className="card-img-top" alt="product" /></Link>
                     <div className="card-body d-flex flex-column">
                         <div className="d-flex flex-row">
-                            <h5 className="mb-1 me-1">{price === 0 ? price_default : price}</h5>
-                            <span className="text-danger"><s>{price !== 0 && price_default}</s></span>
+                            <h5 className="mb-1 me-1">{
+                                sale
+                                    ? min_price_sku
+                                    : (price > 0 ? price : price_default)}</h5>
+                            <span className="text-danger"><s>{sale && (price > 0 ? price : price_default)}</s></span>
                         </div>
                         <p className="card-text">{product.product_name}</p>
                         <div className="d-flex justify-content-around">
@@ -186,7 +206,7 @@ export default function ProductItem({ product }) {
                                 onClick={() => addToCart()}
                             >Thêm vào giỏ</button>
 
-                            { product.product_variations && product.product_variations ? (
+                            {product.product_variations && product.product_variations ? (
                                 showModal &&
                                 (
                                     <div className="modal fade show" style={{ display: "block" }} tabIndex="-1" role="dialog">
@@ -202,13 +222,15 @@ export default function ProductItem({ product }) {
                                                                 <aside className="col-lg-6">
                                                                     <div className="border rounded-4 mb-3 d-flex justify-content-center">
                                                                         <a className="rounded-4" target="_blank" data-type="image">
-                                                                            <img style={{ maxWidth: '100%', maxHeight: '100vh', margin: 'auto' }} className="rounded-4 fit" src={largeImageSrc} alt="product" />
+                                                                            <img style={{ maxWidth: '100%', maxHeight: '100vh', margin: 'auto' }} className="rounded-4 fit" src={selectedImage} alt="product" />
                                                                         </a>
                                                                     </div>
                                                                     <div className="d-flex justify-content-center mb-3">
-                                                                        {product.product_thumb.map((thumb, index) => (
-                                                                            <a key={index} className="border mx-1 rounded-2" target="_blank" data-type="image" onClick={() => handleSizeChange(thumb)}>
-                                                                                <img width="50" height="50" className="rounded-2" src={thumb} alt="thumb" />
+
+
+                                                                        {product.product_images.map((thumb, index) => (
+                                                                            <a key={index} className="border mx-1 rounded-2" target="_blank" data-type="image" onClick={() => handleSizeChange(thumb.thumb_url)}>
+                                                                                <img width="50" height="50" className="rounded-2" src={thumb.thumb_url} alt="thumb" />
                                                                             </a>
                                                                         ))}
                                                                     </div>
@@ -235,13 +257,21 @@ export default function ProductItem({ product }) {
                                                                             </span>
                                                                         </div>
                                                                         <div className="mb-3">
-                                                                            <>
-                                                                                <h5 className="mb-1 me-1">
-                                                                                    {accounting.formatNumber(price === 0 ? price_default : price, 0, ".", ",")} <span className="text-muted">đ</span></h5>
-                                                                                {price !== 0 && (
-                                                                                    <span className="text-danger"><s>{accounting.formatNumber(price_default, 0, ".", ",")} <span className="text-muted">đ</span></s></span>
-                                                                                )}
-                                                                            </>
+                                                                            <span className="h5">
+                                                                                {(price > 0
+                                                                                    ? (sale ? <NumericFormat value={sale.price_sale} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
+                                                                                        : <NumericFormat value={price} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
+                                                                                    )
+                                                                                    : <NumericFormat value={price_default} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
+                                                                                )}                                    </span>
+                                                                            <span className="text-muted">/{product && product.product_unit}</span>
+                                                                            <span className="text-danger ms-3">
+                                                                                <s>
+                                                                                    {sale && (price > 0
+                                                                                        ? <NumericFormat value={price} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
+                                                                                        : <NumericFormat value={price_default} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
+                                                                                    )}</s>
+                                                                            </span>
                                                                         </div>
                                                                         <p>{product.product_short_description}</p>
                                                                         <div className="row">
@@ -329,14 +359,14 @@ export default function ProductItem({ product }) {
                             ) : (<> </>)}
 
 
-                            {productItem &&
+                            {product &&
                                 (userInfo ?
                                     (
-                                        favories_products.some((p_id) => p_id === productItem._id) === true
+                                        favories_products.some((p_id) => p_id === product._id) === true
                                             ?
-                                            <button className="btn btn-light border icon-hover  px-2 py-2" onClick={() => HandleRemoveFromWishList({ userId: userInfo._id, productId: productItem._id })}><i className="fas fa-heart fa-lg text-danger px-1"></i></button>
+                                            <button className="btn btn-light border icon-hover  px-2 py-2" onClick={() => HandleRemoveFromWishList({ userId: userInfo._id, productId: product._id })}><i className="fas fa-heart fa-lg text-danger px-1"></i></button>
                                             :
-                                            <button className="btn btn-light border icon-hover  px-2 py-2" onClick={() => HandleAddToWishList({ userId: userInfo._id, productId: productItem._id })}><i className="fas fa-heart fa-lg text-secondary px-1"></i></button>
+                                            <button className="btn btn-light border icon-hover  px-2 py-2" onClick={() => HandleAddToWishList({ userId: userInfo._id, productId: product._id })}><i className="fas fa-heart fa-lg text-secondary px-1"></i></button>
                                     ) : (
                                         <button className="btn btn-light border icon-hover  px-2 py-2"><i className="fas fa-heart fa-lg text-secondary px-1"></i></button>
                                     ))}

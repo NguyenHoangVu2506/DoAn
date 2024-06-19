@@ -11,6 +11,7 @@ export * from './brand-actions';
 export * from './attribute-actions';
 export * from './menu-actions';
 export * from './contact-actions';
+export * from './gallery-actions';
 
 
 
@@ -95,5 +96,6 @@ export const Action = {
 ////////////
   GET_PAGE: "GET_PAGE",
   GET_PAGE_BY_ID: "GET_PAGE_BY_ID",
-
+//
+GET_IMAGE_LIST:"GET_IMAGE_LIST"
 };

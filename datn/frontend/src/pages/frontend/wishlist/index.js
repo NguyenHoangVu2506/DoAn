@@ -11,14 +11,13 @@ export default function Wishlist() {
     const { wish_list } = useSelector((state) => state.wishlistReducer);
     const { userInfo } = useSelector((state) => state.userReducer);
     const { allProducts } = useSelector((state) => state.productReducer);
-    const [favories_products, setfavoriesProduct] = useState(getFavoritesFromLocalStorage());
+    const [favories_products] = useState(getFavoritesFromLocalStorage());
 
     const navigate = useNavigate();
     const handleSubmit = async () => {
         try {
             await dispatch(onLogout({}));
             toast.success('logout success');
-            window.location.reload();
             navigate('/');
         } catch (error) {
             console.error(error);
@@ -29,30 +28,34 @@ export default function Wishlist() {
         if (userInfo) {
             if (!wish_list) {
                 dispatch(getWishList({ userId: userInfo._id }));
-            } else if (wish_list.length !== getFavoritesFromLocalStorage().length) {
-                dispatch(onAllProduct({ limit: 20, page: 1 }));
+                dispatch(onAllProduct());
+            } else {
+                console.log("sss",wish_list)
+                wish_list.wish_list_products.length != getFavoritesFromLocalStorage().length && dispatch(getWishList({ userId: userInfo._id }));
+
             }
+            // if (!allProducts) {
+            //     dispatch(onAllProduct());
+            // }
         }
-        if (!allProducts) {
-            dispatch(onAllProduct({ limit: 20, page: 1 }));
-        }
+
     }, [wish_list]);
 
-    const HandleAddToWishList = async ({ userId, productId }) => {
-        await dispatch(addProWishList({ userId, productId }));
-        addFavoriteToLocalStorage(productId);
-        setfavoriesProduct(getFavoritesFromLocalStorage());
-        toast.success("Đã thêm sản phẩm vào mục yêu thích!");
-    };
+    // const HandleAddToWishList = async ({ userId, productId }) => {
+    //     await dispatch(addProWishList({ userId, productId }));
+    //     addFavoriteToLocalStorage(productId);
+    //     setfavoriesProduct(getFavoritesFromLocalStorage());
+    //     toast.success("Đã thêm sản phẩm vào mục yêu thích!");
+    // };
 
-    const HandleRemoveFromWishList = async ({ userId, productId }) => {
-        await dispatch(removeFromWishList({ userId, productId }));
-        removeFavoriteFromLocalStorage(productId);
-        setfavoriesProduct(getFavoritesFromLocalStorage());
-        window.location.reload()
+    // const HandleRemoveFromWishList = async ({ userId, productId }) => {
+    //     await dispatch(removeFromWishList({ userId, productId }));
+    //     removeFavoriteFromLocalStorage(productId);
+    //     setfavoriesProduct(getFavoritesFromLocalStorage());
+    //     window.location.reload()
 
-        toast.success("Đã xóa sản phẩm ra khỏi mục yêu thích!");
-    };
+    //     toast.success("Đã xóa sản phẩm ra khỏi mục yêu thích!");
+    // };
 
     return (
         <>
@@ -87,12 +90,12 @@ export default function Wishlist() {
                                 <div className="content-body">
                                     <div className="col-lg-12">
                                         <div className="row justify-content-center mb-3">
-                                            {wish_list && wish_list.wish_list_products?.length > 0 ? (
-                                                wish_list.wish_list_products.map((product_in_wish_list) => {
+                                            {favories_products && favories_products?.length > 0 ? (
+                                                favories_products?.map((product_in_wish_list) => {
                                                     return allProducts && allProducts.map((product) => {
                                                         if (product_in_wish_list === product._id) {
-                                                                return (<ProductListItem product={product} />);
-                                                            
+                                                            return (<ProductListItem product={product} />);
+
                                                         }
                                                     });
                                                 })

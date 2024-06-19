@@ -23,7 +23,6 @@ export default function CategoryList({ category_parent, all_product_category, al
     selectedCategory && setProductByCategory(all_product_category?.filter((product) => product.product_category.includes(selectedCategory._id)))
   }, [selectedCategory]);
 
-  console.log("category_childrent", category_childrent)
   return (
     <div className="container">
       <div className="container pt-2 " style={{ background: '#ffd6b2 linear-gradient(180deg, #fff3ea 0%, #ffd6b2 100%)' }}>

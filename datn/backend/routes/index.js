@@ -28,7 +28,7 @@ const routes = (app) => {
 
     app.use('/api/spu', SpuRouter)
     app.use('/api/slider',SliderRouter )
-    app.use('/api/gallery', CommentRouter)
+    app.use('/api/gallery', GalleryRouter)
     app.use('/api/discount', DiscountRouter)
     app.use('/api/user', UserRouter)
     app.use('/api/cart', CartRouter)

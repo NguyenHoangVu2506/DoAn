@@ -51,10 +51,10 @@ class WishlistService {
             wish_list_state: 'active'
         }, updateSet = {
             $pull: {
-                wish_list_products: productId
+                "wish_list_products": productId
             }
         }
-        return await WishlistModel.updateOne(query, updateSet).lean()
+        return await WishlistModel.updateOne(query, updateSet)
     }
 
     async getUserWishList({ userId }) {

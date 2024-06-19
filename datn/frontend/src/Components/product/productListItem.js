@@ -8,7 +8,7 @@ import { addFavoriteToLocalStorage, getFavoritesFromLocalStorage, removeFavorite
 export default function ProductListItem({ product }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    console.log(product);
+
     const { userInfo } = useSelector((state) => state.userReducer);
     const [favoritesProducts, setFavoritesProducts] = useState(getFavoritesFromLocalStorage());
 
@@ -25,11 +25,9 @@ export default function ProductListItem({ product }) {
 
     const handleRemoveFromWishList = async ({ userId, productId }) => {
         try {
-            await dispatch(removeFromWishList({ userId,productId}));
+            await dispatch(removeFromWishList({ userId, productId }));
             removeFavoriteFromLocalStorage(productId);
             setFavoritesProducts(getFavoritesFromLocalStorage());
-            window.location.reload()
-
             toast.success("Đã xóa sản phẩm ra khỏi mục yêu thích!");
         } catch (error) {
             console.error("Error removing from wishlist:", error);
@@ -79,8 +77,8 @@ export default function ProductListItem({ product }) {
                             <h6 className="text-success">Miễn phí ship</h6>
                             <div className="mt-4">
                                 <button className="btn btn-primary shadow-0" style={{ backgroundColor: '#f6831f', color: 'white' }} type="button">Thêm vào giỏ</button>
-                                {product && userInfo ? (
-                                    favoritesProducts.some((p_id) => p_id === product._id) ? (
+                                {userInfo ? (
+                                    favoritesProducts?.some((p_id) => p_id == product._id) === true ? (
                                         <button
                                             className="btn btn-light border icon-hover px-2 py-2"
                                             onClick={() => handleRemoveFromWishList({ userId: userInfo._id, productId: product._id })}

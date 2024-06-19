@@ -3,7 +3,7 @@ const { NotFoundRequestError } = require('../core/error.response')
 const SPU_MODEL = require('../models/SpuModel')
 const { newSku, allSkuBySpuId, oneSku } = require('./SkuService')
 const _ = require('lodash')
-const { addImage } = require('./GalleryService')
+const { addImage, getImageBySpuId } = require('./GalleryService')
 const spu_repo = require('../models/repositories/spu.repo')
 const { Types } = require('mongoose')
 const { getBrandById } = require('./BrandService')
@@ -141,22 +141,25 @@ const isfindAllProducts = async ({ limit = 50, sort = 'ctime', page = 1, filter 
     let brand_list = []
     let special_offer = []
     let sku_list = []
-    //
-    let category_list=[]
+    //let
+    let product_images = []
+    let category_list = []
     //
     for (let index = 0; index < product_list.length; index++) {
         const brand = await getBrandById({ brand_id: product_list[index].product_brand })
         brand_list.push(brand)
-        const category = await getCategoryById({category_id: product_list[index].product_category})
+        const category = await getCategoryById({ category_id: product_list[index].product_category })
         category_list.push(category)
         const skulist = await allSkuBySpuId({ product_id: product_list[index]._id })
         sku_list.push(skulist)
         console.log("id", product_list[index]._id)
         const specialoffer = await findSpecialOfferBySpuId({ spu_id: product_list[index]._id.toString(), special_offer_is_active: true })
         special_offer.push(specialoffer)
+        const productImages = await getImageBySpuId({ spu_id: product_list[index]._id })
+        product_images.push(productImages)
     }
     const allproduct = await product_list.map((product, index) => {
-        return { ...product, brand: brand_list[index],category:category_list[index], special_offer: special_offer[index], sku_list: sku_list[index] }
+        return { ...product, brand: brand_list[index], category: category_list[index], special_offer: special_offer[index], sku_list: sku_list[index], product_images: product_images[index] }
     })
 
     return allproduct
@@ -174,6 +177,7 @@ const findProductsByCategory = async ({ limit = 50, sort = 'ctime', page = 1, fi
     let brand_list = []
     let special_offer = []
     let sku_list = []
+    let product_images = []
     console.log("productsByCategory", productsByCategory)
     for (let index = 0; index < productsByCategory.length; index++) {
         const brand = await getBrandById({ brand_id: productsByCategory[index].product_brand })
@@ -183,9 +187,11 @@ const findProductsByCategory = async ({ limit = 50, sort = 'ctime', page = 1, fi
         console.log("id", productsByCategory[index]._id)
         const specialoffer = await findSpecialOfferBySpuId({ spu_id: productsByCategory[index]._id.toString(), special_offer_is_active: true })
         special_offer.push(specialoffer)
+        const productImages = await getImageBySpuId({ spu_id: productsByCategory[index]._id })
+        product_images.push(productImages)
     }
     product_list.productsByCategory = await productsByCategory.map((product, index) => {
-        return { ...product, brand: brand_list[index], special_offer: special_offer[index], sku_list: sku_list[index] }
+        return { ...product, brand: brand_list[index], special_offer: special_offer[index], sku_list: sku_list[index], product_images: product_images[index] }
     })
 
     return product_list.productsByCategory

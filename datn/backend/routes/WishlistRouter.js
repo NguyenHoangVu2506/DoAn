@@ -11,7 +11,7 @@ const  {asyncHandler}  = require('../helpers');
 
 router.post('/addProduct', asyncHandler(WishlistController.addToWishList))
 router.post('/getUserWishList', asyncHandler(WishlistController.getUserWishList))
-router.delete('/deleteToWishListItem', asyncHandler(WishlistController.deleteToWishListItem))
-router.delete('/deleteToWishListByUserId', asyncHandler(WishlistController.deleteToWishListByUserId))
+router.post('/deleteToWishListItem', asyncHandler(WishlistController.deleteToWishListItem))
+router.post('/deleteToWishListByUserId', asyncHandler(WishlistController.deleteToWishListByUserId))
 
 module.exports = router
