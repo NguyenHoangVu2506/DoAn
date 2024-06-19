@@ -14,7 +14,7 @@ import {
 } from '@coreui/react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { BlogStore, getTopic, uploadSingleImage } from '../../../store/actions';
+import { BlogStore, getTopic, uploadSingleImageArray } from '../../../store/actions';
 
 const CreatePost = () => {
     const navigate = useNavigate();
@@ -32,24 +32,37 @@ const CreatePost = () => {
     const [topic_id, setTopic_Id] = useState('');
     const [description, setDescription] = useState('');
     const [detail, setDetail] = useState('');
+    const [images, setImages] = useState([]);
+
+    const handleImageChange = (e) => {
+        setImages([...e.target.files]);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const formFile = new FormData();
-
-            const images = document.querySelector("#image");
-            if (images.files.length === 0) {
-                formFile.append("file", "");
-            } else {
-                formFile.append("file", images.files[0]);
-            }
-            formFile.append('folderName', 'website/slider');
-            const image = await dispatch(uploadSingleImage(formFile));
-            image && dispatch(BlogStore({ blog_name: name, topic_id, blog_description: description, blog_title: title, blog_detail: detail, blog_image: image?.payload?.metaData?.thumb_url, isPublished: true }));
-            navigate('/post/postlist/news/1/10');
+            images.forEach((image) => {
+                formFile.append('files', image);
+            });
+            formFile.append('folderName', 'website/post');
+            const response = await dispatch(uploadSingleImageArray(formFile));
+            console.log('Response:', response);
+            const uploadedImages = response?.payload?.metaData.map((data) => data.thumb_url) || [];
+            const postData = {
+                blog_name: name,
+                topic_id,
+                blog_description: description,
+                blog_title: title,
+                blog_detail: detail,
+                blog_image: uploadedImages,
+                isPublished: true
+            };
+            console.log('Post Data:', postData);
+            await dispatch(BlogStore(postData));
+            navigate('/post/postlist');
         } catch (error) {
-            console.log(error);
+            console.error('Error:', error);
         }
     };
 
@@ -89,7 +102,7 @@ const CreatePost = () => {
                             </CCol>
                             <CCol md={3}>
                                 <CFormLabel htmlFor="formFile">Hình ảnh</CFormLabel>
-                                <CFormInput type="file" id="image" />
+                                <CFormInput type="file" id="image" multiple onChange={handleImageChange} />
                             </CCol>
                             <CCol xs={12}>
                                 <CButton color="primary" type="submit">Lưu</CButton>

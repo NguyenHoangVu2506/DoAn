@@ -8,7 +8,7 @@ const morgan = require("morgan");
 const cors = require('cors')
 const session = require('express-session');
 const cookieParser = require("cookie-parser");
-// const { initRedis } = require('./config/redis');
+// const { initRedis } = require('./config/redis'); 
 const Server = async () => {
     dotenv.config();
     port = process.env.PORT || 3001;

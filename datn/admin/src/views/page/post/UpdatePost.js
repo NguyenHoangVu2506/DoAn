@@ -17,7 +17,7 @@ import {
 } from '@coreui/react'
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-import { BlogStore, BlogUpdate, getBlogById, getTopic, uploadSingleImage } from '../../../store/actions';
+import { BlogStore, BlogUpdate, getBlogById, getTopic, uploadSingleImage, uploadSingleImageArray } from '../../../store/actions';
 
 const UpdatePost = () => {
     const { id } = useParams(); // Lấy ID từ URL
@@ -31,21 +31,24 @@ const UpdatePost = () => {
     const [topic_id, setTopic_Id] = useState('');
     const [description, setDescription] = useState('');
     const [detail, setDetail] = useState('');
-    const [image, setImage] = useState('');
+    const [images, setImages] = useState([]);
 
+    const handleImageChange = (e) => {
+        setImages([...e.target.files]);
+    };
     useEffect(() => {
         if (!listBlogById) {
-            dispatch(getBlogById({ blog_id:id }));
+            dispatch(getBlogById({ blog_id: id }));
         } else {
             setName(listBlogById.blog_name || '');
             setTopic_Id(listBlogById.topic_id || '');
             setDescription(listBlogById.blog_description || '');
-            setImage(listBlogById.blog_image || '');
+            setImages(listBlogById.blog_image || '');
             setTitle(listBlogById.blog_title || '');
             setDetail(listBlogById.blog_detail || '');
 
         }
-    }, [dispatch,listBlogById]);
+    }, [dispatch, listBlogById]);
 
     useEffect(() => {
         if (!allTopic) {
@@ -58,17 +61,26 @@ const UpdatePost = () => {
         e.preventDefault();
         try {
             const formFile = new FormData();
+            images.forEach((image) => {
+                formFile.append('files', image);
+            });
+            formFile.append('folderName', 'website/post');
+            const response = await dispatch(uploadSingleImageArray(formFile));
+            const uploadedImages = response?.payload?.metaData.map((data) => data.thumb_url) || [];
+            const postData = {
+                blog_id: id,
+                blog_name: name,
+                topic_id:topic_id,
+                blog_description: description,
+                blog_title: title,
+                blog_detail: detail,
+                blog_image: uploadedImages,
+                isPublished: true
+            };
+            console.log('Post Data:', postData);
 
-            const images = document.querySelector("#image");
-            if (images.files.length === 0) {
-                formFile.append("file", "");
-            } else {
-                formFile.append("file", images.files[0]);
-            }
-            formFile.append('folderName', 'website/blog');
-            const image = await dispatch(uploadSingleImage(formFile));
-            image && dispatch(BlogUpdate({blog_id:id, blog_name: name, topic_id, blog_description: description, blog_title: title, blog_detail: detail, blog_image: image?.payload?.metaData?.thumb_url, isPublished: true }));
-            navigate('/post/postlist/news/1/10');
+            await dispatch(BlogUpdate(postData));
+            navigate('/post/postlist');
         } catch (error) {
             console.log(error);
         }
@@ -110,7 +122,7 @@ const UpdatePost = () => {
                             </CCol>
                             <CCol md={3}>
                                 <CFormLabel htmlFor="formFile">Hình ảnh</CFormLabel>
-                                <CFormInput type="file" id="image" />
+                                <CFormInput type="file" id="image" multiple onChange={handleImageChange} />
                             </CCol>
                             <CCol xs={12}>
                                 <CButton color="primary" type="submit">Lưu</CButton>

@@ -1,87 +1,69 @@
 import { useDispatch, useSelector } from "react-redux"
 import { Link, useParams } from "react-router-dom"
 import { useEffect } from "react";
-import { getBlogByTopicId, getBlogDetails } from "../../../store/actions";
-import PostHomeItem from "../../../Components/blog/postHomeItem";
+import { getBlogDetails } from "../../../store/actions";
 
 export default function PostDetailItem() {
-  const { slug_id } = useParams()
+  const { slug_id } = useParams();
   const dispatch = useDispatch();
-  const blog_id = slug_id.split('-').pop()
-  console.log(blog_id)
-  const { blogDetails } = useSelector((state) => state.blogReducer)
-
+  const blog_id = slug_id.split('-').pop();
+  console.log(blog_id);
+  const { blogDetails } = useSelector((state) => state.blogReducer);
 
   useEffect(() => {
-      dispatch(getBlogDetails({ blog_id: blog_id }))
-    console.log(blogDetails)
-  }, [slug_id])
-
+    dispatch(getBlogDetails({ blog_id }));
+    console.log(blogDetails);
+  }, [slug_id, dispatch]);
 
   return (
     <body>
-      <main role="main" class="px-4 py-2 ">
-        <div class="row">
-          <div class="col-md-8 blog-main ">
-            <div class="blog-post">
+      <main role="main" className="px-4 py-2 ">
+        <div className="row">
+          <div className="col-lg-9">
+            <div className="blog-post">
               {blogDetails && (
-                <div class="blog-post">
-                  <h2 class="pb-3 mb-4 blog-post-title  border-bottom">
-                    {blogDetails.post.blog_title}
-                  </h2>
-                  <img src={blogDetails.post.blog_image} style={{}}></img>
-                  <blockquote></blockquote>
-
-                  <h3 class="blog-post-title">{blogDetails.post.blog_name}</h3>
-                  <p class="blog-post-meta">{blogDetails.post.blog_detail}</p>
+                <div className="blog-post">
+                  {/* <img src={blogDetails.post.blog_image} alt="Blog" /> */}
+                  {/* <blockquote></blockquote> */}
+                  <h3 className="blog-post-title">{blogDetails.post.blog_name}</h3>
+                  <div dangerouslySetInnerHTML={{ __html: blogDetails.post.blog_detail }} />
                 </div>
               )}
             </div>
           </div>
 
-          <aside class="col-md-4 blog-sidebar">
-            <div class=" mb-3 bg-light rounded">
-              <div class="">
+          <div className="col-lg-3">
+            <div className="mb-3 bg-light rounded">
+              <div className="">
                 <div className="px-0 border rounded-2 shadow-0">
                   <div className="card">
                     <div className="card-body">
                       <h5 className="card-title">Bài Viết Liên Quan</h5>
                       <>
-                        {
-                          blogDetails && blogDetails.related_posts.map((post, index) => {
-                            return (
-                              <div className="d-flex mb-3" key={index}>
-                                <Link to={`/blog/${post.blog_slug}-${post._id}`} className="me-3">
-                                  <img src={post.blog_image} style={{ width: '90px', height: '90px' }} className="img-md img-thumbnail" />
-                                </Link>
-                                <div className="info">
-                                  <a href="#" className="nav-link mb-1">
-                                    {post.blog_name}
-                                    <br />
-                                  </a>
-                                </div>
+                        {blogDetails && blogDetails.related_posts
+                          .filter(item => !item.isDeleted)
+                          .map((item, index) => (
+                            <div className="d-flex mb-3" key={index}>
+                              <Link to={`/blog/${item.blog_slug}-${item._id}`} className="me-3">
+                                <img src={item.blog_image} style={{ width: '90px', height: '90px' }} className="img-md img-thumbnail" alt="Related Post" />
+                              </Link>
+                              <div className="info">
+                                <a href="#" className="nav-link mb-1">
+                                  {item.blog_name}
+                                  <br />
+                                </a>
                               </div>
-
-                            )
-                          })
-
-                        }
+                            </div>
+                          ))}
                       </>
                     </div>
-
                   </div>
                 </div>
               </div>
             </div>
-          </aside>
-
+          </div>
         </div>
-
-      </main >
-
-
-
-
-    </body >
-  )
-};
+      </main>
+    </body>
+  );
+}

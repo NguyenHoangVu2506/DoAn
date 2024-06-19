@@ -78,7 +78,7 @@ function PostList() {
                                             <tr className="datarow" key={index}>
 
                                                 <td className="text-left">
-                                                    <img src={blog.blog_image} alt={blog.blog_name} style={{ width: "70px" }} />
+                                                    <img src={blog.blog_image[0]} alt={blog.blog_name} style={{ width: "70px" }} />
 
                                                 </td> {/* Thêm hình ảnh ở đây */}
                                                 <td><div className="text-left">{blog.blog_name}</div></td>

@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
-import { getPageById } from "../../../store/actions/page-actions";
+import { getListPage, getPageById } from "../../../store/actions/page-actions";
 import { useEffect, useState } from "react";
 
 export default function PageSingle() {
@@ -9,10 +9,17 @@ export default function PageSingle() {
   const dispatch = useDispatch();
   const page_id = slug_id.split('-').pop();
   const { listPageById } = useSelector((state) => state.pageReducer);
+  const { allPage } = useSelector((state) => state.pageReducer);
+
   console.log(slug_id)
   useEffect(() => {
     dispatch(getPageById({ page_id }));
   }, [dispatch, page_id]);
+  useEffect(() => {
+    if (!allPage) {
+      dispatch(getListPage({ sort: 'ctime' }));
+    }
+  }, [dispatch, allPage]);
 
   const toggleRatingCollapse = () => {
     setRatingCollapsed(!ratingCollapsed);
@@ -31,9 +38,6 @@ export default function PageSingle() {
                 <span style={{ fontSize: '16px' }}>{listPageById.page_title}</span>
               </p>
               <div dangerouslySetInnerHTML={{ __html: listPageById.page_detail }} />
-
-
-              
             </div>
           )}
         </div>
@@ -57,21 +61,16 @@ export default function PageSingle() {
                 >
                   <div className="accordion-body">
                     <div className="d-flex flex-column justify-content-start">
-                      <div className="d-flex flex-column justify-content-start">
-                        Chính sách vận chuyển
+                    {allPage && allPage.map((item, index) => (
+                      <>
+                      <div className="d-flex flex-column justify-content-start" key={index}>
+                        <Link style={{color:'#4f4f4f'}} to={`/page/${item.page_slug}-${item._id}`}>
+                        {item.page_name}
+                        </Link>
                       </div>
                       <hr />
-                      <div className="d-flex flex-column justify-content-start">
-                        Chính sách đổi trả hàng và hoàn tiền
-                      </div>
-                      <hr />
-                      <div className="d-flex flex-column justify-content-start">
-                        Chính sách bảo mật thông tin cá nhân
-                      </div>
-                      <hr />
-                      <div className="d-flex flex-column justify-content-start">
-                        Quy định và hình thức thanh toán
-                      </div>
+                      </>
+                    ))}
                     </div>
                   </div>
                 </div>
