@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getCart, productById } from "../../../store/actions";
+import { getCart, newOrder, onGetAddress, productById } from "../../../store/actions";
+import { getCartFromLocalStorage, getOrderFromCart } from "../../../utils";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function Checkout() {
-
   const dispatch = useDispatch();
   const inputStyle = {
     border: '1px solid #ced4da',
@@ -18,45 +20,17 @@ function Checkout() {
     ...inputStyle,
     height: '100px'
   };
-  
-  const { cart } = useSelector((state) => state.cartReducer);
+const navigate=useNavigate()
+  const { price_total, price_total_discount, price_discount_amount,
+    discountsApply = []
+  } = getOrderFromCart()
+
   const { userInfo } = useSelector((state) => state.userReducer);
 
   const [shippingMethod, setShippingMethod] = useState('normal');
   const [shippingFee, setShippingFee] = useState(30000);
-  const [product_item, setProductItem] = useState(null);
-  const [_quantity, setQuantity] = useState(null);
+  const [cart_products] = useState(getCartFromLocalStorage())
   const [productItems, setProductItems] = useState([]);
-
-  useEffect(() => {
-    if (userInfo) {
-      dispatch(getCart({ userId: userInfo._id }));
-    }
-  }, [userInfo, dispatch]);
-
-  useEffect(() => {
-    if (cart && cart.cart_products && cart.cart_products.length > 0) {
-      fetchProductDetails();
-    }
-  }, [cart]);
-console.log(cart)
-  const fetchProductDetails = async () => {
-    try {
-      const productsWithDetails = await Promise.all(
-        cart.cart_products.map(async (product) => {
-          const response = await dispatch(productById({ spu_id: product.productId }));
-          if (response && response.payload.metaData) {
-            return response.payload.metaData;
-          }
-          return null;
-        })
-      );
-
-      setProductItems(productsWithDetails.filter(product => product !== null));
-    } catch (error) {
-      console.error('Lỗi khi lấy thông tin sản phẩm:', error);
-    }
-  };
 
   const handleShippingChange = (event) => {
     const selectedShippingMethod = event.target.value;
@@ -68,6 +42,30 @@ console.log(cart)
       setShippingFee(50000);
     }
   };
+
+  const handleOrder =async () => {
+    const new_order =await dispatch(newOrder({
+      //  cartId: cart,
+      userId: userInfo._id,
+      user_address: {},
+      user_payment: {},
+      order_ids:
+      {
+        shop_discounts: discountsApply,
+        item_products: cart_products
+      }
+    }))
+
+    if(new_order.payload.status===(200||201)){
+      toast.success("Đặt hàng thành công")
+      navigate('/')
+    }else{
+      toast.error("Đặt hàng không thành công")
+
+    }
+
+  }
+
   return (
     <>
       <div className="bg-primary">
@@ -100,31 +98,34 @@ console.log(cart)
                   <h5 className="card-title mb-3">Thông tin khách hàng</h5>
                   <div className="row">
                     <div className="col-6 mb-3">
-                      <p className="mb-0">Họ và tên</p>
+                      <p className="mb-0">Họ và tên </p>
                       <div className="form-outline">
                         <input
                           type="text"
                           className="form-control"
                           placeholder="Nhập tên"
                           style={inputStyle}
-                        />
+
+                          value={userInfo.user_name} />
                       </div>
                     </div>
                     <div className="col-6 mb-3">
-                      <p className="mb-0">Phone</p>
+                      <p className="mb-0">Số Điện Thoại</p>
                       <div className="form-outline">
-                        <input
+                        <textarea
                           type="text"
                           className="form-control"
                           placeholder="Nhập số điện thoại"
                           style={inputStyle}
+                          value={userInfo.user_phone}
+
                         />
                       </div>
                     </div>
                     <div className="col-12 mb-3">
                       <p className="mb-0">Địa chỉ</p>
                       <div className="form-outline">
-                        <input
+                        <textarea
                           type="text"
                           className="form-control"
                           placeholder="Nhập địa chỉ"
@@ -135,7 +136,7 @@ console.log(cart)
                     <div className="col-12 mb-3">
                       <p className="mb-0">Ghi chú</p>
                       <div className="form-outline">
-                        <input
+                        <textarea
                           type="text"
                           className="form-control"
                           placeholder="Nhập ghi chú"
@@ -242,7 +243,7 @@ console.log(cart)
                   </div>
                   <div className="float-end">
                     <button className="btn btn-light border">Hủy</button>
-                    <button className="btn btn-success shadow-0 border">Tiếp tục</button>
+                    <button type="button" className="btn btn-success shadow-0 border" onClick={()=>handleOrder()}>Đặt Hàng</button>
                   </div>
                 </div>
               </div>
@@ -253,23 +254,23 @@ console.log(cart)
                 <h6 className="mb-3">Summary</h6>
                 <div className="d-flex justify-content-between">
                   <p className="mb-2">Tổng tiền:</p>
-                  <p className="mb-2">195.90</p>
+                  <p className="mb-2">{price_total}</p>
                 </div>
                 <div className="d-flex justify-content-between">
                   <p className="mb-2">Giảm giá:</p>
-                  <p className="mb-2 text-danger">- 60.00</p>
+                  <p className="mb-2 text-danger">{price_discount_amount}</p>
                 </div>
                 <div className="d-flex justify-content-between">
-                  <p className="mb-2">Phí vận chuyển:</p>
-                  <p className="mb-2">{shippingFee === 0 ? 'Miễn phí' : `${shippingFee}`}</p>
+                  <p className="mb-2">Miễn Phí Ship</p>
+                  {/* <p className="mb-2">{shippingFee === 0 ? 'Miễn phí' : `${shippingFee}`}</p> */}
                 </div>
                 <hr />
                 <div className="d-flex justify-content-between">
                   <p className="mb-2">Tổng tiền:</p>
-                  <p className="mb-2 fw-bold">149.90</p>
+                  <p className="mb-2 fw-bold">{price_total_discount}</p>
                 </div>
                 <hr />
-                
+
                 <h6 className="text-dark my-4">Sản phẩm trong giỏ hàng</h6>
                 {productItems.map((product, index) => (
                   <div className="d-flex align-items-center mb-4" key={index}>
@@ -281,7 +282,7 @@ console.log(cart)
                     </div>
                     <div className="">
                       <a href="#" className="nav-link">
-                      {product.spu_info.product_name}
+                        {product.spu_info.product_name}
                       </a>
                       <div className="price text-muted">Giá:  {product.spu_info.product_price}</div>
                     </div>

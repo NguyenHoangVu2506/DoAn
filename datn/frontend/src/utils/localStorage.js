@@ -156,3 +156,11 @@ export const changeSkuIdFromCart = (sku, cart_products) => {
   }
 
 };
+export const addOrderFromCart = (data) => {
+    localStorage.setItem("set_order_from_cart", JSON.stringify(data));
+  
+};
+export const getOrderFromCart = () => {
+  const selected_listJSON = localStorage.getItem("set_order_from_cart");
+  return selected_listJSON ? JSON.parse(selected_listJSON) : null;
+};

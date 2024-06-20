@@ -7,12 +7,15 @@ import { specialOfferToday } from "../../../store/actions/special_offer-actions"
 import { Amount, getAllDiscount } from "../../../store/actions/discount-actions";
 import accounting from "accounting";
 import { Tooltip, initMDB } from "mdb-ui-kit";
+import { addOrderFromCart } from "../../../utils";
 
 initMDB({ Tooltip });
 export default function Cart() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
     const { userInfo } = useSelector((state) => state.userReducer);
+
     const [price_total, setPriceTotal] = useState(0);
     const [price_total_discount, setPriceTotalApplyDiscount] = useState(0);
     const [discounts, setDiscounts] = useState([])
@@ -60,6 +63,14 @@ export default function Cart() {
         onSelectedDiscount(discountCodeInput);
     };
 
+    const handleAddOrderToLocalStorage = async () => {
+
+        const discountsApply=appliedDiscountCode?[appliedDiscountCode]:[]
+         addOrderFromCart({price_total, price_total_discount ,price_discount_amount,
+            discountsApply,
+
+         })
+    };
 
     const updateItemFromCart = async (type, data) => {
         if (type === 'deleteItem') {
@@ -192,13 +203,13 @@ export default function Cart() {
                                     </div>
                                     <hr />
                                     <div className="d-flex justify-content-between">
-                                        <p className="mb-2">Tổng giá:</p>
+                                        <p className="mb-2">Thành Tiền:</p>
                                         <p className="mb-2 fw-bold">{accounting.formatNumber(price_total_discount, 0, ".", ",")} <span className="text-muted">đ</span></p>
                                     </div>
                                     <div className="mt-3">
                                         {price_total > 0 ? (
                                             <button
-                                                onClick={() => navigate('/checkout')}
+                                                onClick={() => {handleAddOrderToLocalStorage();navigate('/checkout')}}
                                                 disabled={false}
                                                 className="btn btn-success w-100 shadow-0 mb-2"
                                                 style={{ backgroundColor: '#f6831f ' }}
