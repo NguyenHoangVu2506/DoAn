@@ -12,8 +12,8 @@ export default function PostHomeItem({ blog }) {
         <div class="mt-2 text-muted small d-block mb-1">
           <span>
             <i class="fa fa-calendar-alt fa-sm"></i>
-            {blog.createdAt}
-          </span>
+            {blog.createdAt ? new Date(blog.createdAt).toLocaleDateString() : ''}
+            </span>
           <h6 class="text-dark">{blog.blog_name}</h6>
           <p>{blog.blog_title}</p>
         </div>

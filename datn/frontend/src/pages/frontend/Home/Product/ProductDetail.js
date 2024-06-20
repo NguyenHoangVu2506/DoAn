@@ -27,7 +27,10 @@ function ProductDetail() {
 
     const [name, setName] = useState('');
     const [detail, setDetail] = useState('');
-    const [stock, setStock] = useState(null);
+    const [stock, setStock] = useState(0);
+    const [stock_sku, setStock_Sku] = useState(0);
+
+
     const [selectedImage, setSelectedImage] = useState(null);
     const [productDetail, setproduct_detail] = useState(null); 
     const [product_images, setProductImages] = useState([]);
@@ -157,6 +160,9 @@ function ProductDetail() {
             setDetail(
                 productDetail?.product_detail?.product_detail
             );
+            setStock(
+                productDetail?.product_detail?.product_quantity
+            )
             setprice_default(
                 productDetail.product_detail
                     .product_price
@@ -275,7 +281,9 @@ function ProductDetail() {
                                         </span>
                                     </div>
                                     <span className="text-muted"><i className="fas fa-shopping-basket fa-sm mx-1"></i>Đã Mua</span>
-                                    <span className="text-success ms-2">Số Lượng : {selected_sku && selected_sku.sku_stock}</span>
+                                    {/* <span className="text-success ms-2">Số Lượng : {selected_sku && selected_sku.sku_stock}</span> */}
+                                    <span className="text-success ms-2">Số Lượng :{(selected_sku && selected_sku?(selected_sku.sku_stock):(stock) )}</span>
+
                                 </div>
 
                                 <div className="mb-3">
@@ -505,7 +513,8 @@ function ProductDetail() {
                                 </div>
                                 {/*<!-- Pills content --> */}
                             </div>
-                            <div className="border rounded-2 px-3 py-2 bg-white">
+                            
+                            {/* <div className="border rounded-2 px-3 py-2 bg-white">
                                 <div className="tab-content" id="ex1-content">
                                     <div className="tab-pane fade show active" id="ex1-pills-1" role="tabpanel" aria-labelledby="ex1-tab-1">
                                         <h4>ĐÁNH GIÁ CỦA KHÁCH HÀNG</h4>
@@ -559,7 +568,7 @@ function ProductDetail() {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                         <div className="col-lg-4">
                             <div className="px-0 border rounded-2 shadow-0">
