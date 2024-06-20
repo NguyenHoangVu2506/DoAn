@@ -21,7 +21,7 @@ export default function NewProduct() {
             <div class="container my-5">
                 <header class="mb-4">
                     <div className="container">
-                    <h3>New products</h3>
+                    <h3>Sản phẩm mới</h3>
                     <Link to={"/collections/"} >
                     <button type="button" class="btn btn-rounded mr-2 left" style={{ backgroundColor: '#f6831f', color: 'white', textAlign: 'right' }} data-mdb-ripple-init >Xem Thêm</button>
                     </Link>
