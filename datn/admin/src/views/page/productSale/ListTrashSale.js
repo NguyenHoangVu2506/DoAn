@@ -122,7 +122,7 @@ function ListTrashSale() {
                                                                 <button onClick={() => delSale(item.id)} className="btn btn-sm"><i className="fa fa-trash me-1"></i>Xoá</button>
                                                             </div>
                                                         </td>
-                                                        <td>{accounting.formatNumber(item.pricesale, 0, ".", ",")} <span class="text-muted">đ</span></td>
+                                                        <td>{accounting.formatNumber(item.pricesale, 0, ".", ",")} <span className="text-muted">đ</span></td>
                                                         <td>{formatDate(item.date_begin)}</td>
                                                         <td>{formatDate(item.date_end)}</td>
 

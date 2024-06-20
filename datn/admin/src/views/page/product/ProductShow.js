@@ -1,111 +1,108 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import apiProduct from "../../../service/apiProduct";
-import { imageURL } from "../../../config";
 import accounting from "accounting";
+import { CButton, CCol, CRow } from "@coreui/react";
+import { useDispatch, useSelector } from "react-redux";
+import { getCategory, getListBrand, getProductById } from '../../../store/actions'; // Ensure this import is correct
+import CIcon from "@coreui/icons-react";
+import { cilBackspace, cilPlus, cilReload } from "@coreui/icons";
 
 function ProductShow() {
+    const { product_slug_id } = useParams();
 
-    const { id } = useParams();
-    const [data, setData] = useState([]);
-
-    const [status, setStatus] = useState('Ẩn');
+    const dispatch = useDispatch();
+    const product_id = product_slug_id ? product_slug_id.split('-').pop() : null;
+    const { listProductById } = useSelector((state) => state.productReducer);
+    const { allBrand } = useSelector((state) => state.brandReducer);
+    const { listCategory } = useSelector((state) => state.categoryReducer);
 
     useEffect(() => {
-        apiProduct.getProductById(id).then((res) => {
-            try {
-                setData(res.data);
-                if (res.data.status === 1) {
-                    setStatus('Hiển thị');
-                }
-            } catch (e) {
-                console.log(e);
-            }
-        })
-    }, [])
+        if (!allBrand) {
+            dispatch(getListBrand({ sort: 'ctime' }));
+        }
+    }, [dispatch, allBrand]);
+
+    useEffect(() => {
+        if (!listCategory) {
+            dispatch(getCategory({ sort: 'ctime' }));
+        }
+    }, [dispatch, listCategory]);
+    console.log(listCategory)
+
+    useEffect(() => {
+        if (product_id && !listProductById) {
+            dispatch(getProductById({ spu_id: product_id }));
+        }
+    }, [product_id, listProductById, dispatch]);
+
+    if (!listProductById) {
+        return <div>Loading...</div>;
+    }
+
+    const product = listProductById.spu_info;
+
+    const brandName = allBrand?.find(brand => brand._id === product.product_brand)?.brand_name || 'Unknown Brand';
+    const categoryNames = product.product_category.map(catId => {
+        console.log(catId)
+        return listCategory?.find(category => category._id === catId)?.category_name || 'Unknown Category';
+    }).join(', ');
 
     return (
-        <div className="content-wrapper">
-            <section className="content-header">
-                <div className="container-fluid">
-                    <div className="row mb-2">
-                        <div className="col-sm-12">
-                            <h1 className="d-inline">Chi tiết sản phẩm</h1>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
+        <div className="admin content-wrapper">
             <section className="content">
                 <div className="card">
-                    <div className="card-header text-right">
-                        <Link to="/admin/list-products/1/10" className="btn btn-sm btn-info">
-                            <i className="fa fa-reply me-1" aria-hidden="true"></i>
-                            Quay lại
-                        </Link>
+                    <div className="card-body">
+                        <CRow>
+                            <Link to="/product/productlist"> {/* Update this link to the correct path */}
+                                <CButton color="primary" variant="outline" size="sm" className="mb-3">
+                                    <CIcon icon={cilReload} title="Quay lại" />
+                                    Quay lại
+                                </CButton>
+                            </Link>
+                            <CCol sm={6} xl={5} xxl={3}>
+                                <div className="border rounded-4 mb-3 d-flex justify-content-center">
+                                    <a data-fslightbox="mygalley" className="rounded-4" target="_blank" data-type="image">
+                                        <img style={{ maxWidth: '100%', maxHeight: '100vh', margin: 'auto' }} className="rounded-4 fit"
+                                            src={product.product_thumb[0]} />
+                                    </a>
+                                </div>
+                            </CCol>
+                            <CCol sm={6} xl={7} xxl={3}>
+                                <div className="ps-lg-3">
+                                    <h4 className="title text-dark">
+                                        {product.product_name}
+                                    </h4>
+                                    <div className="d-flex flex-row my-3">
+                                        <span className="text-success ms-2">Số Lượng: {product.product_quantity}</span>
+                                    </div>
+                                    <div className="mb-3">
+                                        <span className="h4 fw-bold">
+                                            {accounting.formatNumber(product.product_price, 0, ".", ",")} đ
+                                        </span>
+                                        <span className="text-muted">/{product.product_unit}</span>
+                                    </div>
+                                    <p className="pt-3 text-dark">
+                                        Mô tả: {product.product_short_description}
+                                    </p>
+                                    <div className="row">
+                                        <dt className="col-3">Danh mục</dt>
+                                        <dd className="col-9 fw-bold">{categoryNames}</dd>
+                                    </div>
+                                    <div className="row">
+                                        <dt className="col-3">Thương Hiệu</dt>
+                                        <dd className="col-9 fw-bold">{brandName}</dd>
+                                    </div>
+                                    <hr />
+                                    <p className="pt-3 text-dark">
+                                        Chi tiết: {product.product_detail}
+                                    </p>
+                                </div>
+                            </CCol>
+                        </CRow>
                     </div>
-                    <div className="card-body p-2">
-                        <table className="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th style={{ width: "30%" }}>Tên trường</th>
-                                    <th>Giá trị</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th>Hình ảnh</th>
-                                    <td>
-                                        <img src={imageURL + '/images/product/' + data.image} alt="category.jpg" style={{ width: "70px" }} />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Tên sản phẩm</th>
-                                    <td>{data.name}</td>
-                                </tr>
-                                <tr>
-                                    <th>Thương hiệu</th>
-                                    <td>{data.nameBrand}</td>
-                                </tr>
-                                <tr>
-                                    <th>Danh mục</th>
-                                    <td>{data.nameCat}</td>
-                                </tr>
-                                <tr>
-                                    <th>Slug</th>
-                                    <td>{data.slug}</td>
-                                </tr>
-                                <tr>
-                                    <th>Giá</th>
-                                    <td>{accounting.formatNumber(data.price, 0, ".", ",")} <span class="text-muted">đ</span></td>
-                                </tr>
-                                <tr>
-                                    <th >Chi tiết sản phẩm</th>
-                                    <td>{data.detail}</td>
-                                </tr>
-
-                                <tr>
-                                    <th>Trạng thái</th>
-                                    <td>{status}</td>
-                                </tr>
-                                <tr>
-                                    <th>Ngày thêm</th>
-                                    <td>{data.created_at}</td>
-                                </tr>
-                                <tr>
-                                    <th>Ngày cập nhật</th>
-                                    <td>{data.updated_at}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <br></br>
-                    <br></br>
                 </div>
             </section>
         </div>
-
     );
 }
 

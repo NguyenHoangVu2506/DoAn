@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import { CButton } from '@coreui/react';
 import { cilPlus, cilTrash } from '@coreui/icons';
@@ -9,14 +9,16 @@ import { getCategory, onAllProduct } from '../../../store/actions';
 function ProductList() {
     const dispatch = useDispatch();
     const { allProducts } = useSelector((state) => state.productReducer);
+    const { listCategory } = useSelector((state) => state.categoryReducer);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 8;
 
     useEffect(() => {
         if (!allProducts) {
             dispatch(onAllProduct({ sort: 'ctime' }));
         }
     }, [dispatch, allProducts]);
-    console.log(allProducts)
-    const { listCategory } = useSelector((state) => state.categoryReducer);
 
     useEffect(() => {
         if (!listCategory) {
@@ -32,6 +34,14 @@ function ProductList() {
         });
         return categoryNames.filter(name => name).join(', ');
     };
+
+    // Tính toán các sản phẩm hiển thị trên trang hiện tại
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = allProducts ? allProducts.slice(indexOfFirstItem, indexOfLastItem) : [];
+
+    const totalPages = allProducts ? Math.ceil(allProducts.length / itemsPerPage) : 1;
+
     return (
         <div className="admin content-wrapper">
             <section className="content">
@@ -64,11 +74,11 @@ function ProductList() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {allProducts && allProducts.map((item, index) => (
+                                        {currentItems.map((item, index) => (
                                             <tr className="datarow" key={index}>
                                                 <td>
                                                     <img
-                                                        src={item.product_thumb}
+                                                        src={item.product_thumb[0]}
                                                         alt={`product_${index}`}
                                                         style={{ width: "70px", marginRight: "5px" }}
                                                     />
@@ -78,7 +88,6 @@ function ProductList() {
                                                         {item.product_name}
                                                     </div>
                                                 </td>
-                                               
                                                 <td className='text-left'>
                                                     {Array.isArray(item.product_category)
                                                         ? getCategoryName(item.product_category)
@@ -90,7 +99,7 @@ function ProductList() {
                                                         <Link to={`/product/updateproduct/${item.id}`} className="btn btn-sm">
                                                             <i className="fa fa-edit me-1"></i>Chỉnh sửa
                                                         </Link> |
-                                                        <Link to={`/product/detailproduct/${item._id}`} className="btn btn-sm">
+                                                        <Link to={`/product/${item.product_slug}-${item._id}`} className="btn btn-sm">
                                                             <i className="fa fa-eye me-1"></i>Chi tiết
                                                         </Link> |
                                                         <button onClick={() => trashProduct(item.id)} className="btn btn-sm">
@@ -102,8 +111,22 @@ function ProductList() {
                                         ))}
                                     </tbody>
                                 </table>
+                                <div className="pagination-container" style={{ display: 'flex', justifyContent: 'center' }}>
+                                    <ul className="pagination">
+                                        <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                                            <button className="page-link" onClick={() => setCurrentPage(currentPage - 1)}>Trước</button>
+                                        </li>
+                                        {[...Array(totalPages).keys()].map(number => (
+                                            <li key={number + 1} className={`page-item ${currentPage === number + 1 ? 'active' : ''}`}>
+                                                <button className="page-link" onClick={() => setCurrentPage(number + 1)}>{number + 1}</button>
+                                            </li>
+                                        ))}
+                                        <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                                            <button className="page-link" onClick={() => setCurrentPage(currentPage + 1)}>Sau</button>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
-                            {/* Bạn có thể thêm phần phân trang ở đây */}
                         </div>
                     </div>
                 </div>

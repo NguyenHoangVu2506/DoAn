@@ -51,3 +51,14 @@ export const createSpu = (data) => async (dispatch) => {
 
   }
 };
+export const getProductById = (data) => async (dispatch) => {
+  try {
+    const response = await PostData('/spu/get_spu_info', data);
+    console.log('response:', response)
+    return dispatch({ type: Action.GET_PRODUCT_BY_ID, payload: response.data });
+  } catch (err) {
+    console.log(err)
+    return err.response.data
+  }
+
+};

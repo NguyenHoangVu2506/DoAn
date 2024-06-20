@@ -108,9 +108,9 @@ function OrderShow() {
                                             <td>
                                                 {item.name}
                                             </td>
-                                            <td>{accounting.formatNumber(item.price, 0, ".", ",")}<span class="text-muted">đ</span></td>
+                                            <td>{accounting.formatNumber(item.price, 0, ".", ",")}<span className="text-muted">đ</span></td>
                                             <td>{item.qty}</td>
-                                            <td>{accounting.formatNumber(item.price * item.qty)}<span class="text-muted">đ</span></td>
+                                            <td>{accounting.formatNumber(item.price * item.qty)}<span className="text-muted">đ</span></td>
                                         </tr>
                                     );
                                 })}
@@ -118,7 +118,7 @@ function OrderShow() {
                             <tfoot>
                                 <tr>
                                     <th>Tổng cộng</th>
-                                    <td>{accounting.formatNumber(products.reduce((total, item) => total + (item.price * item.qty), 0))}<span class="text-muted">đ</span></td>
+                                    <td>{accounting.formatNumber(products.reduce((total, item) => total + (item.price * item.qty), 0))}<span className="text-muted">đ</span></td>
                                 </tr>
                             </tfoot>
 

@@ -86,15 +86,15 @@ const routes = [
 
   ////////////////////category
   { path: '/category/createcategory', name: 'CreateCategory', element: CreateCategory },
-  { path: '/category/categorylist/:page/:limit', name: 'CategoryList', element: CategoryList },
+  { path: '/category/categorylist', name: 'CategoryList', element: CategoryList },
   { path: '/category/updatecategory/:id', name: 'UpdateCategory', element: UpdateCategory },
   { path: '/category/detailcategory/:id', name: 'DetailCategory', element: DetailCategory },
   { path: '/category/list-trash', name: 'ListTrashCate', element: ListTrashCate },
   ///////////////////product
   { path: '/product/createproduct', name: 'CreateProduct', element: CreateProduct },
-  { path: '/product/productlist/:page/:limit', name: 'ProductList', element: ProductList },
+  { path: '/product/productlist', name: 'ProductList', element: ProductList },
   { path: '/product/updateproduct/:id', name: 'UpdateProduct', element: UpdateProduct },
-  { path: '/product/detailproduct/:id', name: 'DetailProduct', element: DetailProduct },
+  { path: '/product/:product_slug_id', name: 'DetailProduct', element: DetailProduct },
   { path: '/product/list-trash', name: 'ListTrashProduct', element: ListTrashProduct },
 
   //////////////////user

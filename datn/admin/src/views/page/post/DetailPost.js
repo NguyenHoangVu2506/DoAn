@@ -9,7 +9,6 @@ import { CCard, CCardBody, CCol, CContainer, CTableRow } from "@coreui/react";
 function DetailPost() {
     const { slug_id } = useParams();
     const blog_id = slug_id.split('-').pop();
-    console.log(blog_id);
     const { listBlogById } = useSelector((state) => state.blogReducer);
     const { onBlogByTopicId } = useSelector((state) => state.blogReducer);
     const { allTopic } = useSelector((state) => state.topicReducer);

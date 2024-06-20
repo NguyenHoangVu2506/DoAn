@@ -48,7 +48,7 @@ const CreateCategory = () => {
             formFile.append('folderName', 'website/category')
             const image = await dispatch(uploadSingleImage(formFile))
             image && dispatch(CategoryStore({ category_name: name, category_description: description, category_icon: image?.payload?.metaData?.thumb_url,parent_id:parent_id, isPublished: true }))
-            navigate('/category/categorylist/1/10')
+            navigate('/category/categorylist')
 
         } catch (error) {
             console.log(error)
