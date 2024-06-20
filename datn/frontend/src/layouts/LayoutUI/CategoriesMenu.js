@@ -69,7 +69,7 @@ const Categories = () => {
                                         left: 0,
                                         right: 0,
                                         zIndex: 1000000000,
-                                        width: '933%',
+                                        width: '680%',
                                         minWidth: '100%',
                                         maxWidth: 'none',
                                         padding: '0.5rem 0',
