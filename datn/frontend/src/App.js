@@ -23,6 +23,7 @@ import UserOrder from './pages/frontend/useraccount/userOrder';
 import UserOrderHistory from './pages/frontend/useraccount/userOrderHistory';
 import Brand from './pages/frontend/brand/Brand';
 import PageSingle from './pages/frontend/page/PageSingle';
+import Search from './pages/frontend/search';
 
 
 
@@ -49,6 +50,9 @@ function App() {
           <Route path='/thuong-hieu' element={<Brand />} />
 
           <Route path='/lien-he' element={<Contact />} />
+          <Route path='/tim-kiem/:meta_key?' element={<Search />} />
+          <Route path='/page/:slug_id' element={<PageSingle />} />
+
           <Route path='/blog/:slug_id' element={<PostDetailItem />} />
           <Route path='/wish-list' element={<Wishlist />} />
           <Route path='/' element={<CheckAuth />}>
@@ -56,7 +60,6 @@ function App() {
             <Route path='/profile' element={<UserAccount />} />
             <Route path='/userorder' element={<UserOrder />} />
             <Route path='/userorderhistory' element={<UserOrderHistory />} />
-            <Route path='/page/:slug_id' element={<PageSingle />} />
 
           </Route>
 

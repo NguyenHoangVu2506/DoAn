@@ -20,7 +20,7 @@ function Checkout() {
     ...inputStyle,
     height: '100px'
   };
-const navigate=useNavigate()
+  const navigate = useNavigate()
   const { price_total, price_total_discount, price_discount_amount,
     discountsApply = []
   } = getOrderFromCart()
@@ -43,23 +43,28 @@ const navigate=useNavigate()
     }
   };
 
-  const handleOrder =async () => {
-    const new_order =await dispatch(newOrder({
+  const handleOrder = async () => {
+
+
+    const discounts = discountsApply.map((discount) => { return { discountId: discount._id, codeId: discount.discount_code } })
+
+
+    const new_order = await dispatch(newOrder({
       //  cartId: cart,
       userId: userInfo._id,
       user_address: {},
       user_payment: {},
       order_ids:
       {
-        shop_discounts: discountsApply,
+        shop_discounts: discounts,
         item_products: cart_products
       }
     }))
 
-    if(new_order.payload.status===(200||201)){
+    if (new_order?.payload?.status === (200 || 201)) {
       toast.success("Đặt hàng thành công")
       navigate('/')
-    }else{
+    } else {
       toast.error("Đặt hàng không thành công")
 
     }
@@ -243,7 +248,7 @@ const navigate=useNavigate()
                   </div>
                   <div className="float-end">
                     <button className="btn btn-light border">Hủy</button>
-                    <button type="button" className="btn btn-success shadow-0 border" onClick={()=>handleOrder()}>Đặt Hàng</button>
+                    <button type="button" className="btn btn-success shadow-0 border" onClick={() => handleOrder()}>Đặt Hàng</button>
                   </div>
                 </div>
               </div>

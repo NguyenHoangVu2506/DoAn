@@ -21,3 +21,13 @@ export const newOrder = (data) => async (dispatch) => {
     }
 };
 
+export const getOrderByUser = (data) => async (dispatch) => {
+    try {
+        const response = await PostData('/checkout/findOrderByUser', data);
+        console.log('response:', response)
+        return dispatch({ type: Action.GET_ORDER_BY_USER, payload: response.data });
+    } catch (err) {
+        console.log(err)
+    }
+};
+

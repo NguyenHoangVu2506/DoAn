@@ -15,6 +15,7 @@ import MenuReducer from './menu-reducer';
 import ContactReducer from './contact-reducer';
 import DiscountReducer from './discount-reducer';
 import PageReducer from './page-reducer';
+import CheckoutReducer from './checkout-reducer';
 
 const reducers = combineReducers({
     userReducer: UserReducer,
@@ -33,5 +34,6 @@ const reducers = combineReducers({
     contactReducer: ContactReducer,
     discountReducer:DiscountReducer,
     pageReducer:PageReducer,
+    checkoutReducer:CheckoutReducer
 })
 export default reducers

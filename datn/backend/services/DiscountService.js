@@ -131,7 +131,7 @@ class DiscountService {
                 discount_code: codeId
             }
         })
-        console.log(products)
+        console.log("codeId",codeId)
         if (!foundDiscount) throw new NotFoundRequestError("discount not found")
             
         const { discount_is_active, discount_max_uses, discount_min_order_value, 

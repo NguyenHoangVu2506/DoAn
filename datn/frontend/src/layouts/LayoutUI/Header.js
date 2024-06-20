@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Categories from "./CategoriesMenu";
 import { useSelector } from "react-redux";
@@ -7,13 +7,25 @@ import './style.css';
 
 const Header = () => {
   const navigate = useNavigate();
-
+  const searchInput = useRef(null)
   const { userInfo } = useSelector((state) => state.userReducer);
+  const [textSearch, setTextSearch] = useState('')
 
   const handleLogin = async () => {
     navigate('/login');
 
   };
+
+  const onClickSearch = async (e) => {
+    e.preventDefault()
+    //  searchInput.current.blur();
+    navigate(`/tim-kiem/${textSearch}`,{replace:true});
+  }
+
+  const onChange = async (value) => {
+    setTextSearch(value)
+  }
+
 
   return (
     <>
@@ -57,13 +69,13 @@ const Header = () => {
               </div>
 
               <div class="col-lg-5 col-md-12 col-12" >
-                <div class="input-group float-center border-round" style={{ cursor: 'pointer',border:'1px', borderColor: '#f6831f' }}>
+                <div class="input-group float-center border-round" style={{ cursor: 'pointer', border: '1px', borderColor: '#f6831f' }}>
                   <div class="form-outline " data-mdb-input-init>
-                    <input type="text" id="form1" class="form-control border" style={{ cursor: 'pointer',border:'1px', borderColor: '#f6831f' }} />
-                    <label class="form-label" for="form1" style={{ cursor: 'pointer', color: '#f6831f ' }}>Search</label>
+                    <input type="text" id="form1" class="form-control border" style={{ cursor: 'pointer', border: '1px', borderColor: '#f6831f' }} value={textSearch} onChange={(e) => { onChange(e.target.value) }} />
+                    {/* <label class="form-label" for="form1" style={{ cursor: 'pointer', color: '#f6831f ' }}>Search</label> */}
                   </div>
-                  <button type="button" class=" btn btn-rounded border" >
-                    <i class="fas fa-search" style={{ color: '#f6831f ' }}></i>
+                  <button type="button" class=" btn btn-rounded border" onClick={(e) => onClickSearch(e)}>
+                    <i class="fas fa-search" style={{ color: '#f6831f ' }} ></i>
                   </button>
 
                 </div>

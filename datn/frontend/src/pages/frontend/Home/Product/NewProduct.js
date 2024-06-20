@@ -13,7 +13,7 @@ export default function NewProduct() {
         if (!allProducts) {
             dispatch(onAllProduct({ limit: 50, sort: 'ctime', page: 1, filter: { isPublished: true } }));
         }
-        console.log('allProducts<home',allProducts);
+        console.log('allProductsHome',allProducts);
     }, [allProducts]);
 
     return (
