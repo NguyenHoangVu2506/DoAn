@@ -135,7 +135,7 @@ function ListTrashProduct() {
                                                             </div>
                                                         </td>
                                                         <td>{item.nameCat}</td>
-                                                        <td>{accounting.formatNumber(item.price, 0, ".", ",")} <span class="text-muted">đ</span></td>
+                                                        <td>{accounting.formatNumber(item.price, 0, ".", ",")} <span className="text-muted">đ</span></td>
 
                                                     </tr>
 

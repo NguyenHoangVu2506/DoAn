@@ -12,8 +12,8 @@ const categorySchema = new Schema({
     category_position: { type: String, default: null },
     category_image: { type: String, default: null },
     public_image_id: { type: String, default: null },
-    isPublished: { type: Boolean, default: true, index: true, select: false },
-    isDeleted:  { type: Boolean, default: false, index: true, select: false },
+    isPublished: { type: Boolean, default: true, index: true},
+    isDeleted:  { type: Boolean, default: false, index: true},
 },
     {
         collection: COLLECTION_NAME,

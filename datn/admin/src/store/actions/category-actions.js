@@ -78,3 +78,103 @@ export const CategoryUpdate = (data) => async (dispatch) => {
     return err.response.data
   }
 };
+export const CategoryPublished = (data) => async (dispatch) => {
+
+  try {
+    const response = await PostData('/category/publishCategory',
+      data
+    );
+    console.log('response:', response)
+    dispatch({ type: Action.PUBLISHED, payload: response.data });
+    dispatch(getCategory({ sort: 'ctime' })); // Dispatch getListSlider after publishing
+
+  } catch (err) {
+    console.log(err)
+    return err.response.data
+
+  }
+
+};
+
+export const CategoryUnPublished = (data) => async (dispatch) => {
+
+  try {
+    const response = await PostData('/category/unpublishCategory',
+      data
+    );
+    console.log('response:', response);
+    dispatch({ type: Action.UNPUBLISHED, payload: response.data });
+    dispatch(getCategory({ sort: 'ctime' })); // Dispatch getListSlider after publishing
+  } catch (err) {
+    console.log(err)
+    return err.response.data
+
+  }
+
+};
+export const TrashCategory = (data) => async (dispatch) => {
+
+  try {
+    const response = await PostData('/category/deleteCategory',
+      data
+    );
+    console.log('response:', response)
+    dispatch({ type: Action.DELETETRASH, payload: response.data });
+    dispatch(getCategory({ sort: 'ctime' })); // Dispatch getListSlider after publishing
+    dispatch(ListTrashCategory1({ sort: 'ctime' }));
+
+  } catch (err) {
+    console.log(err)
+    return err.response.data
+
+  }
+
+};
+export const ListTrashCategory1 = (data) => async (dispatch) => {
+  try {
+    const response = await PostData('/category/getDeleteCategoryList',
+      data
+    );
+    console.log('response:', response)
+    return dispatch({ type: Action.LISTTRASH, payload: response.data });
+  } catch (err) {
+    console.log(err)
+    return err.response.data
+
+  }
+
+};
+
+export const CategoryRestore = (data) => async (dispatch) => {
+
+  try {
+    const response = await PostData('/category/restoreCategory',
+      data
+    );
+    console.log('response:', response)
+    dispatch({ type: Action.RESTORE, payload: response.data });
+    dispatch(getCategory({ sort: 'ctime' })); // Dispatch getListSlider after publishing
+  } catch (err) {
+    console.log(err)
+    return err.response.data
+
+  }
+
+};
+export const RemoveCategory = (data) => async (dispatch) => {
+
+  try {
+    const response = await PostData('/category/removeCategory',
+      data
+    );
+    console.log('response:', response)
+    dispatch({ type: Action.DELETE, payload: response.data });
+    dispatch(getCategory({ sort: 'ctime' })); // Dispatch getListSlider after publishing
+    dispatch(ListTrashCategory1({ sort: 'ctime' }));
+  } catch (err) {
+    console.log(err)
+    return err.response.data
+
+  }
+
+};

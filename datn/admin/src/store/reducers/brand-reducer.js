@@ -33,7 +33,7 @@ const BrandReducer = (state = initialState, action) => {
                 ...state,
                 listBrandById: action.payload.metaData
             }
-            case Action.PUBLISHED:
+        case Action.PUBLISHED:
             return {
                 ...state,
                 publishedBrand: action.payload.metaData

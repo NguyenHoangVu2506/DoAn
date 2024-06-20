@@ -28,8 +28,8 @@ const CreateDiscount = () => {
         start_date: new Date(),
         end_date: new Date(),
         max_uses: 0,
-        uses_count:0,
-        users_used:[],
+        uses_count: 0,
+        users_used: [],
         max_uses_per_user: 0,
         min_order_value: 0,
         is_active: false,
@@ -40,14 +40,14 @@ const CreateDiscount = () => {
     const handleProductChange = (selectedOptions) => {
         // Xử lý thay đổi danh sách sản phẩm được chọn
         setSelectedProducts(selectedOptions);
-    
+
         // Lấy ra chỉ các giá trị value từ selectedOptions và gán vào product_ids trong formData
         const selectedProductIds = selectedOptions.map(option => option.value);
         setFormData({ ...formData, product_ids: selectedProductIds });
     };
-    
-console.log(formData.start_date)
-console.log(formData.end_date)
+
+    console.log(formData.start_date)
+    console.log(formData.end_date)
 
     const handleDateChange = (date, fieldName) => {
         setFormData({ ...formData, [fieldName]: date });
@@ -59,7 +59,7 @@ console.log(formData.end_date)
             const addDiscount = await dispatch(DiscountStore(formData));
             if (addDiscount.payload.status === 200 || addDiscount.payload.status === 201) {
                 toast.success(`Thêm mã giảm giá thành công`);
-                // navigate('/list-discounts'); // Điều hướng đến danh sách mã giảm giá sau khi thêm thành công
+                navigate('/discount/discountlist'); // Điều hướng đến danh sách mã giảm giá sau khi thêm thành công
             } else {
                 toast.error('Thêm mã giảm giá không thành công');
             }
@@ -147,7 +147,7 @@ console.log(formData.end_date)
                                     placeholder="Nhập số lượng mã giảm giá"
                                 />
                             </CCol>
-                            
+
                             <CCol xs={6}>
                                 <CFormLabel htmlFor="max_uses_per_user">Số lần sử dụng mã giảm giá / người dùng</CFormLabel>
                                 <CFormInput

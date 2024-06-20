@@ -43,7 +43,6 @@ function ProductSaleList() {
                                 <table className="table ">
                                     <thead>
                                         <tr>
-                                            {/* <th className="text-center" style={{ width: "70px" }}>Hình ảnh</th> */}
                                             <th className="text-left" style={{ width: "220px" }}>Name</th>
                                             <th className="text-left" style={{ width: "220px" }}>Mô tả</th>
                                             <th className="text-left" style={{ width: "130px" }}>Ngày bắt đầu</th>
@@ -52,37 +51,30 @@ function ProductSaleList() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {special && special.map((item, index) => (
+                                        {special && (
 
-                                            <tr className="datarow" key={index}>
-                                                {/* <td>
-                                                        <img
-                                                            src={imageURL + '/images/product/' + imageArray[0].trim()}
-                                                            alt={`product_${index}`}
-                                                            style={{ width: "70px", marginRight: "5px" }}
-                                                        />
-                                                    </td> */}
+                                            <tr className="datarow" >
                                                 <td>
                                                     <div className='text-left'>
-                                                        {item.special_offer_name}
+                                                        {special.special_offer_name}
                                                     </div>
                                                 </td>
                                                 <td className='text-left'>
 
-                                                    {item.special_offer_description}
+                                                    {special.special_offer_description}
 
                                                 </td>
-                                                <td className='text-left'>{new Date(item.special_offer_start_date).toLocaleDateString()}</td>
-                                                <td className='text-left'>{new Date(item.special_offer_end_date).toLocaleDateString()}</td>
+                                                <td className='text-left'>{new Date(special.special_offer_start_date).toLocaleDateString()}</td>
+                                                <td className='text-left'>{new Date(special.special_offer_end_date).toLocaleDateString()}</td>
                                                 <td>
                                                     <div className="function_style">
-                                                        <Link to={`/productsale/updateproductsale/${item.id}`} className="btn btn-sm"><i className="fa fa-edit me-1" ></i>Chỉnh sửa</Link> |
-                                                        <Link to={`/productsale/detailproductsale/${item.id}`} className="btn btn-sm"><i className="fa fa-eye me-1"></i>Chi tiết</Link> |
-                                                        <button onClick={() => trashProductSale(item.id)} className="btn btn-sm"><i className="fa fa-trash me-1"></i>Xoá</button>
+                                                        <Link to={`/productsale/updateproductsale/${special._id}`} className="btn btn-sm"><i className="fa fa-edit me-1" ></i>Chỉnh sửa</Link> |
+                                                        <Link to={`/productsale/detailproductsale/${special._id}`} className="btn btn-sm"><i className="fa fa-eye me-1"></i>Chi tiết</Link> |
+                                                        <button onClick={() => trashProductSale(special._id)} className="btn btn-sm"><i className="fa fa-trash me-1"></i>Xoá</button>
                                                     </div>
                                                 </td>
                                             </tr>
-                                        ))}
+                                        )}
                                     </tbody>
                                 </table>
                             </div>

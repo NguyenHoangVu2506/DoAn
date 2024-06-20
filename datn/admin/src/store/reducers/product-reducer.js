@@ -3,7 +3,8 @@ import { Action } from '../actions'
 const initialState = {
     allProducts: null,
     productDetail: null,
-    productByCategory: null
+    productByCategory: null,
+    listProductById:null
 
 
 }
@@ -31,6 +32,11 @@ const ProductReducer = (state = initialState, action) => {
             return {
                 ...state,
                 data: action.payload.metaData
+            }
+        case Action.GET_PRODUCT_BY_ID:
+            return {
+                ...state,
+                listProductById: action.payload.metaData
             }
         default:
             return state;

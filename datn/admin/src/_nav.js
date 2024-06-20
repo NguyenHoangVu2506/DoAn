@@ -36,7 +36,7 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Danh mục',
-        to: '/category/categorylist/1/10',
+        to: '/category/categorylist',
       },
       {
         component: CNavItem,
@@ -46,7 +46,7 @@ const _nav = [
       {
         component: CNavItem,
         name: ' Tất cả sản phẩm',
-        to: '/product/productlist/1/10',
+        to: '/product/productlist',
       },
       {
         component: CNavItem,

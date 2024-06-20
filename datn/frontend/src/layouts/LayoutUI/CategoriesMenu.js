@@ -101,7 +101,7 @@ const Categories = () => {
                                             })}
                                         </div>
 
-                                        <div class="col-10">
+                                        <div class="col-10 my-1">
                                             <div class="tab-content" id="nav-tabContent">
                                                 {categoryParentNull && categoryParentNull.map((catParentNull, index) => {
                                                     return (
@@ -116,6 +116,7 @@ const Categories = () => {
                                             </div>
                                         </div>
                                     </div>
+                                    
 
                                 </ul>
 

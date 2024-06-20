@@ -52,7 +52,7 @@ function OrderList() {
                                                         </div>
                                                     </td>
                                                     <td>{new Date(item.createdOn).toLocaleString()}</td>
-                                                    <td>{accounting.formatNumber(item.order_checkout.totalPrice, 0, ".", ",")}<span class="text-muted"> đ</span></td>
+                                                    <td>{accounting.formatNumber(item.order_checkout.totalPrice, 0, ".", ",")}<span className="text-muted"> đ</span></td>
                                                     <td>{item.order_status}</td>
                                                 </tr>
                                               ))}
