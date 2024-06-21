@@ -5,7 +5,7 @@ import { PostData } from "../../utils";
 export const getListBlog = (data) => async (dispatch) => {
     try {
         const response = await PostData('/blog/listblog', data);
-        console.log('response:', response)
+        // console.log('response:', response)
         return dispatch({ type: Action.GET_BLOGLIST, payload: response.data });
     } catch (err) {
         console.log(err)
@@ -45,7 +45,6 @@ export const BlogStore = (data) => async (dispatch) => {
         console.log('response:', response)
         dispatch({ type: Action.ADD_BLOG, payload: response.data });
         dispatch(getListBlog({ sort: 'ctime' }));
-
     } catch (err) {
         console.log(err)
         return err.response.data
@@ -137,7 +136,6 @@ export const ListTrashBlog1 = (data) => async (dispatch) => {
         const response = await PostData('/blog/getDeleteBlogList',
             data
         );
-        console.log('response:', response)
         return dispatch({ type: Action.LISTTRASH, payload: response.data });
     } catch (err) {
         console.log(err)
@@ -153,7 +151,6 @@ export const BlogRestore = (data) => async (dispatch) => {
         const response = await PostData('/blog/restoreBlogById',
             data
         );
-        console.log('response:', response)
         dispatch({ type: Action.RESTORE, payload: response.data });
         dispatch(getListBlog({ sort: 'ctime' })); // Dispatch getListSlider after publishing
     } catch (err) {

@@ -365,7 +365,7 @@ export default function UserAccount() {
 
                   <hr class="my-4" />
 
-                  <h5 class="mb-3">Your orders</h5>
+                  {/* <h5 class="mb-3">Your orders</h5>
                   <div class="card border border-primary mb-4 shadow-0">
                     <div class="card-body pb-0">
                       <header class="d-lg-flex">
@@ -571,7 +571,7 @@ export default function UserAccount() {
                         </li>
                       </ul>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </main>

@@ -9,7 +9,7 @@ const orderSchema = new Schema({
     order_payment:{type:Object, default:{}},
     order_product:{type:Array, requied: true},
     order_trackingNumber:{type:String, default: '#0001'},
-    order_status:{type:String, enum: ['pending','confirmed','shipped','cancelled'],default:'pending'}
+    order_status:{type:String, enum: ['pending','confirmed','shipped','Received','cancelled'],default:'pending'}
 
 },
     {

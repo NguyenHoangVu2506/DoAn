@@ -162,8 +162,23 @@ class CheckoutService {
         const Order = await order.find()
         return Order
     }
-    static async cancelOrderByUser() {
-
+    static async cancelOrderByUser(user_id,order_id,order_status="pending") {
+        try {
+            const query = {
+                _id: order_id,
+                order_userId:user_id,
+                order_status
+            }, updateSet = {
+                $set: {
+                    order_status: "cancelled"
+                },
+            }, options = {
+                upsert: true,
+                new:true
+            }
+            return await menu.updateOne(query, updateSet, options)
+        } catch (error) {
+        }
     }
     static async updateOrderStatusbyShop() {
 
