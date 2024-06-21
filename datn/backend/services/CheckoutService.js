@@ -7,7 +7,7 @@ const { getDiscountAmount } = require('./DiscountService')
 const { order } = require('../models/OrderModel')
 const { checkProductByServer } = require('./SpuService')
 const { findSpecialOfferBetweenStartDateAndEndByDate } = require('./SpecialOfferService')
-
+const { v4: uuidv4 } = require('uuid')
 
 class CheckoutService {
     static async checkoutReview({ cartId, userId, order_ids }) {
@@ -23,7 +23,7 @@ class CheckoutService {
             totalSpecialOffer: 0,//tong discount
             totalDiscount: 0,//tong discount
             totalCheckout: 0,//tong thanh toan
-        }, order_ids_new = []
+        }
 
         const { shop_discounts = [], item_products = [] } = order_ids
 
@@ -49,31 +49,64 @@ class CheckoutService {
         }
         let checkProductServerSpecialOffer = []
         const checkDateNow = await findSpecialOfferBetweenStartDateAndEndByDate({})
+
+        // if (checkDateNow) {
+        //     checkDateNow.special_offer_spu_list?.map((spu) => {
+        //         if (spu.sku_list?.length > 0) {
+        //             return spu.sku_list.map((sku) => {
+        //                 return checkProductServer.find((prod) => {
+        //                     if (prod.sku_id == sku.sku_id) {
+        //                         const { price, ...prodNoPrice } = prod
+        //                         checkProductServerSpecialOffer.push({ ...prodNoPrice, price: sku.price_sale })
+        //                         return
+        //                     }
+        //                 })
+        //             })
+        //         }
+        //         return checkProductServer.find((prod) => {
+        //             if (!prod.sku_id & prod.productId == spu.product_id) {
+        //                 const { price, ...prodNoPrice } = prod
+        //                 checkProductServerSpecialOffer.push({ ...prodNoPrice, price: spu.price_sale })
+        //                 return
+        //             }
+        //         })
+        //     })
+        // }
         if (checkDateNow) {
-            checkDateNow.special_offer_spu_list?.map((spu) => {
-                if (spu.sku_list.length > 0) {
-                    return spu.sku_list.map((sku) => {
-                        return checkProductServer.find((prod) => {
-                            if (prod.sku_id == sku.sku_id) {
+
+            checkProductServer.forEach((prod) => {
+
+                const spu_sale = checkDateNow.special_offer_spu_list.find((spu) => spu.product_id == prod.productId)
+                if (spu_sale) {
+                    checkDateNow.special_offer_spu_list?.filter((spu_sale) => {
+                        if (!prod.sku_id & prod.productId == spu_sale.product_id) {
+                            const { price, ...prodNoPrice } = prod
+                            checkProductServerSpecialOffer.push({ ...prodNoPrice, price: spu_sale.price_sale })
+                            return
+                        }
+                        if (prod.sku_id !== null && spu_sale.sku_list?.length > 0) {
+                            const sku_sale = spu_sale.sku_list.find((sku) => sku.sku_id == prod.sku_id)
+
+                            if (sku_sale) {
                                 const { price, ...prodNoPrice } = prod
-                                checkProductServerSpecialOffer.push({ ...prodNoPrice, price: sku.price_sale })
+                                checkProductServerSpecialOffer.push({ ...prodNoPrice, price: sku_sale.price_sale })
                                 return
                             }
-                        })
+                        }
                     })
+                } else {
+                    checkProductServerSpecialOffer.push(prod)
                 }
-                return checkProductServer.find((prod) => {
-                    if (!prod.sku_id & prod.productId == spu.product_id) {
-                        const { price, ...prodNoPrice } = prod
-                        checkProductServerSpecialOffer.push({ ...prodNoPrice, price: spu.price_sale })
-                        return
-                    }
-                })
+
+
             })
         }
+
         itemCheckout.priceApplySpecialOffer = checkProductServerSpecialOffer.reduce((acc, product) => {
             return acc + (product.quantity * product.price)
         }, 0)
+        checkout_order.totalSpecialOffer = checkoutPrice - itemCheckout.priceApplySpecialOffer
+
 
         if (shop_discounts.length > 0) {
             const { discount = 0 } = await getDiscountAmount({
@@ -82,27 +115,21 @@ class CheckoutService {
                 products: checkProductServerSpecialOffer.length > 0 ? checkProductServerSpecialOffer : checkProductServer
             })
             //tong discount 
-            checkout_order.totalDiscount += discount
+            checkout_order.totalDiscount = discount
             //neu tien giam gia >0
-            if (discount > 0) {
 
-                itemCheckout.priceApplyDiscount = checkoutPrice - discount
-            }
+
+            itemCheckout.priceApplyDiscount = checkoutPrice - checkout_order.totalSpecialOffer - discount
+
         }
-        checkout_order.totalSpecialOffer = itemCheckout.priceApplySpecialOffer
         //tong thanh toan
-        if (itemCheckout.priceApplySpecialOffer === 0) {
-            checkout_order.totalCheckout += (itemCheckout.priceApplySpecialOffer - checkout_order.totalDiscount) + checkout_order.totalPrice
 
-        } else {
-            checkout_order.totalCheckout += (itemCheckout.priceApplySpecialOffer - checkout_order.totalDiscount)
+        checkout_order.totalCheckout = checkoutPrice - checkout_order.totalSpecialOffer - checkout_order.totalDiscount
 
-        }
-        order_ids_new.push(itemCheckout)
 
         return {
             order_ids,
-            order_ids_new,
+            order_ids_new: itemCheckout,
             checkout_order
         }
     }
@@ -137,6 +164,7 @@ class CheckoutService {
         // if (acquireProduct.includes(false)) {
         //     throw new BadRequestError('mot so sp da duoc cap nhat ...')
         // }
+        const order_trackingNumber = uuidv4()
         const newOrder = await order.create({
             order_userId: userId,
             order_checkout: checkout_order,

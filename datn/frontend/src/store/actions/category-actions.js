@@ -10,7 +10,6 @@ import { Action } from "../actions";
       return dispatch({ type: Action.GET_CATEGORY_BY_PARENT_ID, payload: response.data });
     } catch (err) {
       console.log(err)
-      return err.response.data
     }
   
   };
@@ -24,7 +23,6 @@ import { Action } from "../actions";
       return dispatch({ type: Action.ALL_CATEGORY, payload: response.data });
     } catch (err) {
       console.log(err)
-      return err.response.data
     }
   
   };

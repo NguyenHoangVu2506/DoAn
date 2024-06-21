@@ -1,4 +1,4 @@
-import { Action } from ".";
+import { Action } from "../actions";
 import { GetData, PostData } from "../../utils";
 
 export const getAttribute= (data) => async (dispatch) => {
@@ -8,7 +8,7 @@ export const getAttribute= (data) => async (dispatch) => {
       return dispatch({ type: Action.GET_ATTRIBUTES,payload: response.data });
     } catch (err) {
       console.log(err)
-      return err.response.data
+
     }
   
   };
@@ -23,7 +23,7 @@ export const getAttribute= (data) => async (dispatch) => {
   
     } catch (err) {
       console.log(err)
-      return err.response.data
+
   
     }
   };

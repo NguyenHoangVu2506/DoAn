@@ -13,6 +13,7 @@ const { reservationInventory } = require('../models/repositories/inventory.repo'
 //     }
 
 // })
+
 const { getRedis } = require('../config/redis')
 
 const { instanceConnect: redisClient } = getRedis()

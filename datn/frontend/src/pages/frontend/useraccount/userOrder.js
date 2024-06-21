@@ -182,7 +182,7 @@ export default function UserOrder() {
                           </div>
                           <hr />
 
-                          <ul class="row list-unstyled">
+                          {/* <ul class="row list-unstyled">
                             <li class="col-xl-4 col-lg-6">
                               <div class="d-flex mb-3 mb-md-0">
                                 <div class="me-3">
@@ -194,7 +194,7 @@ export default function UserOrder() {
                                 </div>
                               </div>
                             </li>
-                          </ul>
+                          </ul> */}
 
                         </div>
                       </div>

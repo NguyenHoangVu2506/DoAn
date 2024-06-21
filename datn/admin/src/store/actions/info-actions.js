@@ -1,4 +1,4 @@
-import { Action } from ".";
+import { Action } from "../actions";
 import { PostData } from "../../utils";
 
 export const getInfo= (data) => async (dispatch) => {
@@ -8,7 +8,7 @@ export const getInfo= (data) => async (dispatch) => {
       return dispatch({ type: Action.GET_INFO,payload: response.data });
     } catch (err) {
       console.log(err)
-      return err.response.data
+
     }
   
   };
@@ -23,7 +23,7 @@ export const getInfo= (data) => async (dispatch) => {
   
     } catch (err) {
       console.log(err)
-      return err.response.data
+
   
     }
   };

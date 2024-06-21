@@ -9,7 +9,6 @@ export const getListBlog = (data) => async (dispatch) => {
         return dispatch({ type: Action.GET_BLOGLIST, payload: response.data });
     } catch (err) {
         console.log(err)
-        return err.response.data
     }
 
 };
@@ -21,7 +20,6 @@ export const getBlogDetails = (data) => async (dispatch) => {
         return dispatch({ type: Action.GET_BLOG_DETAILS, payload: response.data });
     } catch (err) {
         console.log(err)
-        return err.response.data
     }
 
 };
@@ -33,7 +31,6 @@ export const getBlogByTopicId = (data) => async (dispatch) => {
         return dispatch({ type: Action.GET_BLOG_TOPIC_ID, payload: response.data });
     } catch (err) {
         console.log(err)
-        return err.response.data
     }
 
 };

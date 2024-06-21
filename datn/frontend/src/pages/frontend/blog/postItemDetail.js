@@ -29,7 +29,6 @@ export default function PostDetailItem() {
                   <div dangerouslySetInnerHTML={{ __html: blogDetails.post.blog_detail }} />
                 </div>
               )}
-              <h3>6666666666666</h3>
             
             
             </div>

@@ -23,16 +23,14 @@ function ProductDetail() {
     const [sku_tier_idx, setSku_tier_idx] = useState([0])
     const [sku_list, setSkuList] = useState(null);
     const [price_sku, setPrice] = useState(0);
-    const [price_default, setprice_default] = useState(0);
 
     const [name, setName] = useState('');
     const [detail, setDetail] = useState('');
     const [stock, setStock] = useState(0);
-    const [stock_sku, setStock_Sku] = useState(0);
 
 
     const [selectedImage, setSelectedImage] = useState(null);
-    const [productDetail, setproduct_detail] = useState(null); 
+    const [productDetail, setproduct_detail] = useState(null);
     const [product_images, setProductImages] = useState([]);
     const [selected_sku, set_selected_sku] = useState(null);
     const [sale, setSale] = useState(null);
@@ -137,10 +135,10 @@ function ProductDetail() {
     // }, [product_detail]);
 
     useEffect(() => {
-        if (special_offer && special_offer?.special_offer_spu_list?.length > 0) {
+        if (special_offer?.special_offer_spu_list?.length > 0) {
             special_offer.special_offer_spu_list.forEach((spu) => {
                 if (spu.product_id.toString() === productDetail.product_detail._id.toString() && spu.sku_list?.length > 0) {
-                    const sku = spu.sku_list.find((item) => item?.sku_tier_idx?.toString() === sku_tier_idx.toString());
+                    const sku = spu.sku_list.find((item) => item?.sku_id == selected_sku._id);
                     setSale(sku)
                     //
                 } else if (spu.product_id.toString() === productDetail.product_detail._id.toString()) {
@@ -148,7 +146,7 @@ function ProductDetail() {
                 }
             });
         }
-    }, [productDetail, sku_tier_idx]);
+    }, [special_offer, selected_sku]);
 
     useEffect(() => {
         if (productDetail) {
@@ -163,10 +161,7 @@ function ProductDetail() {
             setStock(
                 productDetail?.product_detail?.product_quantity
             )
-            setprice_default(
-                productDetail.product_detail
-                    .product_price
-            );
+
             if (productDetail?.sku_list?.length > 0) {
                 setSkuList(productDetail?.sku_list)
                 set_selected_sku(productDetail?.sku_list[0])
@@ -178,6 +173,10 @@ function ProductDetail() {
             } else {
                 setSelectedImage(
                     productDetail?.product_detail?.product_thumb[0]
+                );
+                setPrice(
+                    productDetail.product_detail
+                        .product_price
                 );
             }
         }
@@ -198,7 +197,7 @@ function ProductDetail() {
         if (selected_sku) {
             setPrice(selected_sku.sku_price);
             setStock(selected_sku.sku_stock);
-            setSelectedImage(productDetail?.product_images?.length > 0 && productDetail.product_images?.find((item) =>item.sku_id === selected_sku._id)?.thumb_url);
+            setSelectedImage(productDetail?.product_images?.length > 0 && productDetail.product_images?.find((item) => item.sku_id === selected_sku._id)?.thumb_url);
         }
     }, [selected_sku])
 
@@ -282,31 +281,28 @@ function ProductDetail() {
                                     </div>
                                     <span className="text-muted"><i className="fas fa-shopping-basket fa-sm mx-1"></i>Đã Mua</span>
                                     {/* <span className="text-success ms-2">Số Lượng : {selected_sku && selected_sku.sku_stock}</span> */}
-                                    <span className="text-success ms-2">Số Lượng :{(selected_sku && selected_sku?(selected_sku.sku_stock):(stock) )}</span>
+                                    <span className="text-success ms-2">Số Lượng :{(selected_sku && selected_sku ? (selected_sku.sku_stock) : (stock))}</span>
 
                                 </div>
 
                                 <div className="mb-3">
                                     <span className="h4 fw-bold">
-                                        {(price_sku > 0
-                                            ? (sale ? <NumericFormat value={sale.price_sale} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
+                                        {(
+                                            sale ? <NumericFormat value={sale.price_sale} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
                                                 : <NumericFormat value={price_sku} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
-                                            )
-                                            : <NumericFormat value={price_default} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
-                                        )}                                    </span>
+                                        )
+                                        }                                    </span>
                                     <span className="text-muted">/{productDetail && productDetail.product_detail.product_unit}</span>
                                     <span className="h5 text-danger ms-3" >
                                         <s>
-                                            {sale && (price_sku > 0
-                                                ? <NumericFormat value={price_sku} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
-                                                : <NumericFormat value={price_default} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
-                                            )}</s>
+                                            {sale && <NumericFormat value={price_sku} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
+                                            }</s>
                                     </span>
                                 </div>
                                 <span>
-                                    {sale && sale?.sku_id === selected_sku?._id && (
-                                        <button className="fw-bold" 
-                                        style={{backgroundColor:"white" ,color:"red", cursor: 'pointer', borderRadius:'10px', borderColor:'red'}}>
+                                    {sale && (
+                                        <button className="fw-bold"
+                                            style={{ backgroundColor: "white", color: "red", cursor: 'pointer', borderRadius: '10px', borderColor: 'red' }}>
                                             Giảm đến {sale?.percentage}%
                                         </button>
                                     )}
@@ -513,7 +509,7 @@ function ProductDetail() {
                                 </div>
                                 {/*<!-- Pills content --> */}
                             </div>
-                            
+
                             {/* <div className="border rounded-2 px-3 py-2 bg-white">
                                 <div className="tab-content" id="ex1-content">
                                     <div className="tab-pane fade show active" id="ex1-pills-1" role="tabpanel" aria-labelledby="ex1-tab-1">

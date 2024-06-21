@@ -8,7 +8,7 @@ const AppFooter = () => {
       <div className="ms-auto">
         <span className="me-1">Được sửa bởi</span>
         <a  target="_blank" rel="noopener noreferrer">
-          Nguyễn Hoàng Vũ
+          Trần Khánh Hằng
         </a>
       </div>
     </CFooter>

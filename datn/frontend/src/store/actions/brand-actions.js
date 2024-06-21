@@ -9,7 +9,6 @@ export const getListBrand= (data) => async (dispatch) => {
       return dispatch({ type: Action.GET_BRAND_LIST, payload: response.data });
     } catch (err) {
       console.log(err)
-      return err.response.data
     }
   
   };

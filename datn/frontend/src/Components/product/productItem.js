@@ -25,7 +25,6 @@ export default function ProductItem({ product }) {
     const [sale, setSale] = useState(null)
 
     const [favories_products, setfavoriesProduct] = useState(getFavoritesFromLocalStorage());
-    const [price_default, setprice_default] = useState(0);
     const [price, setPrice] = useState(0);
     const [showModal, setShowModal] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
@@ -106,7 +105,6 @@ export default function ProductItem({ product }) {
     useEffect(() => {
         setPromotion(product?.special_offer)
         setBrand(product.product_brand)
-        setprice_default(product.product_price);
         if (product?.sku_list?.length > 0) {
             setSku_list(product?.sku_list)
             set_selected_sku(product?.sku_list[0])
@@ -120,7 +118,9 @@ export default function ProductItem({ product }) {
             );
             setProduct_image(product?.product_thumb[0])
             setStock(product.product_quantity)
-
+            setPrice(
+                product.product_price
+            );
 
         }
     }, [product]);
@@ -133,14 +133,15 @@ export default function ProductItem({ product }) {
                     const min_price = spu.sku_list.flatMap((item) => item.price_sale);
 
                     setMin_price_sku(Math.min(...min_price))
-                    const sku = spu.sku_list.find((item) => item?.sku_tier_idx?.toString() === sku_tier_idx.toString());
+                    const sku = spu.sku_list.find((item) => item?.sku_id == selected_sku?._id);
                     setSale(sku)
                 } else if (spu.product_id.toString() === product._id.toString()) {
                     setSale(spu)
+                    setMin_price_sku(spu.price_sale)
                 }
             });
         }
-    }, [product, sku_tier_idx, promotion]);
+    }, [selected_sku, promotion]);
 
     useEffect(() => {
         if (sku_tier_idx) {
@@ -178,7 +179,7 @@ export default function ProductItem({ product }) {
         if (userInfo) {
             if (product?.product_variations?.length > 0) {
                 openModal();
-            } 
+            }
             else {
                 handleAddToCart(userInfo._id, { productId: product._id, sku_id: null, quantity: quantity })
             }
@@ -195,11 +196,11 @@ export default function ProductItem({ product }) {
                     <Link to={`/product/${product.product_slug}-${product._id}`}><img src={product_image} className="card-img-top" alt="product" /></Link>
                     <div className="card-body d-flex flex-column">
                         <div className="d-flex flex-row">
-                            <h5 className="mb-1 me-1">{
-                                sale
+                            <h5 className="mb-1 me-1">
+                                {sale
                                     ? min_price_sku
-                                    : (price > 0 ? price : price_default)}</h5>
-                            <span className="text-danger"><s>{sale && (price > 0 ? price : price_default)}</s></span>
+                                    : price} đ</h5>
+                            <span className="text-danger"><s>{sale && price}</s></span>
                         </div>
                         <p className="card-text">{product.product_name}</p>
                         <div className="d-flex justify-content-around">
@@ -261,19 +262,16 @@ export default function ProductItem({ product }) {
                                                                         </div>
                                                                         <div className="mb-3">
                                                                             <span className="h5">
-                                                                                {(price > 0
-                                                                                    ? (sale ? <NumericFormat value={sale.price_sale} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
-                                                                                        : <NumericFormat value={price} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
-                                                                                    )
-                                                                                    : <NumericFormat value={price_default} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
-                                                                                )}                                    </span>
+                                                                                {sale
+                                                                                    ? <NumericFormat value={sale.price_sale} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
+                                                                                    : <NumericFormat value={price} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
+
+                                                                                }                                    </span>
                                                                             <span className="text-muted">/{product && product.product_unit}</span>
                                                                             <span className="text-danger ms-3">
                                                                                 <s>
-                                                                                    {sale && (price > 0
-                                                                                        ? <NumericFormat value={price} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
-                                                                                        : <NumericFormat value={price_default} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
-                                                                                    )}</s>
+                                                                                    {sale && <NumericFormat value={price} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
+                                                                                    }</s>
                                                                             </span>
                                                                         </div>
                                                                         <p>{product.product_short_description}</p>
@@ -293,24 +291,24 @@ export default function ProductItem({ product }) {
                                                                             {product && product.product_variations.map((variation, indexVariation) => {
                                                                                 return (
                                                                                     <div className="row mb-2">
-                                                                                    <div className="col-md-4 mb-3">
-                                                                                        <div key={indexVariation}>
-                                                                                            <p class="d-none d-md-block mb-1" style={{ cursor: 'pointer', color: '#f6831f ' }}>{variation.name}</p>
+                                                                                        <div className="col-md-4 mb-3">
+                                                                                            <div key={indexVariation}>
+                                                                                                <p class="d-none d-md-block mb-1" style={{ cursor: 'pointer', color: '#f6831f ' }}>{variation.name}</p>
 
-                                                                                            {variation.options.map((option, indexOption) => {
-                                                                                                return (
-                                                                                                    <div key={indexOption} >
-                                                                                                        <input type="radio" class="btn btn-check" name="options" id={option} autocomplete="off"
-                                                                                                            value={indexOption} onClick={() => onChangeVariation(indexOption, indexVariation)} />
-                                                                                                        <label class={`btn ${product.product_variations[indexVariation].options[sku_tier_idx.length == 1 ? sku_tier_idx[0] : `${sku_tier_idx[0]},${sku_tier_idx[1]}`].toString() == option.toString() ? "btn-warning" : "btn-warning-outlined"}`} for={option}>{option}</label>
+                                                                                                {variation.options.map((option, indexOption) => {
+                                                                                                    return (
+                                                                                                        <div key={indexOption} >
+                                                                                                            <input type="radio" class="btn btn-check" name="options" id={option} autocomplete="off"
+                                                                                                                value={indexOption} onClick={() => onChangeVariation(indexOption, indexVariation)} />
+                                                                                                            <label class={`btn ${product.product_variations[indexVariation].options[sku_tier_idx.length == 1 ? sku_tier_idx[0] : `${sku_tier_idx[0]},${sku_tier_idx[1]}`].toString() == option.toString() ? "btn-warning" : "btn-warning-outlined"}`} for={option}>{option}</label>
 
-                                                                                                        {/* <label class="btn mx-1 my-1" for={option} data-mdb-ripple-init>{option}</label> */}
-                                                                                                    </div>
-                                                                                                )
-                                                                                            })}
+                                                                                                            {/* <label class="btn mx-1 my-1" for={option} data-mdb-ripple-init>{option}</label> */}
+                                                                                                        </div>
+                                                                                                    )
+                                                                                                })}
 
+                                                                                            </div>
                                                                                         </div>
-                                                                                    </div>
                                                                                     </div>
                                                                                 )
                                                                             })}

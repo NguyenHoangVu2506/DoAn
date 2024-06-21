@@ -1,15 +1,25 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Categories from "./CategoriesMenu";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Menu from "./MenuHeader";
 import './style.css';
+import { getInfo } from "../../store/actions";
 
 const Header = () => {
+  const dispatch= useDispatch();
   const navigate = useNavigate();
   const searchInput = useRef(null)
   const { userInfo } = useSelector((state) => state.userReducer);
   const [textSearch, setTextSearch] = useState('')
+
+
+  const { info } = useSelector((state) => state.infoReducer);
+  useEffect(() => {
+    if (!info) {
+      dispatch(getInfo({ isPublished: true }))
+    }
+  }, [info])
 
   const handleLogin = async () => {
     navigate('/login');
@@ -25,6 +35,11 @@ const Header = () => {
   const onChange = async (value) => {
     setTextSearch(value)
   }
+  const logoStyle = {
+    height: '30%',
+    width: '30%',
+    borderRadius: '200px'
+  };
 
 
   return (
@@ -34,9 +49,7 @@ const Header = () => {
           <div class="">
             <div class="row gy-3">
               <div class="col-lg-2 col-sm-4 col-4">
-                {/* <img src='' alt="" height="100px"
-                    width="100px"></img>  */}
-                <Link to='/' style={{ cursor: 'pointer', color: '#f6831f ' }}><h3>HOANGVU</h3></Link>
+                <Link to='/' style={{ cursor: 'pointer', color: '#f6831f ' }}><h3>FRUIT STORE</h3></Link>
               </div>
 
               <div class="order-lg-last col-lg-5 col-sm-8 ">

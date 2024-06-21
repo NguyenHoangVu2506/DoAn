@@ -9,7 +9,7 @@ export const getTopic = (data) => async (dispatch) => {
         return dispatch({ type: Action.GET_TOPIC, payload: response.data });
     } catch (err) {
         console.log(err)
-        return err.response.data
+  
     }
 
 };

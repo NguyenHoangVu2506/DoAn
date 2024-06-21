@@ -9,7 +9,6 @@ export const getAllAttribute = (data) => async (dispatch) => {
       return dispatch({ type: Action.GET_ATTRIBUTE_LIST, payload: response.data });
     } catch (err) {
       console.log(err)
-      return err.response.data
     }
   
   };
@@ -21,7 +20,6 @@ export const getAllAttribute = (data) => async (dispatch) => {
       return dispatch({ type: Action.GET_ATTRIBUTE, payload: response.data });
     } catch (err) {
       console.log(err)
-      return err.response.data
     }
   
   };
