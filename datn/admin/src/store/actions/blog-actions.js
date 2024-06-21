@@ -1,4 +1,4 @@
-import { Action } from ".";
+import { Action } from "../actions";
 import { PostData } from "../../utils";
 
 
@@ -9,7 +9,7 @@ export const getListBlog = (data) => async (dispatch) => {
         return dispatch({ type: Action.GET_BLOGLIST, payload: response.data });
     } catch (err) {
         console.log(err)
-        return err.response.data
+  
     }
 };
 
@@ -20,7 +20,7 @@ export const getBlogDetails = (data) => async (dispatch) => {
         return dispatch({ type: Action.GET_BLOG_DETAILS, payload: response.data });
     } catch (err) {
         console.log(err)
-        return err.response.data
+  
     }
 
 };
@@ -32,7 +32,7 @@ export const getBlogByTopicId = (data) => async (dispatch) => {
         return dispatch({ type: Action.GET_BLOG_TOPIC_ID, payload: response.data });
     } catch (err) {
         console.log(err)
-        return err.response.data
+  
     }
 
 };
@@ -47,7 +47,7 @@ export const BlogStore = (data) => async (dispatch) => {
         dispatch(getListBlog({ sort: 'ctime' }));
     } catch (err) {
         console.log(err)
-        return err.response.data
+  
 
     }
 
@@ -59,7 +59,7 @@ export const getBlogById = (data) => async (dispatch) => {
         return dispatch({ type: Action.GET_BLOG_BY_ID, payload: response.data });
     } catch (err) {
         console.log(err)
-        return err.response.data
+  
     }
 
 };
@@ -74,7 +74,7 @@ export const BlogUpdate = (data) => async (dispatch) => {
         dispatch(getListBlog({ sort: 'ctime' }));
     } catch (err) {
         console.log(err)
-        return err.response.data
+  
 
     }
 
@@ -91,7 +91,7 @@ export const BlogPublished = (data) => async (dispatch) => {
 
     } catch (err) {
         console.log(err)
-        return err.response.data
+  
 
     }
 
@@ -108,7 +108,7 @@ export const BlogUnPublished = (data) => async (dispatch) => {
         dispatch(getListBlog({ sort: 'ctime' })); // Dispatch getListSlider after publishing
     } catch (err) {
         console.log(err)
-        return err.response.data
+  
 
     }
 
@@ -126,7 +126,7 @@ export const TrashBlog = (data) => async (dispatch) => {
 
     } catch (err) {
         console.log(err)
-        return err.response.data
+  
 
     }
 
@@ -139,7 +139,7 @@ export const ListTrashBlog1 = (data) => async (dispatch) => {
         return dispatch({ type: Action.LISTTRASH, payload: response.data });
     } catch (err) {
         console.log(err)
-        return err.response.data
+  
 
     }
 
@@ -155,7 +155,7 @@ export const BlogRestore = (data) => async (dispatch) => {
         dispatch(getListBlog({ sort: 'ctime' })); // Dispatch getListSlider after publishing
     } catch (err) {
         console.log(err)
-        return err.response.data
+  
 
     }
 
@@ -172,7 +172,7 @@ export const RemoveBlog = (data) => async (dispatch) => {
         dispatch(ListTrashBlog1({ sort: 'ctime' }));
     } catch (err) {
         console.log(err)
-        return err.response.data
+  
 
     }
 

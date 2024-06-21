@@ -1,4 +1,5 @@
-import { Action } from ".";
+import { Action } from "../actions";
+
 import { PostData } from "../../utils";
 
 export const getListMenu = (data) => async (dispatch) => {

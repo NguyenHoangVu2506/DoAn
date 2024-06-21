@@ -182,6 +182,22 @@ console.log(orderItem)
                               Tổng tiền thanh toán: {order.order_checkout?.totalCheckout}
                             </p>
                           </div>
+                          <hr />
+
+                          {/* <ul class="row list-unstyled">
+                            <li class="col-xl-4 col-lg-6">
+                              <div class="d-flex mb-3 mb-md-0">
+                                <div class="me-3">
+                                  <img width="72" height="72" src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/5.webp" class="img-sm rounded border" />
+                                </div>
+                                <div class="">
+                                  <p class="mb-0">Apple Watch Series 4 Space Gray</p>
+                                  <strong> 2x = $339.90 </strong>
+                                </div>
+                              </div>
+                            </li>
+                          </ul> */}
+
                         </div>
                         <hr />
                         <ul className="row list-unstyled">

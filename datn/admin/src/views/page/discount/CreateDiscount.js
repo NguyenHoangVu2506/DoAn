@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
-import { toast } from 'react-toastify'; // Đảm bảo bạn đã import toast từ react-toastify
 import { DiscountStore } from '../../../store/actions/discount-actions';
 import 'react-datepicker/dist/react-datepicker.css';
 import { onAllProduct } from '../../../store/actions';
@@ -58,13 +57,10 @@ const CreateDiscount = () => {
         try {
             const addDiscount = await dispatch(DiscountStore(formData));
             if (addDiscount.payload.status === 200 || addDiscount.payload.status === 201) {
-                toast.success(`Thêm mã giảm giá thành công`);
                 navigate('/discount/discountlist'); // Điều hướng đến danh sách mã giảm giá sau khi thêm thành công
             } else {
-                toast.error('Thêm mã giảm giá không thành công');
             }
         } catch (error) {
-            toast.error('Thêm mã giảm giá không thành công');
         }
     };
 

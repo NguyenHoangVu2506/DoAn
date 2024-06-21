@@ -9,7 +9,7 @@ export const newContact= (data) => async (dispatch) => {
       return dispatch({ type: Action.NEW_CONTACT, payload: response.data });
     } catch (err) {
       console.log(err)
-      return err.response.data
+
     }
   
   };

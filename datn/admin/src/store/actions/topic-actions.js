@@ -1,4 +1,4 @@
-import { Action } from ".";
+import { Action } from "../actions";
 import { PostData } from "../../utils";
 
 

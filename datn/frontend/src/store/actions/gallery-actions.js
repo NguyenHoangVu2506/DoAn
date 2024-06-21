@@ -9,7 +9,7 @@ export const productImageList = (data) => async (dispatch) => {
         return dispatch({ type: Action.GET_IMAGE_LIST, payload: response.data });
     } catch (err) {
         console.log(err)
-        return err.response.data
+  
     }
 
 };

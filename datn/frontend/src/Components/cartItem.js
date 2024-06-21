@@ -36,6 +36,7 @@ export default function CartItem({ product, special_offer_today, update }) {
                     (item) => item._id?.toString() === product.sku_id?.toString()
                 )?.sku_price)
             } else {
+                
                 setPrice(respon.payload.metaData?.spu_info?.product_price)
             }
 
@@ -45,12 +46,13 @@ export default function CartItem({ product, special_offer_today, update }) {
     useEffect(() => {
         productItemApi();
         setQuantity(product.quantity);
+        
     }, [update]);
     useEffect(() => {
         special_offer_today &&
             special_offer_today?.special_offer_spu_list?.length > 0 && special_offer_today?.special_offer_spu_list.filter((spu) => {
                 if (
-                    spu.product_id.toString() === product.productId.toString() && spu.sku_list.length > 0 && selected_sku
+                    spu.product_id.toString() === product.productId.toString() && spu?.sku_list?.length > 0 && selected_sku
                 ) {
                     return spu.sku_list.filter((sku) => {
                         if (

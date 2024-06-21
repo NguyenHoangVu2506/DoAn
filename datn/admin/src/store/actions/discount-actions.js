@@ -1,4 +1,4 @@
-import { Action } from ".";
+import { Action } from "../actions";
 import { GetData, PostData } from "../../utils";
 
 export const getDiscount = (data) => async (dispatch) => {
@@ -20,6 +20,7 @@ export const DiscountStore = (data) => async (dispatch) => {
     );
     console.log('response:', response)
     return dispatch({ type: Action.ADD_DISCOUNT, payload: response.data });
+    
   } catch (err) {
     console.log(err)
     return err.response.data

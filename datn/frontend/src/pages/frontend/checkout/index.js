@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getCart, newOrder, onGetAddress, productById } from "../../../store/actions";
+import { deleteCartIdUserId, getCart, newOrder, onGetAddress, productById } from "../../../store/actions";
 import { getCartFromLocalStorage, getOrderFromCart } from "../../../utils";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import accounting from "accounting";
 
 function Checkout() {
   const dispatch = useDispatch();
@@ -21,7 +22,7 @@ function Checkout() {
     height: '100px'
   };
   const navigate = useNavigate()
-  const { price_total, price_total_discount, price_discount_amount,
+  const { price_total, price_total_discount, price_total_promotion, price_total_checkout,
     discountsApply = []
   } = getOrderFromCart()
 
@@ -30,7 +31,7 @@ function Checkout() {
   const [shippingMethod, setShippingMethod] = useState('normal');
   const [shippingFee, setShippingFee] = useState(30000);
   const [cart_products] = useState(getCartFromLocalStorage())
-  const [productItems, setProductItems] = useState([]);
+  // const [productItems, setProductItems] = useState([]);
 
   const handleShippingChange = (event) => {
     const selectedShippingMethod = event.target.value;
@@ -63,6 +64,7 @@ function Checkout() {
 
     if (new_order?.payload?.status === (200 || 201)) {
       toast.success("Đặt hàng thành công")
+      dispatch(deleteCartIdUserId({ userId: userInfo._id }))
       navigate('/')
     } else {
       toast.error("Đặt hàng không thành công")
@@ -79,25 +81,22 @@ function Checkout() {
             {/* Breadcrumb */}
             <nav className="d-flex">
               <h6 className="mb-0">
-                <a href="" className="text-white-50">Home</a>
+                <Link to={'/'} className="text-white-50">Home</Link>
                 <span className="text-white-50 mx-2"> - </span>
-                <a href="" className="text-white-50">2. Giỏ hàng</a>
+                <Link to={'/gio-hang'} className="text-white-50">Giỏ hàng</Link>
                 <span className="text-white-50 mx-2"> - </span>
-                <a href="" className="text-white"><u>3. Thông tin đơn hàng</u></a>
-                <span className="text-white-50 mx-2"> - </span>
-                <a href="" className="text-white-50">4. Thanh toán</a>
+                <Link to={'/checkout'} className="text-white"><u>Thanh toán</u></Link>
               </h6>
             </nav>
             {/* Breadcrumb */}
           </div>
         </div>
       </div>
-
-      <section className="bg-light py-5">
+      <section className="bg-light my-5">
         <div className="container">
           <div className="row">
-            <div className="col-xl-8 col-lg-8 mb-2">
-              {/* Checkout */}
+            {/* <!-- giỏ hàng --> */}
+            <div className="col-lg-9">
               <div className="card shadow-0 border">
                 <div className="p-4">
                   <h5 className="card-title mb-3">Thông tin khách hàng</h5>
@@ -246,59 +245,63 @@ function Checkout() {
                       </div>
                     </div>
                   </div>
-                  <div className="float-end">
-                    <button className="btn btn-light border">Hủy</button>
-                    <button type="button" className="btn btn-success shadow-0 border" onClick={() => handleOrder()}>Đặt Hàng</button>
+
+                </div>
+              </div>
+            </div>
+            {/* <!-- giỏ hàng --> */}
+            {/* <!-- tóm tắt --> */}
+            <div className="col-lg-3">
+              <div className="card shadow-0 border">
+                <div className="card-body">
+                  <div className="d-flex justify-content-between">
+                    <p className="mb-2">Tổng giá:</p>
+                    <p className="mb-2">{accounting.formatNumber(price_total, 0, ".", ",")} <span className="text-muted">đ</span></p>
+                  </div>
+                  <div className="d-flex justify-content-between">
+                    <p className="mb-2">Giảm giá:</p>
+                    <p className="mb-2 text-success">{accounting.formatNumber(price_total_promotion, 0, ".", ",")} <span className="text-muted">đ</span></p>
+                  </div>
+                  <div className="d-flex justify-content-between">
+                    <p className="mb-2">Mã giảm giá giảm:</p>
+                    <p className="mb-2 text-success">{accounting.formatNumber(price_total_discount, 0, ".", ",")} <span className="text-muted">đ</span></p>
+                  </div>
+                  <hr />
+                  <div className="d-flex justify-content-between">
+                    <p className="mb-2">Thành Tiền:</p>
+                    <p className="mb-2 fw-bold">{accounting.formatNumber(price_total_checkout, 0, ".", ",")} <span className="text-muted">đ</span></p>
+                  </div>
+                  <div className="mt-3">
+                    {price_total > 0 ? (
+                      <button
+                        disabled={false}
+                        className="btn btn-success w-100 shadow-0 mb-2"
+                        style={{ backgroundColor: '#f6831f ' }}
+                        onClick={() => handleOrder()}
+                      >
+                        Thanh toán
+                      </button>
+                    ) : (
+                      <button
+                        disabled={true}
+                        className="btn btn-success w-100 shadow-0 mb-2"
+
+                      >
+                        Thanh toán
+                      </button>
+                    )}
+
                   </div>
                 </div>
               </div>
-              {/* Checkout */}
             </div>
-            <div className="col-xl-4 col-lg-4 d-flex justify-content-center justify-content-lg-end">
-              <div className="ms-lg-4 mt-4 mt-lg-0" style={{ maxWidth: '320px' }}>
-                <h6 className="mb-3">Summary</h6>
-                <div className="d-flex justify-content-between">
-                  <p className="mb-2">Tổng tiền:</p>
-                  <p className="mb-2">{price_total}</p>
-                </div>
-                <div className="d-flex justify-content-between">
-                  <p className="mb-2">Giảm giá:</p>
-                  <p className="mb-2 text-danger">{price_discount_amount}</p>
-                </div>
-                <div className="d-flex justify-content-between">
-                  <p className="mb-2">Miễn Phí Ship</p>
-                  {/* <p className="mb-2">{shippingFee === 0 ? 'Miễn phí' : `${shippingFee}`}</p> */}
-                </div>
-                <hr />
-                <div className="d-flex justify-content-between">
-                  <p className="mb-2">Tổng tiền:</p>
-                  <p className="mb-2 fw-bold">{price_total_discount}</p>
-                </div>
-                <hr />
-
-                <h6 className="text-dark my-4">Sản phẩm trong giỏ hàng</h6>
-                {productItems.map((product, index) => (
-                  <div className="d-flex align-items-center mb-4" key={index}>
-                    <div className="me-3 position-relative">
-                      <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-secondary">
-                        1
-                      </span>
-                      <img src={product.spu_info.product_thumb[0]} style={{ height: '96px', width: '96px' }} className="img-sm rounded border" alt="item" />
-                    </div>
-                    <div className="">
-                      <a href="#" className="nav-link">
-                        {product.spu_info.product_name}
-                      </a>
-                      <div className="price text-muted">Giá:  {product.spu_info.product_price}</div>
-                    </div>
-                  </div>
-
-                ))}
-              </div>
-            </div>
+            {/* <!-- tóm tắt --> */}
           </div>
         </div>
       </section>
+
+
+
     </>
   );
 }

@@ -184,13 +184,13 @@ console.log(userCart.cart_products.length)
     }
 
     //
-    async deleteToCartByCartIdAndUserId({ cartId, userId }) {
-        return await cart.deleteOne({ _id: Types.ObjectId(cartId), cart_userId: userId, cart_state: cart_state }).lean()
+    async deleteToCartByCartIdAndUserId({ userId }) {
+        return await cart.deleteOne({ cart_userId: userId }).lean()
     }
 
     //get list
     async getListUserCart({ userId, cart_state = 'active' }) {
-        console.log({ userId })
+        
         return await cart.findOne({ cart_userId: userId, cart_state: cart_state }).lean()
     }
 

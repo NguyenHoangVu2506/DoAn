@@ -1,4 +1,4 @@
-import { Action } from ".";
+import { Action } from "../actions"
 import { GetData, PostData } from "../../utils";
 
 export const addProWishList = (data) => async (dispatch) => {

@@ -7,7 +7,7 @@ const { addImage, getImageBySpuId } = require('./GalleryService')
 const spu_repo = require('../models/repositories/spu.repo')
 const { Types } = require('mongoose')
 const { getBrandById } = require('./BrandService')
-const { findSpecialOfferBySpuId } = require('./SpecialOfferService')
+const { findSpecialOfferBySpuId, findSpecialOfferBetweenStartDateAndEndByDate } = require('./SpecialOfferService')
 const { findCategoryByIdList, getCategoryById } = require('./CategoryService')
 const { findAttributesByProductAttributes } = require('./AttributeService')
 const SpuModel = require('../models/SpuModel')
@@ -216,7 +216,7 @@ const findProductDetail = async ({ spu_id, isPublished = true }) => {
         //
         product.product_images = await getImageBySpuId({ spu_id: spu_info._id })
         product.product_brand = await getBrandById({ brand_id: spu_info.product_brand })
-        product.special_offer = await findSpecialOfferBySpuId({ spu_id: spu_info._id.toString(), special_offer_is_active: true })
+        product.special_offer = await findSpecialOfferBetweenStartDateAndEndByDate({ special_offer_is_active: true })
         const categories = await findCategoryByIdList({
             isPublished: true,
             category_id_list: spu_info.product_category

@@ -9,7 +9,7 @@ export const getListMenu= (data) => async (dispatch) => {
       return dispatch({ type: Action.GET_ALL_MENU, payload: response.data });
     } catch (err) {
       console.log(err)
-      return err.response.data
+
     }
   
   };

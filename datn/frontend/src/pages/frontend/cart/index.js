@@ -15,21 +15,22 @@ export default function Cart() {
     const dispatch = useDispatch();
 
     const { userInfo } = useSelector((state) => state.userReducer);
+    const { cart } = useSelector((state) => state.cartReducer);
 
     const [price_total, setPriceTotal] = useState(0);
-    const [price_total_discount, setPriceTotalApplyDiscount] = useState(0);
+    const [price_total_promotion, setPrice_total_promotion] = useState(0);
+    const [price_total_discount, setPriceTotalDiscount] = useState(0);
+    const [price_total_checkout, setPrice_total_checkout] = useState(0);
+
     const [discounts, setDiscounts] = useState([])
-    const [cart_products, setCart] = useState([])
 
     const [special_offer_today, setSpecialOfferToday] = useState(null);
     const [discountCodeInput, setDiscountCodeInput] = useState('');
-    const [price_discount_amount, setPriceDiscountAmount] = useState(0);
     const [appliedDiscountCode, setAppliedDiscountCode] = useState(null); // State lưu mã giảm giá đã áp dụng
 
     const fetchDataCart = async () => {
 
         const resultCart = await dispatch(getCart({ userId: userInfo._id }));
-        setCart(resultCart.payload.metaData.cart_products)
         const resultPromotion = await dispatch(specialOfferToday());
         setSpecialOfferToday(resultPromotion?.payload?.metaData)
         const resultDiscount = await dispatch(getAllDiscount({ sort: 'ctime' }));
@@ -48,16 +49,16 @@ export default function Cart() {
             userId: userInfo._id,
             order_ids: {
                 shop_discounts: [],
-                item_products: cart_products
+                item_products: cart?.cart_products
             }
         }));
-        console.log("///", applyDiscount)
         setPriceTotal(applyDiscount?.payload.metaData.checkout_order?.totalPrice);
-        setPriceTotalApplyDiscount(applyDiscount?.payload.metaData.checkout_order?.totalPrice); // Khởi tạo giá sau giảm giá bằng tổng giá ban đầu
+        setPrice_total_promotion(applyDiscount?.payload.metaData.checkout_order?.totalSpecialOffer);
+        setPrice_total_checkout(applyDiscount?.payload.metaData.checkout_order?.totalCheckout)
     }
     useEffect(() => {
-        cart_products.length > 0 && loadPrice()
-    }, [cart_products])
+        cart?.cart_products?.length > 0 && loadPrice()
+    }, [cart])
 
     const handleApplyDiscount = () => {
         onSelectedDiscount(discountCodeInput);
@@ -65,11 +66,11 @@ export default function Cart() {
 
     const handleAddOrderToLocalStorage = async () => {
 
-        const discountsApply=appliedDiscountCode?[appliedDiscountCode]:[]
-         addOrderFromCart({price_total, price_total_discount ,price_discount_amount,
-            discountsApply,
+        const discountsApply = appliedDiscountCode ? [appliedDiscountCode] : []
+        addOrderFromCart({
+            price_total, price_total_discount, price_total_promotion, price_total_checkout, discountsApply
 
-         })
+        })
     };
 
     const updateItemFromCart = async (type, data) => {
@@ -108,7 +109,7 @@ export default function Cart() {
     };
 
     const onSelectedDiscount = async (discount_code) => {
-        if (discount_code) {
+        if (discount_code && price_total_checkout > 0) {
             const applyDiscount = await dispatch(checkoutReview({
                 // cartId: cart?._id,
                 userId: userInfo._id,
@@ -117,18 +118,20 @@ export default function Cart() {
                         discountId: discount_code._id,
                         codeId: discount_code.discount_code
                     }],
-                    item_products: cart_products
+                    item_products: cart?.cart_products
                 }
             }));
             if (applyDiscount?.payload.status === (200 || 201)) {
                 const { checkout_order } = applyDiscount.payload.metaData;
-                setPriceTotalApplyDiscount(checkout_order.totalCheckout);
-                setPriceDiscountAmount(checkout_order.totalDiscount);
+                setPrice_total_checkout(checkout_order.totalCheckout)
+                setPriceTotalDiscount(checkout_order.totalDiscount);
+                setPrice_total_promotion(checkout_order.totalSpecialOffer);
                 setAppliedDiscountCode(discount_code); // Lưu mã giảm giá đã áp dụng
             }
         } else {
-            setPriceTotalApplyDiscount(price_total);
-            setPriceDiscountAmount(0);
+            setPrice_total_checkout(price_total);
+            setPriceTotalDiscount(0);
+            setPrice_total_promotion(0)
             setAppliedDiscountCode(null); // Bỏ lưu mã giảm giá đã áp dụng khi không có mã nào được chọn
         }
     };
@@ -144,7 +147,7 @@ export default function Cart() {
                             <div className="card border shadow-0">
                                 <div className="m-4">
                                     <h4 className="card-title mb-4">Giỏ hàng của bạn</h4>
-                                    {cart_products?.length > 0 && cart_products.map((product, index) => {
+                                    {cart?.cart_products?.length > 0 && cart?.cart_products.map((product, index) => {
                                         return <CartItem product={product} special_offer_today={special_offer_today}
                                             update={updateItemFromCart} key={index} />;
                                     })}
@@ -199,17 +202,21 @@ export default function Cart() {
                                     </div>
                                     <div className="d-flex justify-content-between">
                                         <p className="mb-2">Giảm giá:</p>
-                                        <p className="mb-2 text-success">{accounting.formatNumber(price_discount_amount, 0, ".", ",")} <span className="text-muted">đ</span></p>
+                                        <p className="mb-2 text-success">{accounting.formatNumber(price_total_promotion, 0, ".", ",")} <span className="text-muted">đ</span></p>
+                                    </div>
+                                    <div className="d-flex justify-content-between">
+                                        <p className="mb-2">Mã giảm giá giảm:</p>
+                                        <p className="mb-2 text-success">{accounting.formatNumber(price_total_discount, 0, ".", ",")} <span className="text-muted">đ</span></p>
                                     </div>
                                     <hr />
                                     <div className="d-flex justify-content-between">
                                         <p className="mb-2">Thành Tiền:</p>
-                                        <p className="mb-2 fw-bold">{accounting.formatNumber(price_total_discount, 0, ".", ",")} <span className="text-muted">đ</span></p>
+                                        <p className="mb-2 fw-bold">{accounting.formatNumber(price_total_checkout, 0, ".", ",")} <span className="text-muted">đ</span></p>
                                     </div>
                                     <div className="mt-3">
                                         {price_total > 0 ? (
                                             <button
-                                                onClick={() => {handleAddOrderToLocalStorage();navigate('/checkout')}}
+                                                onClick={() => { handleAddOrderToLocalStorage(); navigate('/checkout') }}
                                                 disabled={false}
                                                 className="btn btn-success w-100 shadow-0 mb-2"
                                                 style={{ backgroundColor: '#f6831f ' }}

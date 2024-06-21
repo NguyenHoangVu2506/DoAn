@@ -8,7 +8,7 @@ const tem = require('../utils/tem.html')
 const sendEmailLinkVerify = async ({ html, toEmail, subject = "xac nhan", text = "..." }) => {
     try {
         const mailOption = {
-            from: `"OUTRUNNER STORE" <phandoanhtu0291@gmail.com>`,
+            from: `"BEAUTYSTORE" <phandoanhtu0291@gmail.com>`,
             to: toEmail,
             subject: "Xac nhan",
             text,

@@ -9,7 +9,7 @@ export const getListSlider = (data) => async (dispatch) => {
         return dispatch({ type: Action.GET_LIST_SLIDER, payload: response.data });
     } catch (err) {
         console.log(err)
-        return err.response.data
+  
     }
 
 };
