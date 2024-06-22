@@ -1,3 +1,4 @@
+import { NumericFormat } from "react-number-format";
 import { Link } from "react-router-dom";
 
 export default function ProductRelatedItem({product}) {
@@ -11,7 +12,7 @@ export default function ProductRelatedItem({product}) {
                     <a href="#" className="nav-link mb-1">
                       {product.product_name} <br />
                     </a>
-                    <strong className="text-dark">{product.product_price}</strong>
+                    <strong className="text-dark"><NumericFormat value={product.product_price} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" /></strong>
                 </div>
             </div>
 

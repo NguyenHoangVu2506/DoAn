@@ -152,15 +152,16 @@ export default function UserOrder() {
                                       <h4 className="mb-2" style={{ color: '#f37a27' }}>Thông tin đơn hàng</h4>
                                       <div className="row">
                                         <div className="col mb-0">
-                                          <p className="small text-muted mb-1">Ngày tạo:</p>
+                                          <p className="small text-dark mb-1">Ngày tạo:</p>
                                           <p>{order.createdOn ? new Date(order.createdOn).toLocaleString() : ''}</p>
                                         </div>
                                         <div className="col mb-1">
-                                          <p className="small text-muted mb-1">Mã đơn hàng</p>
+                                          <p className="small text-dark mb-1">Mã đơn hàng</p>
                                           <p>{order._id}</p>
                                         </div>
                                       </div>
                                       <hr />
+
                                       {order.order_product.map((product, productIndex) => (
 
                                         <div key={productIndex}>
@@ -177,7 +178,7 @@ export default function UserOrder() {
                                                   <p className="small text-muted mb-1">Giá tiền</p>
 
                                                   <div className='row'>
-                                                    <p>{item.price_sale ? <NumericFormat value={item.price_sale} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
+                                                    <p><small><em className='fw-bold'>{item.quantity}x </em></small> {item.price_sale ? <NumericFormat value={item.price_sale} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
                                                       : <NumericFormat value={item.price} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
                                                     }  <s className='text-danger'>{item?.price_sale && <NumericFormat value={item.price} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
                                                     }</s>
@@ -192,18 +193,18 @@ export default function UserOrder() {
                                       ))}
                                       <hr />
                                       <div className="d-flex justify-content-between">
-                                        <p className="fw-bold">Giảm Giá</p>
+                                        <p className="fw-bold">Giảm Giá:</p>
                                         <p className="text-warning">-<NumericFormat value={order.order_checkout?.totalSpecialOffer} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" /></p>
                                       </div>
                                       <div className="d-flex justify-content-between">
-                                        <p className="fw-bold">Áp Mã Giảm Giá</p>
+                                        <p className="fw-bold">Áp Mã Giảm Giá:</p>
                                         <p className="text-danger">-<NumericFormat value={order.order_checkout?.totalDiscount} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" /></p>
                                       </div>
                                       <hr />
                                       <hr />
                                       <div className="d-flex justify-content-between">
-                                        <p className="fw-bold">Tổng cộng</p>
-                                        <p className="fw-bold"></p><NumericFormat value={order.order_checkout?.totalCheckout} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
+                                        <p className="fw-bold">Tổng cộng:</p>
+                                        <p className="fw-bold"></p><NumericFormat className='text-success fw-bold' value={order.order_checkout?.totalCheckout} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
                                       </div>
                                       <hr />
                                       <h4 className="mb-4" style={{ color: '#f37a27' }}>Tình trạng đơn hàng</h4>
@@ -233,7 +234,7 @@ export default function UserOrder() {
                           <hr />
                           <div className="row">
                             <div className="col-lg-4">
-                              <p className="mb-0 text-muted">Thông tin liên hệ</p>
+                              <p className="mb-0 text-dark fw-bold">Thông tin liên hệ</p>
                               <p className="m-0">
                                 {userInfo.user_name} <br />
                                 {userInfo.user_phone} <br />
@@ -241,17 +242,17 @@ export default function UserOrder() {
                               </p>
                             </div>
                             <div className="col-lg-4 border-start">
-                              <p className="mb-0 text-muted">Địa chỉ giao hàng</p>
+                              <p className="mb-0 text-dark fw-bold">Địa chỉ giao hàng</p>
                               <p className="m-0">
                                 United States <br />
                                 3601 Old Capitol Trail, Unit A-7, Suite 170777, Wilmington, DE 19808
                               </p>
                             </div>
                             <div className="col-lg-4 border-start">
-                              <p className="mb-0 text-muted">Phương thức thanh toán</p>
-                              <p className="m-0">
-                                Tổng tiền thanh toán: {order.order_checkout?.totalCheckout}
-                              </p>
+                              <p className="mb-0 text-dark fw-bold">Phương thức thanh toán</p>
+                              <em className="   m-0">
+                                Tổng tiền thanh toán: <NumericFormat className='text-success fw-bold' value={order.order_checkout?.totalCheckout} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
+                              </em>
                             </div>
                             <hr />
                           </div>
@@ -279,7 +280,7 @@ export default function UserOrder() {
 
                                         <div>
                                           <p className="mb-0">{productDetail.product_name}</p>
-                                          <strong>{item.quantity} x = {item.price_sale ? <NumericFormat value={item.price_sale} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" /> : <NumericFormat value={item.price} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />}</strong>
+                                          <small><em className='fw-bold'>{item.quantity}x</em></small>    <strong>{item.price_sale ? <NumericFormat value={item.price_sale} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" /> : <NumericFormat value={item.price} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />}</strong>
 
                                           {/* <strong><s className='text-danger'>{item?.price_sale && item.price_sale}</s></strong> */}
 
