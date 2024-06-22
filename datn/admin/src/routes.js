@@ -98,7 +98,7 @@ const routes = [
   { path: '/product/list-trash', name: 'ListTrashProduct', element: ListTrashProduct },
 
   //////////////////user
-  { path: '/user/userlist/:roles', name: 'UserList', element: UserList },
+  { path: '/user/userlist', name: 'UserList', element: UserList },
   //////////////product_sale
   { path: '/productsale/productsalelist', name: 'ProductSaleList', element: ProductSaleList },
   { path: '/productsale/detailproductsale/:id', name: 'DetailProductSale', element: DetailProductSale },

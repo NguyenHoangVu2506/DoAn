@@ -104,7 +104,7 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Khách hàng',
-    to: '/user/userlist/:roles',
+    to: '/user/userlist',
     icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
   },
   {

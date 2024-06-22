@@ -190,11 +190,24 @@ class CheckoutService {
         const Order = await order.find()
         return Order
     }
-    static async cancelOrderByUser() {
-
+    static async updateOrderStatusByOrder({order_id, order_status}) {
+        try {
+            const query = { _id: order_id },
+                updates = {
+                    $set: {
+                        order_status: order_status
+                    },
+                }, options = {
+                    returnNewDocument: true,
+                    new: true
+                }
+            return await order.findOneAndUpdate(query, updates, options)
+        } catch (error) {
+            
+        }
     }
-    static async updateOrderStatusbyShop() {
+    // static async updateOrderStatusbyShop() {
 
-    }
+    // }
 }
 module.exports = CheckoutService

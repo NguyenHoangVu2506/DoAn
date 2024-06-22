@@ -45,7 +45,7 @@ export const CategoryStore = (data) => async (dispatch) => {
     );
     console.log('response:', response)
     return dispatch({ type: Action.ADD_CATEGORY, payload: response.data });
-
+    dispatch(getCategory({ sort: 'ctime' }));
   } catch (err) {
     console.log(err)
     return err.response.data
@@ -71,8 +71,8 @@ export const CategoryUpdate = (data) => async (dispatch) => {
       data
     );
     console.log('response:', response)
-    return dispatch({ type: Action.UPDATE_CATEGORY, payload: response.data });
-
+    dispatch({ type: Action.UPDATE_CATEGORY, payload: response.data });
+    dispatch(getCategory({ sort: 'ctime' }));
   } catch (err) {
     console.log(err)
     return err.response.data

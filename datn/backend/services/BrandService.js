@@ -75,7 +75,7 @@ const pulishBrand = async ({ brand_id, isPublished = false }) => {
             },
         }, options = {
             upsert: true,
-            new:true
+            new: true
         }
         return await brand.updateOne(query, updateSet, options)
     } catch (error) {
@@ -130,7 +130,7 @@ const restoreBrandById = async ({ brand_id, isDeleted = true }) => {
             },
         }, options = {
             upsert: true,
-            new : true
+            new: true
         }
         console.log(updateSet)
         return await brand.updateOne(query, updateSet, options)

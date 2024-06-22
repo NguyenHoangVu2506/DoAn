@@ -152,3 +152,14 @@ export const updateUser = (data) => async (dispatch) => {
   }
 
 };
+export const getUserByID = (data) => async (dispatch) => {
+  try {
+    const response = await PostData('/user/getUser', data);
+    console.log('response:', response)
+    return dispatch({ type: Action.GET_USER_BY_ID, payload: response.data });
+  } catch (err) {
+    console.log(err)
+    return err.response.data
+  }
+
+};

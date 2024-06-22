@@ -3,10 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { NumericFormat } from "react-number-format";
 import ProductRelatedItem from "../../../../Components/product/product_related_item";
-import { addCart, addProWishList, removeFromWishList, productImageList, onProductDetail } from "../../../../store/actions";
+import { addCart, addProWishList, removeFromWishList, productImageList, onProductDetail, getUserByID } from "../../../../store/actions";
 import { toast } from 'react-toastify';
 import { addFavoriteToLocalStorage, getFavoritesFromLocalStorage, removeFavoriteFromLocalStorage } from "../../../../utils";
-
+import { getComment } from "../../../../store/actions/comment_rating-actions";
+import { formatDistanceToNow } from 'date-fns';
+import { vi } from 'date-fns/locale';
 function ProductDetail() {
 
     const { product_slug_id } = useParams()
@@ -14,7 +16,8 @@ function ProductDetail() {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
+    const { getComentProduct } = useSelector((state) => state.commnetRatingReducer);
+    const { userbyid } = useSelector((state) => state.userReducer);
     const { userInfo } = useSelector((state) => state.userReducer);
     const [favories_products, setfavoriesProduct] = useState(getFavoritesFromLocalStorage)
     const [special_offer, setSpecial_offer] = useState([])
@@ -53,6 +56,16 @@ function ProductDetail() {
     const HandleImageChoose = (thumb) => {
         setSelectedImage(thumb);
     };
+
+    ////comment
+    useEffect(() => {
+        dispatch(getComment({ productId: spu_id }));
+    }, [spu_id, dispatch]);
+    console.log(getComentProduct);
+    // useEffect(() => {
+    //     dispatch(getUserByID({ user_id: spu_id }));
+    // }, [spu_id, dispatch]);
+    // console.log(commentuserid);
 
 
     ////addtoCart
@@ -115,25 +128,6 @@ function ProductDetail() {
         })
     }
     console.log(sku_tier_idx)
-
-
-    // useEffect(() => {
-    //     if (product_detail?.special_offer && product_detail.special_offer?.special_offer_spu_list.length > 0) {
-    //         product_detail.special_offer.special_offer_spu_list.forEach((spu) => {
-    //             if (spu.product_id.toString() === product_detail.product_detail._id.toString() && spu.sku_list?.length > 0) {
-    //                 const min_price = spu.sku_list.flatMap((item) => item.price_sale);
-    //                 setPrice(Math.min(...min_price));
-    //                 setSale(spu)
-    //                 //
-
-    //             } else if (spu.product_id.toString() === product_detail.product_detail._id.toString()) {
-    //                 setPrice(spu.price_sale);
-    //                 setSale(spu)
-    //             }
-    //         });
-    //     }
-    // }, [product_detail]);
-
     useEffect(() => {
         if (special_offer?.special_offer_spu_list?.length > 0) {
             special_offer.special_offer_spu_list.forEach((spu) => {
@@ -510,61 +504,64 @@ function ProductDetail() {
                                 {/*<!-- Pills content --> */}
                             </div>
 
-                            {/* <div className="border rounded-2 px-3 py-2 bg-white">
+                            <div className="border rounded-2 px-3 py-2 bg-white">
                                 <div className="tab-content" id="ex1-content">
                                     <div className="tab-pane fade show active" id="ex1-pills-1" role="tabpanel" aria-labelledby="ex1-tab-1">
                                         <h4>ĐÁNH GIÁ CỦA KHÁCH HÀNG</h4>
-                                        <p>(0)</p>
-                                        <ul data-mdb-rating-init class="rating mb-3" data-mdb-toggle="rating">
-                                            <li>
-                                                <i class="far fa-star fa-sm text-danger" title="Bad"></i>
-                                            </li>
-                                            <li>
-                                                <i class="far fa-star fa-sm text-danger" title="Poor"></i>
-                                            </li>
-                                            <li>
-                                                <i class="far fa-star fa-sm text-danger" title="OK"></i>
-                                            </li>
-                                            <li>
-                                                <i class="far fa-star fa-sm text-danger" title="Good"></i>
-                                            </li>
-                                            <li>
-                                                <i class="far fa-star fa-sm text-danger" title="Excellent"></i>
-                                            </li>
-                                        </ul>
-                                        <div class="card mb-3">
-                                            <div class="card-body">
-                                                <div class="d-flex flex-start">
-                                                    <img class="rounded-circle shadow-1-strong me-3"
-                                                        src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(26).webp" alt="avatar" width="40"
-                                                        height="40" />
-                                                    <div class="w-100">
-                                                        <div class="d-flex justify-content-between align-items-center mb-3">
-                                                            <h6 class="text-primary fw-bold mb-0">
-                                                                lara_stewart
-                                                                <span class="text-body ms-2">Hmm, This poster looks cool</span>
-                                                            </h6>
-                                                            <p class="mb-0">2 days ago</p>
-                                                        </div>
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <p class="small mb-0" style={{ color: '#aaa' }}>
-                                                                <a href="#!" class="link-grey">Remove</a> •
-                                                                <a href="#!" class="link-grey">Reply</a> •
-                                                                <a href="#!" class="link-grey">Translate</a>
-                                                            </p>
-                                                            <div class="d-flex flex-row">
-                                                                <i class="fas fa-star text-warning me-2"></i>
-                                                                <i class="far fa-check-circle me-2" style={{ color: '#ff8647' }}></i>
-                                                                <a href="#!" class="link-grey " style={{ color: '#ff8647' }}>Đã mua hàng</a>
+                                        <span className="text-success"> 5 đánh giá</span>
+                                        <div className="text-warning mb-1 me-2">
+                                            <i className="fa fa-star"></i>
+                                            <i className="fa fa-star"></i>
+                                            <i className="fa fa-star"></i>
+                                            <i className="fa fa-star"></i>
+                                            <i className="fas fa-star-half-alt"></i>
+                                            <span className="ms-1">
+                                                4.5
+                                            </span>
+
+                                        </div>
+                                        {getComentProduct && getComentProduct.map((comment, index) => {
+                                             const commentuserid=comment.comment_userId;
+                                             console.log(commentuserid)
+                                            return (
+                                                <div class="card mb-3" key={index}>
+                                                    <div class="card-body">
+                                                        <div class="d-flex flex-start">
+                                                            <img class="rounded-circle shadow-1-strong me-3"
+                                                                src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(26).webp" alt="avatar" width="40"
+                                                                height="40" />
+                                                            <div class="w-100">
+                                                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                                                    <h6 class="text-primary fw-bold mb-0">
+                                                                        lara_stewart
+                                                                    </h6>
+                                                                    <p class="mb-0">{comment.createdAt ? formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true, locale: vi }) : ''}</p>
+                                                                </div>
+                                                                <div class="d-flex justify-content-between align-items-center">
+                                                                    <span class="text-body ms-1">{comment.comment_content}</span>
+
+                                                                    {/* <p class="small mb-0" style={{ color: '#aaa' }}>
+                                                                    <a href="#!" class="link-grey">Remove</a> •
+                                                                    <a href="#!" class="link-grey">Reply</a> •
+                                                                    <a href="#!" class="link-grey">Translate</a>
+                                                                </p> */}
+                                                                    {/* <div class="d-flex flex-row">
+                                                                    <i class="fas fa-star text-warning me-2"></i>
+                                                                    <i class="far fa-check-circle me-2" style={{ color: '#ff8647' }}></i>
+                                                                    <a href="#!" class="link-grey " style={{ color: '#ff8647' }}>Đã mua hàng</a>
+                                                                </div> */}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
+
+                                            )
+                                        }
+                                        )}
                                     </div>
                                 </div>
-                            </div> */}
+                            </div>
                         </div>
                         <div className="col-lg-4">
                             <div className="px-0 border rounded-2 shadow-0">

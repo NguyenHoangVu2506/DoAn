@@ -18,12 +18,11 @@ export const getAttribute= (data) => async (dispatch) => {
       const response = await PostData('/info/updateInfo', 
         data
       );
-      console.log('response:', response)
+      // console.log('response:', response)
       return dispatch({ type: Action.UPDATE_INFO, payload: response.data });
   
     } catch (err) {
       console.log(err)
-
-  
+      return err.response.data
     }
   };

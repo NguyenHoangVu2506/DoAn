@@ -6,7 +6,7 @@ class CategoryService {
   static async createCategory(payload) {
     const {
       parent_id = null, category_name, category_description,
-      category_icon = null, category_image = null, category_position= null
+      category_icon = null, category_image = null, category_position = null
     } = payload
 
     const newCategory = await category.create({
@@ -45,12 +45,14 @@ class CategoryService {
       return null
     }
   }
-  static async findAllCategory({ isPublished = true }) {
+  static async findAllCategory({ sort,isPublished = true }) {
     try {
+      const sortBy = sort === 'ctime' ? { _id: -1 } : { _id: 1 }
       const categories = await category.find({
         isPublished
-      });
-      console.log('findAllCategories', categories)
+      }).sort(sortBy)
+        .lean()
+      // console.log('findAllCategories', categories)
       return categories;
     } catch (error) {
       console.log(error)
@@ -70,19 +72,19 @@ class CategoryService {
     }
   }
 
-  static async updateCategory({ category_id, category_name,category_icon, category_description, category_image }) {
+  static async updateCategory({ category_id, category_name, category_icon, category_description, category_image }) {
     try {
       const query = { _id: category_id }
       const updates = {
         $set: {
           category_id: category_id,
           category_name: category_name,
-          category_icon:category_icon,
+          category_icon: category_icon,
           category_description: category_description,
           category_image: category_image
         }
       }, options = {
-        returnNewDocument: true, new:true
+        returnNewDocument: true, new: true
       }
       return await category.findOneAndUpdate(query, updates, options)
 
@@ -103,7 +105,7 @@ class CategoryService {
         },
       }, options = {
         upsert: true,
-        new:true
+        new: true
       }
       return await category.updateOne(query, updateSet, options)
     } catch (error) {
@@ -121,7 +123,7 @@ class CategoryService {
         },
       }, options = {
         upsert: true,
-        new:true
+        new: true
       }
       return await category.updateOne(query, updateSet, options)
     } catch (error) {
@@ -139,7 +141,7 @@ class CategoryService {
         },
       }, options = {
         upsert: true,
-        new:true
+        new: true
       }
       console.log(updateSet)
       return await category.updateOne(query, updateSet, options)
@@ -158,7 +160,7 @@ class CategoryService {
         },
       }, options = {
         upsert: true,
-        new:true
+        new: true
       }
       console.log(updateSet)
       return await category.updateOne(query, updateSet, options)
@@ -168,22 +170,22 @@ class CategoryService {
 
   }
 
-  static async getDeleteCategoryList ({ sort, isDeleted = true }){
+  static async getDeleteCategoryList({ sort, isDeleted = true }) {
     try {
-        const sortBy = sort === 'ctime' ? { _id: -1 } : { _id: 1 }
-        const listDelCategory = await category.find({
-            isDeleted
-        }).sort(sortBy)
-            .lean()
-        console.log("listDelCategory", listDelCategory)
-        return listDelCategory
+      const sortBy = sort === 'ctime' ? { _id: -1 } : { _id: 1 }
+      const listDelCategory = await category.find({
+        isDeleted
+      }).sort(sortBy)
+        .lean()
+      console.log("listDelCategory", listDelCategory)
+      return listDelCategory
     } catch (error) {
     }
-}
+  }
 
-  static async removeCategory  ({ category_id })  {
+  static async removeCategory({ category_id }) {
     return await category.deleteOne({ _id: category_id }).lean()
-}
+  }
 
 }
 module.exports = CategoryService
