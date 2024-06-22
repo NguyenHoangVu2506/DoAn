@@ -105,9 +105,14 @@ class UserService {
             .lean()
         return addressByUserId
     }
+    // Đã thêm phương thức getUser
     async getUser({ user_id }) {
-        const getUser = await this.repository.findByUserId(user_id)
-        return getUser
+        try {
+            const user = await UserModel.findById(user_id).lean(); // Sửa lại phương thức từ findByUserId thành findById
+            return user;
+        } catch (error) {
+            throw new Error(`Failed to get user with id ${user_id}: ${error.message}`);
+        }
     }
 
     async getAllUser({ isPublished = true }) {

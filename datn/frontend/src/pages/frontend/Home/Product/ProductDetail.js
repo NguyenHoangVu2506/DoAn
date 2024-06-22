@@ -62,12 +62,28 @@ function ProductDetail() {
         dispatch(getComment({ productId: spu_id }));
     }, [spu_id, dispatch]);
     console.log(getComentProduct);
-    // useEffect(() => {
-    //     dispatch(getUserByID({ user_id: spu_id }));
-    // }, [spu_id, dispatch]);
-    // console.log(commentuserid);
 
+    const renderStars = (rating) => {
+        const fullStars = Math.floor(rating);
+        const halfStars = rating % 1 !== 0 ? 1 : 0;
+        const emptyStars = 5 - fullStars - halfStars;
 
+        return (
+            <>
+                {Array(fullStars).fill(<i className="fa fa-star"></i>)}
+                {halfStars === 1 && <i className="fas fa-star-half-alt"></i>}
+                {Array(emptyStars).fill(<i className="far fa-star"></i>)}
+            </>
+        );
+    };
+
+    const calculateAverageRating = () => {
+        if (getComentProduct && getComentProduct.length > 0) {
+            const totalRatings = getComentProduct.reduce((acc, comment) => acc + comment.comment_rating, 0);
+            return (totalRatings / getComentProduct.length).toFixed(1);
+        }
+        return 0; // Default to 0 if there are no comments
+    };
     ////addtoCart
     const handleAddToCart = async (userId, { productId, sku_id = null, quantity }) => {
         console.log("productId, sku_id, quantity", productId, sku_id, quantity, userId)
@@ -264,14 +280,10 @@ function ProductDetail() {
                                 </h4>
                                 <div className="d-flex flex-row my-3">
                                     <div className="text-warning mb-1 me-2">
-                                        <i className="fa fa-star" style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
-                                        <i className="fa fa-star" style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
-                                        <i className="fa fa-star" style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
-                                        <i className="fa fa-star" style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
-                                        <i className="fas fa-star-half-alt" style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
-                                        <span className="ms-1">
-                                            4.5
-                                        </span>
+                                    {renderStars(calculateAverageRating())}
+                                                    <span className="ms-1">
+                                                        {calculateAverageRating()}
+                                                    </span>
                                     </div>
                                     <span className="text-muted"><i className="fas fa-shopping-basket fa-sm mx-1"></i>Đã Mua</span>
                                     {/* <span className="text-success ms-2">Số Lượng : {selected_sku && selected_sku.sku_stock}</span> */}
@@ -508,56 +520,60 @@ function ProductDetail() {
                                 <div className="tab-content" id="ex1-content">
                                     <div className="tab-pane fade show active" id="ex1-pills-1" role="tabpanel" aria-labelledby="ex1-tab-1">
                                         <h4>ĐÁNH GIÁ CỦA KHÁCH HÀNG</h4>
-                                        <span className="text-success"> 5 đánh giá</span>
-                                        <div className="text-warning mb-1 me-2">
-                                            <i className="fa fa-star"></i>
-                                            <i className="fa fa-star"></i>
-                                            <i className="fa fa-star"></i>
-                                            <i className="fa fa-star"></i>
-                                            <i className="fas fa-star-half-alt"></i>
-                                            <span className="ms-1">
-                                                4.5
-                                            </span>
 
-                                        </div>
-                                        {getComentProduct && getComentProduct.map((comment, index) => {
-                                             const commentuserid=comment.comment_userId;
-                                             console.log(commentuserid)
-                                            return (
-                                                <div class="card mb-3" key={index}>
-                                                    <div class="card-body">
-                                                        <div class="d-flex flex-start">
-                                                            <img class="rounded-circle shadow-1-strong me-3"
-                                                                src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(26).webp" alt="avatar" width="40"
-                                                                height="40" />
-                                                            <div class="w-100">
-                                                                <div class="d-flex justify-content-between align-items-center mb-1">
-                                                                    <h6 class="text-primary fw-bold mb-0">
-                                                                        lara_stewart
-                                                                    </h6>
-                                                                    <p class="mb-0">{comment.createdAt ? formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true, locale: vi }) : ''}</p>
-                                                                </div>
-                                                                <div class="d-flex justify-content-between align-items-center">
-                                                                    <span class="text-body ms-1">{comment.comment_content}</span>
+                                        {getComentProduct && getComentProduct.length > 0 ? (
+                                            <>
+                                                <span className="text-success"> {getComentProduct.length} đánh giá</span>
+                                                
+                                                {getComentProduct && getComentProduct.map((comment, index) => {
+                                                    console.log(comment.user)
+                                                    return (
+                                                        <div class="card mb-3" key={index}>
+                                                            <div class="card-body">
+                                                                <div class="d-flex flex-start">
+                                                                    <img class="rounded-circle shadow-1-strong me-3"
+                                                                        src={comment.user.user_avatar} alt="avatar" width="40"
+                                                                        height="40" />
+                                                                    <div class="w-100">
+                                                                        <div class="d-flex justify-content-between align-items-center mb-0">
+                                                                            <div className="text-warning mb-1 me-2">
+                                                                                <h6 class="text-primary fw-bold mb-0">
+                                                                                    {comment.user.user_name}
+                                                                                </h6>
+                                                                                {renderStars(comment.comment_rating)}
+                                                                                <span className="ms-1">
+                                                                                    {comment.comment_rating}
+                                                                                </span>
 
-                                                                    {/* <p class="small mb-0" style={{ color: '#aaa' }}>
+                                                                            </div>
+
+                                                                            <p class="mb-0">{comment.createdAt ? formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true, locale: vi }) : ''}</p>
+                                                                        </div>
+                                                                        <div class="d-flex justify-content-between align-items-center">
+                                                                            <span class="text-body ms-1">{comment.comment_content}</span>
+
+                                                                            {/* <p class="small mb-0" style={{ color: '#aaa' }}>
                                                                     <a href="#!" class="link-grey">Remove</a> •
                                                                     <a href="#!" class="link-grey">Reply</a> •
                                                                     <a href="#!" class="link-grey">Translate</a>
                                                                 </p> */}
-                                                                    {/* <div class="d-flex flex-row">
+                                                                            {/* <div class="d-flex flex-row">
                                                                     <i class="fas fa-star text-warning me-2"></i>
                                                                     <i class="far fa-check-circle me-2" style={{ color: '#ff8647' }}></i>
                                                                     <a href="#!" class="link-grey " style={{ color: '#ff8647' }}>Đã mua hàng</a>
                                                                 </div> */}
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </div>
 
-                                            )
-                                        }
+                                                    )
+                                                }
+                                                )}
+                                            </>
+                                        ) : (
+                                            <span className="text-success" style={{ textAlign: "center" }}>Không có đánh giá nào</span>
                                         )}
                                     </div>
                                 </div>
