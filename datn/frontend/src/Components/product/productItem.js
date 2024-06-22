@@ -7,14 +7,13 @@ import { addFavoriteToLocalStorage, getFavoritesFromLocalStorage, removeFavorite
 import accounting from "accounting";
 import { addCart } from "../../store/actions";
 import { NumericFormat } from "react-number-format";
+import { getComment } from "../../store/actions/comment_rating-actions";
 
 export default function ProductItem({ product }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { userInfo } = useSelector((state) => state.userReducer);
-
-    // const { spuInfo } = useSelector((state) => state.productReducer);
-    // const { productDetail } = useSelector((state) => state.productReducer);
+    const { getComentProduct } = useSelector((state) => state.commnetRatingReducer);
 
     const [sku_list, setSku_list] = useState([])
     const [promotion, setPromotion] = useState(null)
@@ -32,7 +31,6 @@ export default function ProductItem({ product }) {
     const [stock, setStock] = useState(null);
     const [selected_sku, set_selected_sku] = useState(null);
     const [sku_tier_idx, setSku_tier_idx] = useState([0])
-
     const decreaseQuantity = () => {
         if (quantity > 1) {
             setQuantity(quantity - 1);
@@ -121,7 +119,6 @@ export default function ProductItem({ product }) {
             setPrice(
                 product.product_price
             );
-
         }
     }, [product]);
 
@@ -188,21 +185,67 @@ export default function ProductItem({ product }) {
             navigate('/login');
         }
     };
+    // console.log(product._id)
+    //////////////////rating
 
-    return (
+    // useEffect(() => {
+    //     dispatch(getComment({ productId: '666c87d232ce3bce5d785772' }));
+    // }, [dispatch]);
+    // console.log('review',getComentProduct); 
+    const review = product.review_list
+    const renderStars = (rating) => {
+        const fullStars = Math.max(0, Math.floor(rating));
+        const halfStars = rating % 1 !== 0 ? 1 : 0;
+        const emptyStars = Math.max(0, 5 - fullStars - halfStars);
+    
+        return (
+            <>
+                {[...Array(fullStars)].map((_, index) => (
+                    <i key={`full-${index}`} className="fa fa-star"></i>
+                ))}
+                {halfStars === 1 && <i className="fas fa-star-half-alt"></i>}
+                {[...Array(emptyStars)].map((_, index) => (
+                    <i key={`empty-${index}`} className="far fa-star"></i>
+                ))}
+            </>
+        );
+    };
+    
+    // console.log(review.length);
+    const calculateAverageRating = () => {
+        if (review && review.length > 0) {
+            const totalRatings = review.reduce((acc, comment) => acc + comment.comment_rating, 0);
+            return (totalRatings / review.length).toFixed(1);
+        }
+        return 0; // Default to 0 if there are no comments
+    };
+        return (
         <>
             <div className="col-lg-3 col-md-6 col-sm-6 d-flex" key={product._id}>
                 <div className="card bg-image hover-zoom ripple rounded ripple-surface w-100 my-2 shadow-2-strong">
                     <Link to={`/product/${product.product_slug}-${product._id}`}><img src={product_image} className="card-img-top" alt="product" /></Link>
                     <div className="card-body d-flex flex-column">
+                        <h6 className="text-dark">{product.product_name}</h6>
+                        {/* rating */}
+                        <div className="text-warning mb-1 me-2">
+                        {renderStars(calculateAverageRating())}
+                        <span className="ms-1">
+                            {calculateAverageRating()}
+                        </span>
+                    </div>
+                        
                         <div className="d-flex flex-row">
                             <h5 className="mb-1 me-1">
                                 {sale
-                                    ? min_price_sku
-                                    : price} đ</h5>
-                            <span className="text-danger"><s>{sale && price}</s></span>
+                                    ? accounting.formatNumber(min_price_sku, 0, '.', ',')
+                                    : accounting.formatNumber(price, 0, '.', ',')} đ
+                            </h5>
+                            {sale && (
+                                <span className="text-danger">
+                                    <s>{accounting.formatNumber(price, 0, '.', ',')} đ</s>
+                                </span>
+                            )}
                         </div>
-                        <p className="card-text">{product.product_name}</p>
                         <div className="d-flex justify-content-around">
 
                             <button className="btn btn-primary shadow-0 px-2 py-2"

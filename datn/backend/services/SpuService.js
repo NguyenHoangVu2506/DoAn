@@ -11,6 +11,7 @@ const { findSpecialOfferBySpuId, findSpecialOfferBetweenStartDateAndEndByDate } 
 const { findCategoryByIdList, getCategoryById } = require('./CategoryService')
 const { findAttributesByProductAttributes } = require('./AttributeService')
 const SpuModel = require('../models/SpuModel')
+const { getCommentByParentId, getCommentsByProductId } = require('./CommentService')
 
 const newSpu = async ({
     product_name,
@@ -144,6 +145,8 @@ const isfindAllProducts = async ({ limit = 50, sort = 'ctime', page = 1, filter 
     //let
     let product_images = []
     let category_list = []
+    let review_list = []
+
     //
     for (let index = 0; index < product_list.length; index++) {
         const brand = await getBrandById({ brand_id: product_list[index].product_brand })
@@ -157,9 +160,11 @@ const isfindAllProducts = async ({ limit = 50, sort = 'ctime', page = 1, filter 
         special_offer.push(specialoffer)
         const productImages = await getImageBySpuId({ spu_id: product_list[index]._id })
         product_images.push(productImages)
+        const productReview = await getCommentsByProductId({ productId: product_list[index]._id })
+        review_list.push(productReview)
     }
     const allproduct = await product_list.map((product, index) => {
-        return { ...product, brand: brand_list[index], category: category_list[index], special_offer: special_offer[index], sku_list: sku_list[index], product_images: product_images[index] }
+        return { ...product, brand: brand_list[index], category: category_list[index], special_offer: special_offer[index], sku_list: sku_list[index], product_images: product_images[index], review_list: review_list[index] }
     })
 
     return allproduct
@@ -178,6 +183,8 @@ const findProductsByCategory = async ({ limit = 50, sort = 'ctime', page = 1, fi
     let special_offer = []
     let sku_list = []
     let product_images = []
+    let review_list = []
+
     console.log("productsByCategory", productsByCategory)
     for (let index = 0; index < productsByCategory.length; index++) {
         const brand = await getBrandById({ brand_id: productsByCategory[index].product_brand })
@@ -189,9 +196,11 @@ const findProductsByCategory = async ({ limit = 50, sort = 'ctime', page = 1, fi
         special_offer.push(specialoffer)
         const productImages = await getImageBySpuId({ spu_id: productsByCategory[index]._id })
         product_images.push(productImages)
+        const productReview = await getCommentsByProductId({ productId: productsByCategory[index]._id })
+        review_list.push(productReview)
     }
     product_list.productsByCategory = await productsByCategory.map((product, index) => {
-        return { ...product, brand: brand_list[index], special_offer: special_offer[index], sku_list: sku_list[index], product_images: product_images[index] }
+        return { ...product, brand: brand_list[index], special_offer: special_offer[index], sku_list: sku_list[index], product_images: product_images[index], review_list: review_list[index] }
     })
 
     return product_list.productsByCategory
@@ -204,7 +213,7 @@ const findProductDetail = async ({ spu_id, isPublished = true }) => {
             product_detail: {},
             special_offer: {},
             sku_list: [],
-            product_images : [],
+            product_images: [],
             product_brand: {},
             product_categories: [],
             product_attributes: [],
@@ -216,6 +225,8 @@ const findProductDetail = async ({ spu_id, isPublished = true }) => {
         //
         product.product_images = await getImageBySpuId({ spu_id: spu_info._id })
         product.product_brand = await getBrandById({ brand_id: spu_info.product_brand })
+        product.product_comment = await getCommentsByProductId({ productId: spu_info._id })
+
         product.special_offer = await findSpecialOfferBetweenStartDateAndEndByDate({ special_offer_is_active: true })
         const categories = await findCategoryByIdList({
             isPublished: true,
@@ -282,6 +293,8 @@ const findProductsByBrand = async ({ limit = 50, sort = 'ctime', page = 1, filte
     let brand_list = []
     let special_offer = []
     let sku_list = []
+    let review_list = []
+
     console.log("productsByBrand", productsByBrand)
     for (let index = 0; index < productsByBrand.length; index++) {
         const brand = await getBrandById({ brand_id: productsByBrand[index].product_brand })
@@ -291,9 +304,11 @@ const findProductsByBrand = async ({ limit = 50, sort = 'ctime', page = 1, filte
         console.log("id", productsByBrand[index]._id)
         const specialoffer = await findSpecialOfferBySpuId({ spu_id: productsByBrand[index]._id.toString(), special_offer_is_active: true })
         special_offer.push(specialoffer)
+        const productReview = await getCommentsByProductId({ productId: productsByBrand[index]._id })
+        review_list.push(productReview)
     }
     product_list.productsByBrand = await productsByBrand.map((product, index) => {
-        return { ...product, brand: brand_list[index], special_offer: special_offer[index], sku_list: sku_list[index] }
+        return { ...product, brand: brand_list[index], special_offer: special_offer[index], sku_list: sku_list[index], review_list: review_list[index] }
     })
 
     return product_list.productsByBrand

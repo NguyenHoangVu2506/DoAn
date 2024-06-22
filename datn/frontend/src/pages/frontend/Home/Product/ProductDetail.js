@@ -34,6 +34,8 @@ function ProductDetail() {
 
     const [selectedImage, setSelectedImage] = useState(null);
     const [productDetail, setproduct_detail] = useState(null);
+    const [productReview, setProductReview] = useState(null);
+
     const [product_images, setProductImages] = useState([]);
     const [selected_sku, set_selected_sku] = useState(null);
     const [sale, setSale] = useState(null);
@@ -58,11 +60,6 @@ function ProductDetail() {
     };
 
     ////comment
-    useEffect(() => {
-        dispatch(getComment({ productId: spu_id }));
-    }, [spu_id, dispatch]);
-    console.log(getComentProduct);
-
     const renderStars = (rating) => {
         const fullStars = Math.floor(rating);
         const halfStars = rating % 1 !== 0 ? 1 : 0;
@@ -218,6 +215,9 @@ function ProductDetail() {
         setproduct_detail(
             detail?.payload.metaData
         );
+        setProductReview(detail?.payload.metaData.product_comment
+
+        )
         const images = await dispatch(productImageList({ spu_id: spu_id }))
         setProductImages(images?.payload?.metaData)
     }
@@ -229,7 +229,8 @@ function ProductDetail() {
     console.log("product_detail", productDetail, selected_sku);
     console.log("pro", selected_sku);
 
-
+    // const review= productDetail.product_comment;
+    console.log(productReview)
     return (
         <>
             <div className="bg-" style={{ backgroundColor: '#f6831f' }} >
@@ -280,10 +281,10 @@ function ProductDetail() {
                                 </h4>
                                 <div className="d-flex flex-row my-3">
                                     <div className="text-warning mb-1 me-2">
-                                    {renderStars(calculateAverageRating())}
-                                                    <span className="ms-1">
-                                                        {calculateAverageRating()}
-                                                    </span>
+                                        {renderStars(calculateAverageRating())}
+                                        <span className="ms-1">
+                                            {calculateAverageRating()}
+                                        </span>
                                     </div>
                                     <span className="text-muted"><i className="fas fa-shopping-basket fa-sm mx-1"></i>Đã Mua</span>
                                     {/* <span className="text-success ms-2">Số Lượng : {selected_sku && selected_sku.sku_stock}</span> */}
@@ -521,24 +522,24 @@ function ProductDetail() {
                                     <div className="tab-pane fade show active" id="ex1-pills-1" role="tabpanel" aria-labelledby="ex1-tab-1">
                                         <h4>ĐÁNH GIÁ CỦA KHÁCH HÀNG</h4>
 
-                                        {getComentProduct && getComentProduct.length > 0 ? (
+                                        {productReview && productReview.length > 0 ? (
                                             <>
-                                                <span className="text-success"> {getComentProduct.length} đánh giá</span>
-                                                
-                                                {getComentProduct && getComentProduct.map((comment, index) => {
+                                                <span className="text-success"> {productReview.length} đánh giá</span>
+
+                                                {productReview && productReview.map((comment, index) => {
                                                     console.log(comment.user)
                                                     return (
                                                         <div class="card mb-3" key={index}>
                                                             <div class="card-body">
                                                                 <div class="d-flex flex-start">
                                                                     <img class="rounded-circle shadow-1-strong me-3"
-                                                                        src={comment.user.user_avatar} alt="avatar" width="40"
+                                                                        src={comment.comment_userId.user_avatar} alt="avatar" width="40"
                                                                         height="40" />
                                                                     <div class="w-100">
                                                                         <div class="d-flex justify-content-between align-items-center mb-0">
                                                                             <div className="text-warning mb-1 me-2">
                                                                                 <h6 class="text-primary fw-bold mb-0">
-                                                                                    {comment.user.user_name}
+                                                                                    {comment.comment_userId.user_name}
                                                                                 </h6>
                                                                                 {renderStars(comment.comment_rating)}
                                                                                 <span className="ms-1">
