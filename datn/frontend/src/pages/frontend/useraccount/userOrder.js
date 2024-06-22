@@ -27,7 +27,7 @@ export default function UserOrder() {
 
   useEffect(() => {
     orderUser();
-  }, [orderItem]);
+  }, []);
 
   const handleSubmit = async () => {
     try {
@@ -117,7 +117,7 @@ export default function UserOrder() {
             <main className="col-lg-9 col-xl-9">
               {orderItem && orderItem.map((order, index) => (
                 // Kiểm tra nếu đơn hàng có trạng thái là cancelled thì không hiển thị
-                 order.order_status !== 'cancelled' && (
+                order.order_status !== 'cancelled' && (
                   <div className="card p-4 mb-4 shadow-0 border" key={index}>
                     <div className="content-body">
                       <h5 className="mb-3">Đơn hàng của bạn</h5>
@@ -161,6 +161,7 @@ export default function UserOrder() {
                                       </div>
                                       <hr />
                                       {order.order_product.map((product, productIndex) => (
+
                                         <div key={productIndex}>
                                           {product.item_products.map((item, itemIndex) => {
                                             getProductDetails(item); // Call function to fetch product details
@@ -180,6 +181,16 @@ export default function UserOrder() {
                                           })}
                                         </div>
                                       ))}
+                                      <hr />
+                                      <div className="d-flex justify-content-between">
+                                        <p className="fw-bold">Giảm Giá</p>
+                                        <p className="text-warning">-{order.order_checkout?.totalSpecialOffer}</p>
+                                      </div>
+                                      <div className="d-flex justify-content-between">
+                                        <p className="fw-bold">Áp Mã Giảm Giá</p>
+                                        <p className="text-danger">-{order.order_checkout?.totalDiscount}</p>
+                                      </div>
+                                      <hr />
                                       <hr />
                                       <div className="d-flex justify-content-between">
                                         <p className="fw-bold">Tổng cộng</p>
@@ -202,7 +213,7 @@ export default function UserOrder() {
                                         </li>
                                       </ul>
                                     </div>
-                                    <div className="modal-footer d-flex justify-content-center border-top-0 py-4">
+                                    <div className="modal-footer d-flex justify-content-center border-top-0">
                                       <p>Mọi thắc mắc<a href="#!" style={{ color: '#f37a27' }}> liên hệ chúng tôi</a></p>
                                     </div>
                                   </div>
