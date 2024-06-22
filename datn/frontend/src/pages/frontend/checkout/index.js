@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCartIdUserId, getCart, newOrder, onGetAddress, productById } from "../../../store/actions";
-import { getCartFromLocalStorage, getOrderFromCart } from "../../../utils";
+import { deleteOrderFromCart, getCartFromLocalStorage, getOrderFromCart } from "../../../utils";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import accounting from "accounting";
@@ -22,6 +22,7 @@ function Checkout() {
     height: '100px'
   };
   const navigate = useNavigate()
+
   const { price_total, price_total_discount, price_total_promotion, price_total_checkout,
     discountsApply = []
   } = getOrderFromCart()
@@ -65,6 +66,8 @@ function Checkout() {
     if (new_order?.payload?.status === (200 || 201)) {
       toast.success("Đặt hàng thành công")
       dispatch(deleteCartIdUserId({ userId: userInfo._id }))
+      deleteOrderFromCart()
+      
       navigate('/')
     } else {
       toast.error("Đặt hàng không thành công")

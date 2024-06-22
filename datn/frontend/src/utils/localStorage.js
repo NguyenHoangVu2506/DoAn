@@ -156,11 +156,18 @@ export const changeSkuIdFromCart = (sku, cart_products) => {
   }
 
 };
+//add order from cart
 export const addOrderFromCart = (data) => {
     localStorage.setItem("set_order_from_cart", JSON.stringify(data));
   
 };
+//get order from cart
 export const getOrderFromCart = () => {
   const selected_listJSON = localStorage.getItem("set_order_from_cart");
   return selected_listJSON ? JSON.parse(selected_listJSON) : null;
+};
+//cancle order 
+
+export const deleteOrderFromCart = () => {
+  localStorage.removeItem("set_order_from_cart")
 };

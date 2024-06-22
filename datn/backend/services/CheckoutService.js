@@ -9,7 +9,7 @@ const { checkProductByServer } = require('./SpuService')
 const { findSpecialOfferBetweenStartDateAndEndByDate } = require('./SpecialOfferService')
 const { v4: uuidv4 } = require('uuid')
 
-class CheckoutService {
+class CheckoutService { 
     static async checkoutReview({ cartId, userId, order_ids }) {
 
         // const foundCart = await findCartById(cartId)
