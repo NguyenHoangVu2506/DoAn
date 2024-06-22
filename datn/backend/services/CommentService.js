@@ -1,6 +1,6 @@
-const {Types} = require('mongoose');
+const { Types } = require('mongoose');
 const { errorResponse } = require('../core/error.response');
-const commentRepository  = require('../models/repositories/comment.repo');
+const commentRepository = require('../models/repositories/comment.repo');
 const Comment = require('../models/CommentModel')
 // const { findById } = require('./apiKey.service');
 
@@ -10,13 +10,14 @@ class CommentService {
         this.repository = new commentRepository();
     }
 
-    async createComment({ productId, userId, content, parentCommentId = null }) {
+    async createComment({ productId, userId, content, parentCommentId = null, rating }) {
 
         const comment = new Comment({
             comment_productId: productId,
             comment_userId: userId,
             comment_content: content,
-            comment_parentId: parentCommentId
+            comment_parentId: parentCommentId,
+            comment_rating: rating,
         })
 
         let rightValue
@@ -72,21 +73,29 @@ class CommentService {
                 comment_left: 1,
                 comment_right: 1,
                 comment_content: 1,
-                parentCommentId: 1
+                comment_rating: 1,
+                parentCommentId: 1,
+                comment_userId: 1,
+                createdAt: 1
+
             }).sort({
                 comment_left: 1
             })
             return comments
         }
         const comments = await Comment.find({
-            comment_productId:new Types.ObjectId(productId),
+            comment_productId: new Types.ObjectId(productId),
             comment_parentId: parentCommentId
 
         }).select({
             comment_left: 1,
             comment_right: 1,
             comment_content: 1,
-            parentCommentId: 1
+            comment_rating: 1,
+            comment_userId: 1,
+            parentCommentId: 1,
+
+            createdAt: 1
         }).sort({
             comment_left: 1
         })

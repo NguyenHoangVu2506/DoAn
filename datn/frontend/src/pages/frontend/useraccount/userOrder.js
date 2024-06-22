@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { getOrderByUser, onLogout, productById } from '../../../store/actions';
+import { UpdateStatusOrder, getOrderByUser, onLogout, productById } from '../../../store/actions';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import "./UserOrder.css";
@@ -27,7 +27,8 @@ export default function UserOrder() {
 
   useEffect(() => {
     orderUser();
-  }, []);
+  }, [orderItem]);
+
   const handleSubmit = async () => {
     try {
       await dispatch(onLogout({}));
@@ -38,7 +39,7 @@ export default function UserOrder() {
       console.error(error);
     }
   };
-console.log(orderItem)
+
   const getProductDetails = async (item) => {
     if (!productDetails[item.productId]) {
       const details = await fetchProductDetails(item.productId);
@@ -47,6 +48,34 @@ console.log(orderItem)
         [item.productId]: details
       }));
     }
+  };
+
+  // Object để ánh xạ trạng thái đơn hàng từ server sang tiếng Việt
+  const orderStatusMapping = {
+    pending: 'Đã đặt hàng',
+    confirmed: 'Đã xác nhận',
+    shipped: 'Đang giao hàng',
+    Received: 'Đã nhận hàng',
+    cancelled: 'Đơn hàng đã bị hủy'
+  };
+
+  // Hàm để xác định lớp CSS dựa trên trạng thái đơn hàng
+  const getStatusClass = (status, step) => {
+    if (step === 1) {
+      return status === 'pending' ? 'step0 active' : 'step0 active';
+    } else if (step === 2) {
+      return status === 'confirmed' || status === 'shipped' || status === 'Received' ? 'step0 active text-center' : 'step0';
+    } else if (step === 3) {
+      return status === 'shipped' || status === 'Received' ? 'step0 active text-center' : 'step0';
+    } else if (step === 4) {
+      return status === 'Received' ? 'step0 active text-center text-muted text-end' : 'step0';
+    }
+    return 'step0';
+  };
+  const updateStatus = (orderId, status) => {
+    dispatch(UpdateStatusOrder({ order_id: orderId, order_status: status }));
+    toast.success("Hủy đơn hàng thành công!");
+
   };
   return (
     <>
@@ -87,155 +116,163 @@ console.log(orderItem)
             </div>
             <main className="col-lg-9 col-xl-9">
               {orderItem && orderItem.map((order, index) => (
-                <div className="card p-4 mb-0 shadow-0 border" key={index}>
-                  <div className="content-body">
-                    <h5 className="mb-3">Đơn hàng của bạn</h5>
-                    <div className="card border border-primary mb-4 shadow-0">
-                      <div className="card-body pb-0">
-                        <header className="d-lg-flex">
-                          <div className="flex-grow-1">
-                            <h6 className="mb-0">Mã đơn hàng: {order._id}<i className="dot"></i></h6>
-                          </div>
-                          <div>
-                            <button type="button" className="btn btn-sm btn-outline-warning shadow-0" data-bs-toggle="modal" data-bs-target={`#exampleModal${index}`}>
-                              <i></i> Thông tin vận chuyển
-                            </button>
-                            <div className="modal fade" id={`exampleModal${index}`} tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                              <div className="modal-dialog">
-                                <div className="modal-content">
-                                  <div className="modal-header border-bottom-0">
-                                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                  </div>
-                                  <div className="modal-body text-start p-4">
-                                    <h5 className="modal-title text-uppercase mb-2" id="exampleModalLabel">{userInfo.user_name}</h5>
-                                    <h4 className="mb-2" style={{ color: '#f37a27' }}>Thông tin đơn hàng</h4>
-                                    <div className="row">
-                                      <div className="col mb-0">
-                                        <p className="small text-muted mb-1">Ngày tạo:</p>
-                                        <p>{order.createdOn ? new Date(order.createdOn).toLocaleString() : ''}</p>
-                                      </div>
-                                      <div className="col mb-1">
-                                        <p className="small text-muted mb-1">Mã đơn hàng</p>
-                                        <p>{order._id}</p>
-                                      </div>
+                // Kiểm tra nếu đơn hàng có trạng thái là cancelled thì không hiển thị
+                 order.order_status !== 'cancelled' && (
+                  <div className="card p-4 mb-4 shadow-0 border" key={index}>
+                    <div className="content-body">
+                      <h5 className="mb-3">Đơn hàng của bạn</h5>
+                      <div className="card border border-primary mb-4 shadow-0">
+                        <div className="card-body pb-0">
+                          <header className="d-lg-flex">
+                            <div className="flex-grow-1">
+                              <h6 className="mb-0">Mã đơn hàng: {order._id}</h6>
+                              <i className="dot"></i>
+                              <span className="text-success"> {orderStatusMapping[order.order_status]}</span>
+                            </div>
+                            <div>
+                              {order.order_status === 'shipped' ? (
+                                <button onClick={() => updateStatus(order._id, 'Received')} className="btn btn-sm btn-outline-success">Đã nhận hàng</button>
+                              ) : order.order_status === 'Received' ? (
+                                <button className="btn btn-sm btn-outline-primary">Đánh giá</button>
+                              ) : (
+                                <button onClick={() => updateStatus(order._id, 'cancelled')} className="btn btn-sm btn-outline-danger">Hủy đơn hàng</button>
+                              )}
+                              <button type="button" className="btn btn-sm btn-outline-warning shadow-0" data-bs-toggle="modal" data-bs-target={`#exampleModal${index}`}>
+                                <i></i> Thông tin vận chuyển
+                              </button>
+                              <div className="modal fade" id={`exampleModal${index}`} tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div className="modal-dialog">
+                                  <div className="modal-content">
+                                    <div className="modal-header border-bottom-0">
+                                      <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
-                                    <hr />
-                                    <div className="row">
-                                      <div className="col mb-0">
-                                        <p className="small text-muted mb-1">Tên sản phẩm</p>
-                                        <p>{order.createdOn ? new Date(order.createdOn).toLocaleString() : ''}</p>
+                                    <div className="modal-body text-start p-4">
+                                      <h5 className="modal-title text-uppercase mb-2" id="exampleModalLabel">{userInfo.user_name}</h5>
+                                      <h4 className="mb-2" style={{ color: '#f37a27' }}>Thông tin đơn hàng</h4>
+                                      <div className="row">
+                                        <div className="col mb-0">
+                                          <p className="small text-muted mb-1">Ngày tạo:</p>
+                                          <p>{order.createdOn ? new Date(order.createdOn).toLocaleString() : ''}</p>
+                                        </div>
+                                        <div className="col mb-1">
+                                          <p className="small text-muted mb-1">Mã đơn hàng</p>
+                                          <p>{order._id}</p>
+                                        </div>
                                       </div>
-                                      <div className="col mb-2">
-                                        <p className="small text-muted mb-1">Giá tiền</p>
-                                        <p>{order._id}</p>
+                                      <hr />
+                                      {order.order_product.map((product, productIndex) => (
+                                        <div key={productIndex}>
+                                          {product.item_products.map((item, itemIndex) => {
+                                            getProductDetails(item); // Call function to fetch product details
+                                            const productDetail = productDetails[item.productId] || {};
+                                            return (
+                                              <div className="row mb-1" key={`${productIndex}-${itemIndex}`}>
+                                                <div className="col-lg-9 mb-0">
+                                                  <p className="small text-muted mb-1">Tên sản phẩm</p>
+                                                  <p>{productDetail.product_name}</p>
+                                                </div>
+                                                <div className="col-lg-3 mb-1">
+                                                  <p className="small text-muted mb-1">Giá tiền</p>
+                                                  <p>{item.price}</p>
+                                                </div>
+                                              </div>
+                                            );
+                                          })}
+                                        </div>
+                                      ))}
+                                      <hr />
+                                      <div className="d-flex justify-content-between">
+                                        <p className="fw-bold">Tổng cộng</p>
+                                        <p className="fw-bold">{order.order_checkout?.totalCheckout}</p>
                                       </div>
+                                      <hr />
+                                      <h4 className="mb-4" style={{ color: '#f37a27' }}>Tình trạng đơn hàng</h4>
+                                      <ul id="progressbar-1" className="progressbar">
+                                        <li className={getStatusClass(order.order_status, 1)} id="step1">
+                                          <span>Đã đặt hàng</span>
+                                        </li>
+                                        <li className={getStatusClass(order.order_status, 2)} id="step2">
+                                          <span>Đã xác nhận</span>
+                                        </li>
+                                        <li className={getStatusClass(order.order_status, 3)} id="step3">
+                                          <span>Đang giao hàng</span>
+                                        </li>
+                                        <li className={getStatusClass(order.order_status, 4)} id="step4">
+                                          <span>Đã nhận hàng</span>
+                                        </li>
+                                      </ul>
                                     </div>
-                                    <hr />
-                                    <div className="d-flex justify-content-between">
-                                      <p className="fw-bold">Tổng cộng</p>
-                                      <p className="fw-bold">{order.order_checkout?.totalCheckout}</p>
+                                    <div className="modal-footer d-flex justify-content-center border-top-0 py-4">
+                                      <p>Mọi thắc mắc<a href="#!" style={{ color: '#f37a27' }}> liên hệ chúng tôi</a></p>
                                     </div>
-                                    <h4 className="mb-4" style={{ color: '#f37a27' }}>Theo dõi đơn hàng</h4>
-                                    <ul id="progressbar-1" className="progressbar">
-                                      <li className={`step0 active`} id="step1">
-                                        <span>Đã đặt hàng</span>
-                                      </li>
-                                      <li className={`step0 active text-center`} id="step2">
-                                        <span>Đang chuẩn bị hàng</span>
-                                      </li>
-                                      <li className={`step0 active text-center`} id="step3">
-                                        <span>Đang giao hàng</span>
-                                      </li>
-                                      <li className={`step0 active text-muted text-end`} id="step4">
-                                        <span>Đã nhận</span>
-                                      </li>
-                                    </ul>
-                                  </div>
-                                  <div className="modal-footer d-flex justify-content-center border-top-0 py-4">
-                                    <p>Mọi thắc mắc<a href="#!" style={{ color: '#f37a27' }}> liên hệ chúng tôi</a></p>
                                   </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
-                        </header>
-                        <hr />
-                        <div className="row">
-                          <div className="col-lg-4">
-                            <p className="mb-0 text-muted">Thông tin liên hệ</p>
-                            <p className="m-0">
-                              {userInfo.user_name} <br />
-                              {userInfo.user_phone} <br />
-                              {userInfo.user_email}
-                            </p>
-                          </div>
-                          <div className="col-lg-4 border-start">
-                            <p className="mb-0 text-muted">Địa chỉ giao hàng</p>
-                            <p className="m-0">
-                              United States <br />
-                              3601 Old Capitol Trail, Unit A-7, Suite 170777, Wilmington, DE 19808
-                            </p>
-                          </div>
-                          <div className="col-lg-4 border-start">
-                            <p className="mb-0 text-muted">Phương thức thanh toán</p>
-                            <p className="m-0">
-                              Tổng tiền thanh toán: {order.order_checkout?.totalCheckout}
-                            </p>
+                          </header>
+                          <hr />
+                          <div className="row">
+                            <div className="col-lg-4">
+                              <p className="mb-0 text-muted">Thông tin liên hệ</p>
+                              <p className="m-0">
+                                {userInfo.user_name} <br />
+                                {userInfo.user_phone} <br />
+                                {userInfo.user_email}
+                              </p>
+                            </div>
+                            <div className="col-lg-4 border-start">
+                              <p className="mb-0 text-muted">Địa chỉ giao hàng</p>
+                              <p className="m-0">
+                                United States <br />
+                                3601 Old Capitol Trail, Unit A-7, Suite 170777, Wilmington, DE 19808
+                              </p>
+                            </div>
+                            <div className="col-lg-4 border-start">
+                              <p className="mb-0 text-muted">Phương thức thanh toán</p>
+                              <p className="m-0">
+                                Tổng tiền thanh toán: {order.order_checkout?.totalCheckout}
+                              </p>
+                            </div>
+                            <hr />
                           </div>
                           <hr />
+                          <ul className="row list-unstyled">
+                            {order.order_product.map((product, productIndex) => (
+                              <React.Fragment key={productIndex}>
+                                {product.item_products.map((item, itemIndex) => {
+                                  getProductDetails(item); // Call function to fetch product details
+                                  const productDetail = productDetails[item.productId] || {};
+                                  return (
+                                    <li className="col-xl-4 col-lg-6" key={itemIndex}>
+                                      <div className="d-flex mb-3 mb-md-0">
+                                        <div className="me-3">
+                                          {productDetail.product_thumb && (
+                                            <img
+                                              width="72"
+                                              height="72"
+                                              src={productDetail.product_thumb[0]} // Đảm bảo product_thumb[0] là đường dẫn hợp lệ
+                                              className="img-sm rounded border" // Áp dụng CSS cho hình ảnh
+                                              alt={item.name}
+                                            />
+                                          )}
+                                        </div>
 
-                          {/* <ul class="row list-unstyled">
-                            <li class="col-xl-4 col-lg-6">
-                              <div class="d-flex mb-3 mb-md-0">
-                                <div class="me-3">
-                                  <img width="72" height="72" src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/5.webp" class="img-sm rounded border" />
-                                </div>
-                                <div class="">
-                                  <p class="mb-0">Apple Watch Series 4 Space Gray</p>
-                                  <strong> 2x = $339.90 </strong>
-                                </div>
-                              </div>
-                            </li>
-                          </ul> */}
-
+                                        <div>
+                                          <p className="mb-0">{productDetail.product_name}</p>
+                                          <strong>{item.quantity} x = {item.price}</strong>
+                                        </div>
+                                      </div>
+                                    </li>
+                                  );
+                                })}
+                              </React.Fragment>
+                            ))}
+                          </ul>
                         </div>
-                        <hr />
-                        <ul className="row list-unstyled">
-                          {order.order_product.map((product, productIndex) => (
-                            <React.Fragment key={productIndex}>
-                              {product.item_products.map((item, itemIndex) => {
-                                getProductDetails(item); // Call function to fetch product details
-                                const productDetail = productDetails[item.productId] || {};
-                                return (
-                                  <li className="col-xl-4 col-lg-6" key={itemIndex}>
-                                    <div className="d-flex mb-3 mb-md-0">
-                                      <div className="me-3">
-                                        {productDetail.product_thumb && (
-                                          <img
-                                            width="72"
-                                            height="72"
-                                            src={productDetail.product_thumb[0]} // Đảm bảo product_thumb[0] là đường dẫn hợp lệ
-                                            className="img-sm rounded border" // Áp dụng CSS cho hình ảnh
-                                            alt={item.name}
-                                          />
-                                        )}
-                                      </div>
-
-                                      <div>
-                                        <p className="mb-0">{productDetail.product_name}</p>
-                                        <strong>{item.quantity} x = {item.price}</strong>
-                                      </div>
-                                    </div>
-                                  </li>
-                                );
-                              })}
-                            </React.Fragment>
-                          ))}
-                        </ul>
                       </div>
                     </div>
                   </div>
-                </div>
+                )
               ))}
             </main>
           </div>

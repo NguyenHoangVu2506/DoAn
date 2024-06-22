@@ -32,6 +32,15 @@ class CheckoutController {
             metaData: await CheckoutService.findAllOrder()
         }).send(res)
     }
+    updateOrderStatusByOrder = async(req, res, next) => {
+        return new SuccessResponse({
+            message: "update status order success",
+            metaData: await CheckoutService.updateOrderStatusByOrder(req.body)
+        }).send(res)
+
+
+    }
+
 }
 
 module.exports = new CheckoutController()

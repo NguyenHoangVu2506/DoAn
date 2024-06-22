@@ -16,7 +16,7 @@ const cartSchema = new Schema({
      */
     cart_count_product: { type: Number, default: 0 },
    
-    cart_userId: { type: String, required: true },
+    cart_userId: { type: String, required: true }, 
 
 
 

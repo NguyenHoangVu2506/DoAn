@@ -30,4 +30,21 @@ export const getOrderByUser = (data) => async (dispatch) => {
         console.log(err)
     }
 };
+export const UpdateStatusOrder = (data) => async (dispatch) => {
 
+    try {
+      const response = await PostData('/checkout/updateStatusByOrder',
+        data
+      );
+      console.log('response:', response)
+      dispatch({ type: Action.UPDATE_STATUS, payload: response.data });
+    //   dispatch(getListBrand({ sort: 'ctime' })); // Dispatch getListSlider after publishing
+    //   dispatch(ListTrashBrand1({ sort: 'ctime' }));
+  
+    } catch (err) {
+      console.log(err)
+      return err.response.data
+  
+    }
+  
+  };
