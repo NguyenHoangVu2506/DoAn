@@ -4,6 +4,7 @@ import { UpdateStatusOrder, getOrderByUser, onLogout, productById } from '../../
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import "./UserOrder.css";
+import { NumericFormat } from 'react-number-format';
 
 export default function UserOrder() {
   const dispatch = useDispatch();
@@ -168,13 +169,21 @@ export default function UserOrder() {
                                             const productDetail = productDetails[item.productId] || {};
                                             return (
                                               <div className="row mb-1" key={`${productIndex}-${itemIndex}`}>
-                                                <div className="col-lg-9 mb-0">
+                                                <div className="col-lg-7 mb-0">
                                                   <p className="small text-muted mb-1">Tên sản phẩm</p>
                                                   <p>{productDetail.product_name}</p>
                                                 </div>
-                                                <div className="col-lg-3 mb-1">
+                                                <div className="col-lg-5 mb-1">
                                                   <p className="small text-muted mb-1">Giá tiền</p>
-                                                  <p>{item.price}</p>
+
+                                                  <div className='row'>
+                                                    <p>{item.price_sale ? <NumericFormat value={item.price_sale} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
+                                                      : <NumericFormat value={item.price} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
+                                                    }  <s className='text-danger'>{item?.price_sale && <NumericFormat value={item.price} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
+                                                    }</s>
+
+                                                    </p>
+                                                  </div>
                                                 </div>
                                               </div>
                                             );
@@ -184,17 +193,17 @@ export default function UserOrder() {
                                       <hr />
                                       <div className="d-flex justify-content-between">
                                         <p className="fw-bold">Giảm Giá</p>
-                                        <p className="text-warning">-{order.order_checkout?.totalSpecialOffer}</p>
+                                        <p className="text-warning">-<NumericFormat value={order.order_checkout?.totalSpecialOffer} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" /></p>
                                       </div>
                                       <div className="d-flex justify-content-between">
                                         <p className="fw-bold">Áp Mã Giảm Giá</p>
-                                        <p className="text-danger">-{order.order_checkout?.totalDiscount}</p>
+                                        <p className="text-danger">-<NumericFormat value={order.order_checkout?.totalDiscount} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" /></p>
                                       </div>
                                       <hr />
                                       <hr />
                                       <div className="d-flex justify-content-between">
                                         <p className="fw-bold">Tổng cộng</p>
-                                        <p className="fw-bold">{order.order_checkout?.totalCheckout}</p>
+                                        <p className="fw-bold"></p><NumericFormat value={order.order_checkout?.totalCheckout} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
                                       </div>
                                       <hr />
                                       <h4 className="mb-4" style={{ color: '#f37a27' }}>Tình trạng đơn hàng</h4>
@@ -270,7 +279,10 @@ export default function UserOrder() {
 
                                         <div>
                                           <p className="mb-0">{productDetail.product_name}</p>
-                                          <strong>{item.quantity} x = {item.price}</strong>
+                                          <strong>{item.quantity} x = {item.price_sale ? <NumericFormat value={item.price_sale} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" /> : <NumericFormat value={item.price} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />}</strong>
+
+                                          {/* <strong><s className='text-danger'>{item?.price_sale && item.price_sale}</s></strong> */}
+
                                         </div>
                                       </div>
                                     </li>

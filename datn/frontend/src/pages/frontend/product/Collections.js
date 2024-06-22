@@ -37,7 +37,6 @@ function Collections() {
 
   const changeSelectedCategory = async (category) => {
   }
-
   const handleChangeBrand = async (checked, brand_id) => {
     if (checked === true) {
       setSelectedBrand([...selectedBrand, brand_id])
@@ -47,7 +46,6 @@ function Collections() {
       setSelectedBrand(selectedBrand.length > 0 && selectedBrand?.filter((brandId) => brandId != brand_id))
     }
   }
-
   const loadData = async () => {
     const filterByBrand = await allProducts?.length > 0 ? allProducts?.filter((prod) => selectedBrand.includes(prod.product_brand) === true) : []
 
@@ -101,7 +99,7 @@ function Collections() {
 
   useEffect(() => {
     if (!allProducts) {
-      dispatch( ({ limit: 50, sort: 'ctime', page: 1, filter: { isPublished: true } }));
+      dispatch(onAllProduct({ limit: 50, sort: 'ctime', page: 1, filter: { isPublished: true } }));
     }
   }, [allProducts])
 
@@ -402,8 +400,6 @@ function Collections() {
                     </div>
                   </div>
                 }
-
-                
 
               </div>
 

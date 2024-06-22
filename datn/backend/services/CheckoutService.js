@@ -10,6 +10,129 @@ const { findSpecialOfferBetweenStartDateAndEndByDate } = require('./SpecialOffer
 const { v4: uuidv4 } = require('uuid')
 
 class CheckoutService { 
+    // static async checkoutReview({ cartId, userId, order_ids }) {
+
+    //     // const foundCart = await findCartById(cartId)
+
+    //     // if (!foundCart) {
+    //     //     throw new BadRequestError('cart does not exists!')
+    //     // }
+    //     const checkout_order = {
+    //         totalPrice: 0,
+    //         feeShip: 0,//phi ship
+    //         totalSpecialOffer: 0,//tong discount
+    //         totalDiscount: 0,//tong discount
+    //         totalCheckout: 0,//tong thanh toan
+    //     }
+
+    //     const { shop_discounts = [], item_products = [] } = order_ids
+
+    //     console.log("item_products:  ", item_products)
+    //     //checkout product available
+
+    //     const checkProductServer = await checkProductByServer(item_products)
+    //     console.log('checkProductServer', checkProductServer)
+    //     if (!checkProductServer[0]) throw new BadRequestError('order wrong')
+    //     //tong don hang
+
+    //     const checkoutPrice = checkProductServer.reduce((acc, product) => {
+    //         return acc + (product.quantity * product.price)
+    //     }, 0)
+    //     //tong tien truoc khi xuly
+    //     checkout_order.totalPrice = + checkoutPrice
+    //     const itemCheckout = {
+    //         shop_discounts,//hmmmm
+    //         priceRaw: checkoutPrice,//tien truoc khi giam gia
+    //         priceApplySpecialOffer: checkoutPrice,
+    //         priceApplyDiscount: checkoutPrice,
+    //         item_products: checkProductServer
+    //     }
+    //     let checkProductServerSpecialOffer = []
+    //     const checkDateNow = await findSpecialOfferBetweenStartDateAndEndByDate({})
+
+    //     // if (checkDateNow) {
+    //     //     checkDateNow.special_offer_spu_list?.map((spu) => {
+    //     //         if (spu.sku_list?.length > 0) {
+    //     //             return spu.sku_list.map((sku) => {
+    //     //                 return checkProductServer.find((prod) => {
+    //     //                     if (prod.sku_id == sku.sku_id) {
+    //     //                         const { price, ...prodNoPrice } = prod
+    //     //                         checkProductServerSpecialOffer.push({ ...prodNoPrice, price: sku.price_sale })
+    //     //                         return
+    //     //                     }
+    //     //                 })
+    //     //             })
+    //     //         }
+    //     //         return checkProductServer.find((prod) => {
+    //     //             if (!prod.sku_id & prod.productId == spu.product_id) {
+    //     //                 const { price, ...prodNoPrice } = prod
+    //     //                 checkProductServerSpecialOffer.push({ ...prodNoPrice, price: spu.price_sale })
+    //     //                 return
+    //     //             }
+    //     //         })
+    //     //     })
+    //     // }
+    //     if (checkDateNow) {
+
+    //         checkProductServer.forEach((prod) => {
+
+    //             const spu_sale = checkDateNow.special_offer_spu_list.find((spu) => spu.product_id == prod.productId)
+    //             if (spu_sale) {
+    //                 checkDateNow.special_offer_spu_list?.filter((spu_sale) => {
+    //                     if (!prod.sku_id & prod.productId == spu_sale.product_id) {
+    //                         const { price, ...prodNoPrice } = prod
+    //                         checkProductServerSpecialOffer.push({ ...prodNoPrice, price: spu_sale.price_sale })
+    //                         return
+    //                     }
+    //                     if (prod.sku_id !== null && spu_sale.sku_list?.length > 0) {
+    //                         const sku_sale = spu_sale.sku_list.find((sku) => sku.sku_id == prod.sku_id)
+
+    //                         if (sku_sale) {
+    //                             const { price, ...prodNoPrice } = prod
+    //                             checkProductServerSpecialOffer.push({ ...prodNoPrice, price: sku_sale.price_sale })
+    //                             return
+    //                         }
+    //                     }
+    //                 })
+    //             } else {
+    //                 checkProductServerSpecialOffer.push(prod)
+    //             }
+    //         })
+    //     }
+
+    //     itemCheckout.priceApplySpecialOffer = checkProductServerSpecialOffer.reduce((acc, product) => {
+    //         return acc + (product.quantity * product.price)
+    //     }, 0)
+    //     checkout_order.totalSpecialOffer = checkoutPrice - itemCheckout.priceApplySpecialOffer
+
+
+    //     if (shop_discounts.length > 0) {
+    //         const { discount = 0 } = await getDiscountAmount({
+    //             codeId: shop_discounts[0].codeId,
+    //             userId,
+    //             products: checkProductServerSpecialOffer.length > 0 ? checkProductServerSpecialOffer : checkProductServer
+    //         })
+    //         //tong discount 
+    //         checkout_order.totalDiscount = discount
+    //         //neu tien giam gia >0
+
+
+    //         itemCheckout.priceApplyDiscount = checkoutPrice - checkout_order.totalSpecialOffer - discount
+
+    //     }
+    //     //tong thanh toan
+
+    //     checkout_order.totalCheckout = checkoutPrice - checkout_order.totalSpecialOffer - checkout_order.totalDiscount
+
+
+    //     return {
+    //         order_ids,
+    //         order_ids_new: itemCheckout,
+    //         checkout_order
+    //     }
+    // }
+
+    //test
     static async checkoutReview({ cartId, userId, order_ids }) {
 
         // const foundCart = await findCartById(cartId)
@@ -80,16 +203,15 @@ class CheckoutService {
                 if (spu_sale) {
                     checkDateNow.special_offer_spu_list?.filter((spu_sale) => {
                         if (!prod.sku_id & prod.productId == spu_sale.product_id) {
-                            const { price, ...prodNoPrice } = prod
-                            checkProductServerSpecialOffer.push({ ...prodNoPrice, price: spu_sale.price_sale })
+                            checkProductServerSpecialOffer.push({...prod, price_sale: spu_sale.price_sale})
                             return
                         }
                         if (prod.sku_id !== null && spu_sale.sku_list?.length > 0) {
                             const sku_sale = spu_sale.sku_list.find((sku) => sku.sku_id == prod.sku_id)
 
                             if (sku_sale) {
-                                const { price, ...prodNoPrice } = prod
-                                checkProductServerSpecialOffer.push({ ...prodNoPrice, price: sku_sale.price_sale })
+
+                                checkProductServerSpecialOffer.push({...prod, price_sale: sku_sale.price_sale })
                                 return
                             }
                         }
@@ -97,14 +219,15 @@ class CheckoutService {
                 } else {
                     checkProductServerSpecialOffer.push(prod)
                 }
-
-
             })
         }
 
+        console.log("checkProductServerSpecialOffer",checkProductServerSpecialOffer)
+
         itemCheckout.priceApplySpecialOffer = checkProductServerSpecialOffer.reduce((acc, product) => {
-            return acc + (product.quantity * product.price)
+            return acc + (product.quantity * (product.price_sale ? product.price_sale : product.price))
         }, 0)
+
         checkout_order.totalSpecialOffer = checkoutPrice - itemCheckout.priceApplySpecialOffer
 
 
@@ -123,7 +246,9 @@ class CheckoutService {
 
         }
         //tong thanh toan
-
+        if(checkProductServerSpecialOffer.length>0){
+            itemCheckout.item_products=checkProductServerSpecialOffer
+        }
         checkout_order.totalCheckout = checkoutPrice - checkout_order.totalSpecialOffer - checkout_order.totalDiscount
 
 
