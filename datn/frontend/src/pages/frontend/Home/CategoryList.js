@@ -8,6 +8,9 @@ export default function CategoryList({ category_parent, all_product_category, al
   const [category_childrent, setCattagoryChildrent] = useState(null)
   const [productByCategory, setProductByCategory] = useState([])
   const [selectedCategory, setSelectedCategory] = useState()
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 4;
+
   const changeSelectedCategory = async (category) => {
     setSelectedCategory(category)
   }
@@ -22,6 +25,21 @@ export default function CategoryList({ category_parent, all_product_category, al
   useEffect(() => {
     selectedCategory && setProductByCategory(all_product_category?.filter((product) => product.product_category.includes(selectedCategory._id)))
   }, [selectedCategory]);
+  const totalPages = Math.ceil(productByCategory.length / itemsPerPage);
+  const productcate = productByCategory.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  const handlePrevious = () => {
+      if (currentPage > 1) {
+          setCurrentPage(currentPage - 1);
+      }
+  };
+
+  const handleNext = () => {
+      if (currentPage < totalPages) {
+          setCurrentPage(currentPage + 1);
+      }
+  };
+
 
   return (
     <div className="container">
@@ -49,14 +67,30 @@ export default function CategoryList({ category_parent, all_product_category, al
       </div>
 
       <div class=" row " >
-        {productByCategory.length > 0 ? productByCategory.map((product, index) => {
+        {productcate.length > 0 ? productcate.map((product, index) => {
           return <ProductItem product={product} key={index} />
-        }) :
+        }) 
+        :
           <div>
             <div className="card-body pt-3 text-center">
               <p style={{ color: '#545453' }}>Không có sản phẩm</p>
             </div>
           </div>}
+          {/* <div className="pagination-container" style={{ display: 'flex', justifyContent: 'center' }}>
+                        <ul className="pagination">
+                            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                                <button className="page-link" onClick={handlePrevious}>Previous</button>
+                            </li>
+                            {Array.from({ length: totalPages }, (_, index) => (
+                                <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
+                                    <button className="page-link" onClick={() => setCurrentPage(index + 1)}>{index + 1}</button>
+                                </li>
+                            ))}
+                            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                                <button className="page-link" onClick={handleNext}>Next</button>
+                            </li>
+                        </ul>
+                    </div> */}
       </div>
 
     </div>

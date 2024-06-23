@@ -9,6 +9,8 @@ import { Link } from "react-router-dom";
 function Collections() {
   const dispatch = useDispatch();
   const [isList, setIsList] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
 
   const { allProducts } = useSelector((state) => state.productReducer);
   const { all_brand } = useSelector((state) => state.brandReducer);
@@ -29,6 +31,7 @@ function Collections() {
   const [attributeCollapsedStatus, setAttributeCollapsedStatus] = useState(false);
   const [priceCollapsed, setPriceCollapsed] = useState(false);
   const [ratingCollapsed, setRatingCollapsed] = useState(false);
+
 
 
   useEffect(() => {
@@ -108,6 +111,21 @@ function Collections() {
     dispatch(AllCategory())
     dispatch(getAllAttribute({ isPublished: true }))
   }, [])
+  console.log(allProducts.length)
+  const totalPages = Math.ceil(allProducts.length / itemsPerPage);
+  const newproduct = allProducts.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
 
   return (
     <>
@@ -365,7 +383,7 @@ function Collections() {
 
               <header class="d-sm-flex align-items-center border-bottom mb-4 pb-3">
                 <div class="ms-auto">
-                
+
                   <div class="btn-group shadow-0 border">
                     <button onClick={() => setIsList(true)} class="btn btn-light" title="List view">
                       <i class="fa fa-bars fa-lg"></i>
@@ -381,7 +399,7 @@ function Collections() {
 
 
 
-                {allProducts && allProducts.length > 0 ? allProducts.map((product, index) => {
+                {newproduct && allProducts.length > 0 ? newproduct.map((product, index) => {
 
                   return (
                     isList === true ? (
@@ -400,7 +418,7 @@ function Collections() {
                     </div>
                   </div>
                 }
-
+                
               </div>
 
 
@@ -408,25 +426,21 @@ function Collections() {
 
 
               {/*<!-- Pagination -->*/}
-              <nav aria-label="Page navigation example" class="d-flex justify-content-center mt-3">
-                <ul class="pagination">
-                  <li class="page-item disabled">
-                    <a class="page-link" href="#" aria-label="Previous">
-                      <span aria-hidden="true">&laquo;</span>
-                    </a>
-                  </li>
-                  <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                  <li class="page-item"><a class="page-link" href="#">2</a></li>
-                  <li class="page-item"><a class="page-link" href="#">3</a></li>
-                  <li class="page-item"><a class="page-link" href="#">4</a></li>
-                  <li class="page-item"><a class="page-link" href="#">5</a></li>
-                  <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
-                      <span aria-hidden="true">&raquo;</span>
-                    </a>
-                  </li>
-                </ul>
-              </nav>
+              <div className="pagination-container" style={{ display: 'flex', justifyContent: 'center' }}>
+                  <ul className="pagination">
+                    <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                      <button className="page-link" onClick={handlePrevious}>Previous</button>
+                    </li>
+                    {Array.from({ length: totalPages }, (_, index) => (
+                      <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
+                        <button className="page-link" onClick={() => setCurrentPage(index + 1)}>{index + 1}</button>
+                      </li>
+                    ))}
+                    <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                      <button className="page-link" onClick={handleNext}>Next</button>
+                    </li>
+                  </ul>
+                </div>
               {/*<!-- Pagination -->*/}
             </div>
           </div>

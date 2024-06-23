@@ -9,7 +9,8 @@ function Brand() {
     const [allproducts, setAllproducts] = useState([])
 
     const [brand_id, setBrand_ID] = useState('')
-
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 8;
     const fetchDataBrand = async () => {
         dispatch(getListBrand())
         const productsByBrand = await dispatch(onAllProduct())
@@ -23,7 +24,7 @@ function Brand() {
     }, []);
 
     const onChangeBrand = async (brand_id) => {
-        console.log("brand_id",brand_id)
+        console.log("brand_id", brand_id)
         setBrand_ID(brand_id)
     }
 
@@ -35,6 +36,20 @@ function Brand() {
         setProductByBrand(allproducts.filter((prod) => prod.product_brand.toString() === brand_id.toString()))
     }, [brand_id])
 
+    const totalPages = Math.ceil(productByBrand.length / itemsPerPage);
+    const productBrand = productByBrand.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+    const handlePrevious = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+
+    const handleNext = () => {
+        if (currentPage < totalPages) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
     return (
         <body>
 
@@ -74,7 +89,7 @@ function Brand() {
 
 
                         <div class=" row pt-4" >
-                            {productByBrand?.length > 0 ? productByBrand.map((product, index) => {
+                            {productBrand?.length > 0 ? productBrand.map((product, index) => {
                                 return <ProductItem product={product} key={index} />
                             }) :
                                 <div>
@@ -82,6 +97,21 @@ function Brand() {
                                         <p style={{ color: '#545453' }}>Không có sản phẩm</p>
                                     </div>
                                 </div>}
+                            <div className="pagination-container" style={{ display: 'flex', justifyContent: 'center' }}>
+                                <ul className="pagination">
+                                    <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                                        <button className="page-link" onClick={handlePrevious}>Previous</button>
+                                    </li>
+                                    {Array.from({ length: totalPages }, (_, index) => (
+                                        <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
+                                            <button className="page-link" onClick={() => setCurrentPage(index + 1)}>{index + 1}</button>
+                                        </li>
+                                    ))}
+                                    <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                                        <button className="page-link" onClick={handleNext}>Next</button>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
 
 
