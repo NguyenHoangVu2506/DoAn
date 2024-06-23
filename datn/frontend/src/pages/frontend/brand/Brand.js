@@ -59,14 +59,14 @@ function Brand() {
                     <div class="col-md-12 blog-main">
                         <header class="mb-2 pt-4 pb-3">
                             {/* <h3 className="text-center text-uppercase text-dark pb-3">THƯƠNG HIỆU MỸ PHẨM</h3> */}
-                            <h3 className="text-center text-uppercase text-dark pb-3">XUẤT XỨ</h3>
+                            <h3 className="text-center text-uppercase text-dark pb-3">THƯƠNG HIỆU</h3>
 
                         </header>
                         {all_brand && all_brand.map((brand, index) => {
                             return (
                                 <>
                                     {/* <img src={brand.brand_image} class="rounded-circle" style={{ height: '150px', width: '150px' }} /> */}
-                                    <button onClick={() => onChangeBrand(brand._id)} key={index} type="button" class="btn btn-rounded me-2 " style={{ backgroundColor: 'white', color: '#f6831f' }} data-mdb-ripple-init >
+                                    <button onClick={() => onChangeBrand(brand._id)} key={index} type="button" class="btn btn-rounded me-2 pb-1 fw-bold " style={{ backgroundColor: 'white', color: '#f6831f' }} data-mdb-ripple-init >
                                         {brand.brand_name}
                                     </button>
                                 </>)

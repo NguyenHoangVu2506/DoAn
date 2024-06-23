@@ -112,9 +112,9 @@ export default function ProductItem({ product }) {
             setPrice(product.sku_list[0]?.sku_price)
         } else {
             setSelectedImage(
-                product?.product_thumb[0]
+                product?.product_thumb
             );
-            setProduct_image(product?.product_thumb[0])
+            setProduct_image(product?.product_thumb)
             setStock(product.product_quantity)
             setPrice(
                 product.product_price
