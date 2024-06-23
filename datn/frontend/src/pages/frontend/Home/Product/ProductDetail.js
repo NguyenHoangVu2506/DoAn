@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { NumericFormat } from "react-number-format";
@@ -336,7 +336,8 @@ function ProductDetail() {
 
                                                         {variation.options.map((option, indexOption) => {
                                                             return (
-                                                                <div key={indexOption} className="flex flex-row justify-content-around ">
+                                                                <React.Fragment key={indexOption}>
+                                                                {/* // <div key={indexOption} className="flex flex-row justify-content-around "> */}
                                                                     {/* <MDBRadio
                                                                         btn
                                                                         btnColor='warning'
@@ -357,7 +358,8 @@ function ProductDetail() {
                                                                         <label class="btn mx-1 my-1" for={option} data-mdb-ripple-init>{option}</label> 
                                                                         </button> */}
 
-                                                                </div>
+                                                                {/* // </div> */}
+                                                                </React.Fragment>
                                                             )
                                                         })}
 

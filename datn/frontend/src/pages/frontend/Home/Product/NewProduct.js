@@ -60,7 +60,7 @@ export default function NewProduct() {
                         <ProductItem product={product} key={index} />
                     ))}
                 </div>
-                <div className="pagination-container" style={{ display: 'flex', justifyContent: 'center' }}>
+                {/* <div className="pagination-container" style={{ display: 'flex', justifyContent: 'center' }}>
                     <ul className="pagination">
                         <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
                             <button className="page-link" onClick={handlePrevious}>Previous</button>
@@ -74,7 +74,7 @@ export default function NewProduct() {
                             <button className="page-link" onClick={handleNext}>Next</button>
                         </li>
                     </ul>
-                </div>
+                </div> */}
             </div>
         </section>
     );

@@ -44,7 +44,8 @@
   position: relative;
   margin-right: 0;
   padding-top: 15px;
-  display: flex; /* Thêm thuộc tính này để sử dụng flexbox */
+  display: flex;
+  /* Thêm thuộc tính này để sử dụng flexbox */
   align-items: center;
   flex: 1;
   text-align: center;
@@ -54,7 +55,8 @@
 .dot {
   height: 10px;
   width: 10px;
-  background-color: #bbb; /* Màu xám mặc định */
+  background-color: #bbb;
+  /* Màu xám mặc định */
   border-radius: 50%;
   display: inline-block;
   margin-left: 5px;
@@ -145,7 +147,8 @@
 .modal-body .fw-bold,
 .modal-body .text-muted,
 .modal-body h4 {
-  color: inherit; /* Sử dụng màu chữ mặc định */
+  color: inherit;
+  /* Sử dụng màu chữ mặc định */
 }
 
 .card .list-unstyled li .img-sm {
@@ -171,14 +174,17 @@
 .nav-pills .nav-link p {
   margin: 0;
 }
+
 /* Toastr Container */
 .toast {
   border-radius: 4px;
   padding: 15px;
   margin: 10px;
   font-size: 14px;
-  color: #ea7508 !important; /* Màu văn bản */
-  opacity: 3; /* Độ trong suốt */
+  color: #ea7508 !important;
+  /* Màu văn bản */
+  opacity: 3;
+  /* Độ trong suốt */
 
 }
 
@@ -205,11 +211,31 @@
   -ms-animation: fadeOut ease 0.3s;
 }
 
+.star-rating {
+  font-size: 24px;
+  /* Kích thước biểu tượng đánh giá */
+  color: #ffc107;
+  /* Màu sắc cho các sao không được chọn */
+  display: flex;
+  align-items: center;
+}
+
+.star-rating .react-star-rating__star {
+  cursor: pointer;
+  /* Con trỏ chuột là pointer khi rê chuột qua các sao */
+}
+
+.star-rating .react-star-rating__star--full {
+  color: #f6831f;
+  /* Màu sắc cho các sao đã chọn */
+}
+
 /* Toastr Show and Hide Effects */
 @keyframes fadeIn {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -219,6 +245,7 @@
   from {
     opacity: 1;
   }
+
   to {
     opacity: 0;
   }

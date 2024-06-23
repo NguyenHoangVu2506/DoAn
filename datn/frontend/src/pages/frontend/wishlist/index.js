@@ -79,7 +79,7 @@ export default function Wishlist() {
                             <nav className="nav flex-lg-column w-100 d-flex nav-pills mb-4">
                                 <Link className="nav-link my-0 bg-light" to="/profile"><p className="pb-0 mb-0" style={{ width: '130px' }}>Tài khoản</p></Link>
                                 <Link className="nav-link my-0 bg-light" to="/userorder"><p className="pb-0 mb-0" style={{ width: '130px' }}>Đơn hàng</p></Link>
-                                <Link className="nav-link my-0 bg-light" to="/userorderhistory"><p className="pb-0 mb-0" style={{ width: '130px' }}>Lịch sử đơn hàng</p></Link>
+                                {/* <Link className="nav-link my-0 bg-light" to="/userorderhistory"><p className="pb-0 mb-0" style={{ width: '130px' }}>Lịch sử đơn hàng</p></Link> */}
                                 <Link className="nav-link my-0 active" to="/wish-list"><p className="pb-0 mb-0" style={{ width: '130px', color: '#f6831f' }}>Sản phẩm yêu thích</p></Link>
                                 <button className="nav-link my-0 bg-light" onClick={handleSubmit}><p className="pb-0 mb-0" style={{ width: '100px' }}>Đăng xuất</p></button>
                             </nav>
