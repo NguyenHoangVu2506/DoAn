@@ -16,6 +16,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { PageUpdate, getPageById } from '../../../store/actions/page-actions';
 import { uploadSingleImage } from '../../../store/actions';
+import { toast } from "react-toastify";
 
 const UpdatePage = () => {
     const dispatch = useDispatch();
@@ -61,6 +62,8 @@ const UpdatePage = () => {
             formFile.append('folderName', 'website/page')
             const image = await dispatch(uploadSingleImage(formFile))
             image && dispatch(PageUpdate({ page_id:id,page_name: name, page_title: title,page_detail: detail,page_link:link,page_type:type,public_image_id:"public_image_id", page_image: image?.payload?.metaData?.thumb_url }))
+            toast.success("Cập nhật trang đơn thành công!");
+
             navigate('/page/pagelist')
     
           } catch (error) {

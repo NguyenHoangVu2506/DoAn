@@ -15,6 +15,8 @@ import {
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { CategoryStore, CategoryUpdate, getCategory, getCategoryById, uploadSingleImage } from '../../../store/actions';
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const UpdateCategory = () => {
     const { id } = useParams();
@@ -62,7 +64,9 @@ const UpdateCategory = () => {
             }
             formFile.append('folderName', 'website/category')
             const image = await dispatch(uploadSingleImage(formFile))
-            image && dispatch(CategoryUpdate({category_id:id, category_name: name, category_description: description, category_icon: image?.payload?.metaData?.thumb_url, parent_id: parent_id, isPublished: true }))
+            image && dispatch(CategoryUpdate({ category_id: id, category_name: name, category_description: description, category_icon: image?.payload?.metaData?.thumb_url, parent_id: parent_id, isPublished: true }))
+            toast.success("Cập nhật danh mục thành công!");
+
             navigate('/category/categorylist')
 
         } catch (error) {
@@ -76,8 +80,14 @@ const UpdateCategory = () => {
             <CCol xs={12}>
                 <CCard className="mb-4">
                     <CCardHeader>
-                        <strong>Thêm danh mục</strong>
+                        <strong>Chỉnh sửa danh mục</strong>
                     </CCardHeader>
+                    <div className="card-header text-right ">
+                        <Link to="/category/categorylist" className="btn btn-sm btn-info text-white">
+                            <i className="fa fa-reply me-1" aria-hidden="true"></i>
+                            Quay lại
+                        </Link>
+                    </div>
                     <CCardBody>
                         <CForm className="row g-3" onSubmit={handleSubmit}>
                             <CCol md={6}>

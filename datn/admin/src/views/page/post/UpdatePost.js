@@ -18,6 +18,7 @@ import {
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { BlogStore, BlogUpdate, getBlogById, getTopic, uploadSingleImage, uploadSingleImageArray } from '../../../store/actions';
+import { toast } from "react-toastify";
 
 const UpdatePost = () => {
     const { id } = useParams(); // Lấy ID từ URL
@@ -77,12 +78,12 @@ const UpdatePost = () => {
                 blog_image: uploadedImages,
                 isPublished: true
             };
-            console.log('Post Data:', postData);
-
             await dispatch(BlogUpdate(postData));
+            toast.success("Cập nhật bài viết thành công!");
+
             navigate('/post/postlist');
         } catch (error) {
-            console.log(error);
+            toast.error("Cập nhật bài viết không thành công!");
         }
     };
 

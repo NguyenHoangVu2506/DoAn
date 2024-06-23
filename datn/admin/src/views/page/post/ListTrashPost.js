@@ -4,6 +4,8 @@ import CIcon from "@coreui/icons-react";
 import { cilDelete, cilPencil } from "@coreui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { BlogRestore, ListTrashBlog1, RemoveBlog } from "../../../store/actions";
+import { toast } from "react-toastify";
+
 function ListTrashPost() {
     const dispatch = useDispatch();
     const { listDelBlog } = useSelector((state) => state.blogReducer);

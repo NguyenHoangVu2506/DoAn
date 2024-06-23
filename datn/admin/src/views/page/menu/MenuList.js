@@ -6,6 +6,8 @@ import CIcon from '@coreui/icons-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { MenuPublished, MenuUnPublished, TrashMenu, getListMenu } from '../../../store/actions/menu-actions';
 import { cilDelete, cilPencil, cilPlus, cilTrash } from '@coreui/icons';
+import { toast } from "react-toastify";
+
 function MenuList() {
     const dispatch = useDispatch();
     const { allMenu } = useSelector((state) => state.menuReducer);
@@ -21,12 +23,18 @@ function MenuList() {
 
         if (isPublished) {
             dispatch(MenuUnPublished({ menu_id: menuId, isPublished: true }));
+            toast.success("Ẩn menu thành công!");
+
         } else {
             dispatch(MenuPublished({ menu_id: menuId, isPublished: false }));
+            toast.success("Hiện menu thành công!");
+
         }
     };
     const handleTrash = (menuId) => {
         dispatch(TrashMenu({ menu_id: menuId, isDeleted: false }));
+        toast.success("Xóa vào thùng rác thành công!");
+
     };
     return (
         <div className=" admin content-wrapper">

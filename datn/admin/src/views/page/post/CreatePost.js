@@ -15,6 +15,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { BlogStore, getTopic, uploadSingleImageArray } from '../../../store/actions';
+import { toast } from "react-toastify";
 
 const CreatePost = () => {
     const navigate = useNavigate();
@@ -58,11 +59,13 @@ const CreatePost = () => {
                 blog_image: uploadedImages,
                 isPublished: true
             };
-            console.log('Post Data:', postData);
             await dispatch(BlogStore(postData));
+            toast.success("Thêm bài viết thành công!");
+
             navigate('/post/postlist');
         } catch (error) {
-            console.error('Error:', error);
+            toast.error("Thêm bài viết không thành công!");
+
         }
     };
 

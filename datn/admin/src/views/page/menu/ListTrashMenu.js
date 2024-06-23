@@ -4,6 +4,8 @@ import CIcon from "@coreui/icons-react";
 import { cilDelete, cilPencil } from "@coreui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { ListTrashMenu1, MenuRestore, RemoveMenu } from "../../../store/actions/menu-actions";
+import { toast } from "react-toastify";
+
 function ListTrashMenu() {
     const dispatch = useDispatch();
     const { listDelMenu } = useSelector((state) => state.menuReducer);

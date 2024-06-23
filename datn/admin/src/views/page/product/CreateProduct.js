@@ -16,6 +16,7 @@ import Select from 'react-select';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSpu, getCategory, getListBrand, uploadSingleImage } from '../../../store/actions';
 import { getAttribute } from '../../../store/actions/attributes-actions';
+import { toast } from "react-toastify";
 
 const CreateProduct = () => {
     const [showClassificationForm, setShowClassificationForm] = useState(false);
@@ -101,6 +102,9 @@ const CreateProduct = () => {
             };
             await dispatch(createSpu(productData));
             // Navigate to product list or show success message
+            toast.success("Thêm sản phẩm thành công!");
+            navigate('/product/productlist')
+
         } catch (error) {
             console.log(error);
         }

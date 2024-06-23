@@ -197,7 +197,7 @@ export default function ProductItem({ product }) {
         const fullStars = Math.max(0, Math.floor(rating));
         const halfStars = rating % 1 !== 0 ? 1 : 0;
         const emptyStars = Math.max(0, 5 - fullStars - halfStars);
-    
+
         return (
             <>
                 {[...Array(fullStars)].map((_, index) => (
@@ -210,7 +210,7 @@ export default function ProductItem({ product }) {
             </>
         );
     };
-    
+
     // console.log(review.length);
     const calculateAverageRating = () => {
         if (review && review.length > 0) {
@@ -219,7 +219,7 @@ export default function ProductItem({ product }) {
         }
         return 0; // Default to 0 if there are no comments
     };
-        return (
+    return (
         <>
             <div className="col-lg-3 col-md-6 col-sm-6 d-flex" key={product._id}>
                 <div className="card bg-image hover-zoom ripple rounded ripple-surface w-100 my-2 shadow-2-strong">
@@ -228,22 +228,22 @@ export default function ProductItem({ product }) {
                         <h6 className="text-dark">{product.product_name}</h6>
                         {/* rating */}
                         <div className="text-warning mb-1 me-2">
-                        {renderStars(calculateAverageRating())}
-                        <span className="ms-1">
-                            {calculateAverageRating()}
-                        </span>
-                    </div>
-                        
+                            {renderStars(calculateAverageRating())}
+                            <span className="ms-1">
+                                {calculateAverageRating()}
+                            </span>
+                        </div>
+
                         <div className="d-flex flex-row">
-                            <h5 className="mb-1 me-1">
+                            <h5 className="mb-1 me-1" style={{ fontSize: "18px" }}>
                                 {sale
                                     ? accounting.formatNumber(min_price_sku, 0, '.', ',')
                                     : accounting.formatNumber(price, 0, '.', ',')} đ
                             </h5>
                             {sale && (
-                                <span className="text-danger">
+                                <h5 className="text-danger" style={{ fontSize: "16px" }}>
                                     <s>{accounting.formatNumber(price, 0, '.', ',')} đ</s>
-                                </span>
+                                </h5>
                             )}
                         </div>
                         <div className="d-flex justify-content-around">
@@ -335,7 +335,7 @@ export default function ProductItem({ product }) {
                                                                                 return (
                                                                                     <div className="row mb-2">
                                                                                         <div className="col-md-4 mb-3">
-                                                                                            <div key={indexVariation}>
+                                                                                            <div className="d-flex flex-row" key={indexVariation}>
                                                                                                 <p class="d-none d-md-block mb-1" style={{ cursor: 'pointer', color: '#f6831f ' }}>{variation.name}</p>
 
                                                                                                 {variation.options.map((option, indexOption) => {

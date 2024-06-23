@@ -4,6 +4,8 @@ import CIcon from "@coreui/icons-react";
 import { cilDelete, cilPencil } from "@coreui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { ListTrashTopic1, RemoveTopic, TopicRestore } from "../../../store/actions";
+import { toast } from "react-toastify";
+
 function ListTrashTopic() {
     const dispatch = useDispatch();
     const { listDelTopic } = useSelector((state) => state.topicReducer);
@@ -13,7 +15,6 @@ function ListTrashTopic() {
             dispatch(ListTrashTopic1({ isDeleted: true }));
         }
     }, [dispatch, listDelTopic]);
-    console.log(listDelTopic)
     const handleRestore = async (topicId) => {
         try {
             await dispatch(TopicRestore({ topic_id: topicId, isDeleted: true }));
@@ -33,9 +34,6 @@ function ListTrashTopic() {
             toast.error("Đã xảy ra lỗi khi xóa!");
         }
     };
-
-
-
     return (
         <div className="content-wrapper">
             <section className="content">

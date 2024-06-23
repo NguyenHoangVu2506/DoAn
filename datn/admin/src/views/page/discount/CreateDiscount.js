@@ -7,6 +7,7 @@ import DatePicker from 'react-datepicker';
 import { DiscountStore } from '../../../store/actions/discount-actions';
 import 'react-datepicker/dist/react-datepicker.css';
 import { onAllProduct } from '../../../store/actions';
+import { toast } from "react-toastify";
 
 const CreateDiscount = () => {
     const dispatch = useDispatch();
@@ -57,6 +58,8 @@ const CreateDiscount = () => {
         try {
             const addDiscount = await dispatch(DiscountStore(formData));
             if (addDiscount.payload.status === 200 || addDiscount.payload.status === 201) {
+                toast.success("Thêm mã giảm giá thành công!");
+
                 navigate('/discount/discountlist'); // Điều hướng đến danh sách mã giảm giá sau khi thêm thành công
             } else {
             }

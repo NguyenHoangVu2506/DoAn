@@ -14,6 +14,7 @@ import {
 import { Link, useParams, useNavigate } from "react-router-dom";
 import {  TopicUpdate, getTopicById } from '../../../store/actions';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from "react-toastify";
 
 const UpdateTopic = () => {
     const dispatch = useDispatch();
@@ -40,11 +41,13 @@ const UpdateTopic = () => {
         e.preventDefault();
         try {
             await dispatch(TopicUpdate({ topic_id:id,topic_name: name,topic_description:description, parent_id: '0',isPublished:true }))
+            toast.success("Cập nhât chủ đề thành công!");
             navigate('/topic/topiclist')
       
       
           } catch (error) {
-            
+            toast.error("Cập nhât chủ đề không thành công!");
+
           }
     }
 

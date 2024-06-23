@@ -5,6 +5,7 @@ import { cilDelete, cilPencil, cilPlus, cilTrash } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BannerPublished, BannerUnPublished, TrashBanner, getListSlider } from '../../../store/actions';
+import { toast } from "react-toastify";
 
 function BannerList() {
     const dispatch = useDispatch();
@@ -19,13 +20,19 @@ function BannerList() {
     const handleSwitchChange = (sliderId, isPublished) => {
         if (isPublished) {
             dispatch(BannerUnPublished({ slider_id: sliderId }));
+            toast.success("Ẩn banner thành công!");
+
         } else {
             dispatch(BannerPublished({ slider_id: sliderId }));
+            toast.success("Ẩn banner thành công!");
+
         }
     };
 
     const handleTrash = (sliderId) => {
         dispatch(TrashBanner({ slider_id: sliderId, isDeleted: false }));
+        toast.success("Xóa vào thùng rác thành công!");
+
     };
 
     return (

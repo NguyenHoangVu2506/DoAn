@@ -2,6 +2,7 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { CButton, CFormSwitch } from '@coreui/react';
+import { toast } from "react-toastify";
 import CIcon from '@coreui/icons-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { cilDelete, cilPencil, cilPlus, cilTrash } from '@coreui/icons';
@@ -21,12 +22,18 @@ function PageList() {
 
         if (isPublished) {
             dispatch(PageUnPublished({ page_id: pageId, isPublished: true }));
+            toast.success("Ẩn trang đơn thành công!");
+
         } else {
             dispatch(PagePublished({ page_id: pageId, isPublished: false }));
+            toast.success("Hiện trang đơn thành công!");
+
         }
     };
     const handleTrash = (pageId) => {
         dispatch(TrashPage({ page_id: pageId, isDeleted: false }));
+        toast.success("Xóa vào thùng rác thành công!");
+
     };
 
     return (

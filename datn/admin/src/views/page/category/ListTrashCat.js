@@ -4,6 +4,8 @@ import CIcon from "@coreui/icons-react";
 import { cilDelete, cilPencil } from "@coreui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { CategoryRestore, ListTrashCategory1, RemoveCategory } from "../../../store/actions";
+import { toast } from "react-toastify";
+
 function ListTrashCategory() {
     const dispatch = useDispatch();
     const { listDelCategory } = useSelector((state) => state.categoryReducer);

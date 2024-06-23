@@ -15,6 +15,7 @@ import {
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { BrandUpdate, getBrandById, uploadSingleImage } from '../../../store/actions';
+import { toast } from "react-toastify";
 
 const UpdateBrand = () => {
     const dispatch = useDispatch();
@@ -52,7 +53,8 @@ const UpdateBrand = () => {
             formFile.append('folderName', 'website/brand')
             const image = await dispatch(uploadSingleImage(formFile)) 
             image && dispatch(BrandUpdate({brand_id:id, brand_name: name, brand_description: description, brand_image: image?.payload?.metaData?.thumb_url, isPublished: true }))
-            navigate('/brand/brandlist/1/10')
+            toast.success("Cập nhật thương hiệu thành công!");
+            navigate('/brand/brandlist')
 
         } catch (error) {
             console.log(error)

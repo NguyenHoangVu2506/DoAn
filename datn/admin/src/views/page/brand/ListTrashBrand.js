@@ -4,6 +4,8 @@ import CIcon from "@coreui/icons-react";
 import { cilDelete, cilPencil } from "@coreui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { BrandRestore, ListTrashBrand1, RemoveBrand } from "../../../store/actions";
+import { toast } from "react-toastify";
+
 function ListTrashBrand() {
     const dispatch = useDispatch();
     const { listDelBrand } = useSelector((state) => state.brandReducer);
