@@ -15,6 +15,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { MenuStore } from '../../../store/actions/menu-actions';
+import { toast } from "react-toastify";
 
 const CreateMenu = () => {
     const dispatch = useDispatch();
@@ -31,9 +32,12 @@ const CreateMenu = () => {
         e.preventDefault();
         try {
             await dispatch(MenuStore({ menu_name: name,menu_link:link,menu_type:type, parent_id: null,menu_position:position}))
-            navigate('/menu/menulist')      
+            navigate('/menu/menulist')    
+            toast.success("Thêm menu thành công!");
+  
           } catch (error) {
-            
+            toast.error("Thêm menu không thành công!");
+
           }
     }
     return (

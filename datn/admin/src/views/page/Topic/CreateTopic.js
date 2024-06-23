@@ -16,12 +16,9 @@ import {
     CRow,
 } from '@coreui/react'
 import { useNavigate } from 'react-router-dom'; // Chỉnh sửa từ đây
-import axiosInstance from '../../../axio';
-import apiUploadFile from '../../../service/apiUploadFile';
-import apiPost from '../../../service/apiPost';
-import apiTopic from '../../../service/apiTopic';
 import { TopicStore } from '../../../store/actions';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from "react-toastify";
 
 const CreateTopic = () => {
     const dispatch = useDispatch();
@@ -37,6 +34,7 @@ const CreateTopic = () => {
         e.preventDefault();
         try {
             await dispatch(TopicStore({ name: name,description:description, parent_id: '0',isPublished:true }))
+            toast.success("Thêm chủ đề thành công!");
             navigate('/topic/topiclist')
       
       
@@ -55,11 +53,11 @@ const CreateTopic = () => {
                     <CCardBody>
 
                         <CForm className="row g-3" onSubmit={handleSubmit}>
-                            <CCol md={6}>
+                            <CCol md={12}>
                                 <CFormLabel htmlFor="inputName">Tên chủ đề</CFormLabel>
                                 <CFormInput type="name" id="inputName" value={name} onChange={(e) => setName(e.target.value)} />
                             </CCol>
-                            <CCol xs={6}>
+                            <CCol xs={12}>
                                 <CFormLabel htmlFor="inputAddress">Mô tả </CFormLabel>
                                 <CFormTextarea id="inputAddress"  rows={3} value={description} onChange={(e) => setDescription(e.target.value)} />
                             </CCol>

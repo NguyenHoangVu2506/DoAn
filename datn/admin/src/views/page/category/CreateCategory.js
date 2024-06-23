@@ -15,6 +15,8 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { CategoryStore, getCategory, uploadSingleImage } from '../../../store/actions';
+import { toast } from "react-toastify";
+
 const CreateCategory = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -48,6 +50,7 @@ const CreateCategory = () => {
             formFile.append('folderName', 'website/category')
             const image = await dispatch(uploadSingleImage(formFile))
             image && dispatch(CategoryStore({ category_name: name, category_description: description, category_icon: image?.payload?.metaData?.thumb_url,parent_id:parent_id, isPublished: true }))
+            toast.success("Thêm danh mục thành công!");
             navigate('/category/categorylist')
 
         } catch (error) {

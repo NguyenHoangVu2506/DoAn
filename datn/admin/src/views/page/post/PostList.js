@@ -5,6 +5,7 @@ import { CButton, CFormSwitch } from '@coreui/react';
 import { cilTrash, cilPlus, cilPencil, cilDescription } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
 import { BlogPublished, BlogUnPublished, TrashBlog, getListBlog, getTopic } from '../../../store/actions';
+import { toast } from "react-toastify";
 
 function PostList() {
     const dispatch = useDispatch();
@@ -34,12 +35,18 @@ function PostList() {
 
         if (isPublished) {
             dispatch(BlogUnPublished({ blog_id: blogId, isPublished: true }));
+            toast.success("Ẩn bài viết thành công!");
+
         } else {
             dispatch(BlogPublished({ blog_id: blogId, isPublished: false }));
+            toast.success("Hiện bài viết thành công!");
+
         }
     };
     const handleTrash = (blogId) => {
         dispatch(TrashBlog({ blog_id: blogId, isDeleted: false }));
+        toast.success("Xóa vào thùng rác thành công!");
+
     };
     return (
         <div className="admin content-wrapper">

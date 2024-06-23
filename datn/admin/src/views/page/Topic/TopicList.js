@@ -5,6 +5,7 @@ import { CButton, CFormSwitch } from '@coreui/react';
 import { cilTrash, cilPlus, cilPencil } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
 import {  TopicPublished, TopicUnPublished, TrashTopic, getTopic } from '../../../store/actions';
+import { toast } from "react-toastify";
 
 function TopicList() {
     const dispatch = useDispatch();
@@ -23,8 +24,12 @@ function TopicList() {
 
         if (isPublished) {
             dispatch(TopicUnPublished({ topic_id: topicId, isPublished: true }));
+            toast.success("Ẩn chủ đề thành công!");
+
         } else {
             dispatch(TopicPublished({ topic_id: topicId, isPublished: false }));
+            toast.success("Hiện chủ đề thành công!");
+
         }
     };
     const handleTrash = (topicId) => {

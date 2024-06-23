@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
 import { cilDelete, cilPencil } from "@coreui/icons";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+
 import { ListTrashPage1, PageRestore, RemovePage } from "../../../store/actions/page-actions";
 function ListTrashPage() {
     const dispatch = useDispatch();

@@ -15,6 +15,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { BrandStore, uploadSingleImage } from '../../../store/actions';
+import { toast } from "react-toastify";
 
 const CreateBrand = () => {
     const dispatch = useDispatch();
@@ -26,7 +27,7 @@ const CreateBrand = () => {
     
     useEffect(() => {
         if (createBrand) {
-            navigate('/post/postlist/news/1/10');
+            navigate('/post/postlist');
         }
     }, [navigate, createBrand]);
     const handleSubmit = async (e) => {
@@ -44,7 +45,9 @@ const CreateBrand = () => {
             formFile.append('folderName', 'website/brand')
             const image = await dispatch(uploadSingleImage(formFile))
             image && dispatch(BrandStore({ brand_name: name, brand_description: description, brand_image: image?.payload?.metaData?.thumb_url, public_image_id: image?.payload?.metaData?.public_id, isPublished: true }))
-            navigate('/brand/brandlist/1/10')
+            toast.success("Thêm thương hiệu thành công!");
+
+            navigate('/brand/brandlist')
 
         } catch (error) {
             console.log(error)

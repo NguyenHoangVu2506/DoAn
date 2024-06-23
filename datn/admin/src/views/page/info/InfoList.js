@@ -13,6 +13,7 @@ import { getInfo, updateInfo, uploadSingleImage } from '../../../store/actions';
 import './InfoList.css';  // Import the CSS file for custom styles
 import CIcon from '@coreui/icons-react';
 import { cilPencil } from '@coreui/icons';
+import { toast } from "react-toastify";
 
 function InfoList() {
     const dispatch = useDispatch();
@@ -79,10 +80,10 @@ console.log(info)
                 other_info: formData.other_info,
                 info_logo: imageUrl
             }));
-            alert("Chỉnh sửa thành công!");
+            toast.success("Cập nhật thông tin thành công!");
             setIsEditing(false);  // Close the form after submission
         } catch (error) {
-            console.log(error);
+            toast.error("Cập nhật thông tin không thành công!");
         }
     };
     console.log('Form Data:', formData);

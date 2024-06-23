@@ -15,6 +15,7 @@ import {
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {  MenuUpdate, getMenuById } from '../../../store/actions/menu-actions';
+import { toast } from "react-toastify";
 
 const UpdateMenu = () => {
     const dispatch = useDispatch();
@@ -40,9 +41,12 @@ const UpdateMenu = () => {
         e.preventDefault();
         try {
             await dispatch(MenuUpdate({menu_id:id, menu_name: name,menu_link:link,menu_type:type, parent_id: null,menu_position:position}))
+            toast.success("Cập nhật menu thành công!");
+
             navigate('/menu/menulist')      
           } catch (error) {
-            
+            toast.error("Cập nhật menu không thành công!");
+
           }
     }
     return (

@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { PageStore } from '../../../store/actions/page-actions';
 import { uploadSingleImage } from '../../../store/actions';
+import { toast } from "react-toastify";
 
 const CreatePage = () => {
     const dispatch = useDispatch();
@@ -45,6 +46,8 @@ const CreatePage = () => {
             formFile.append('folderName', 'website/page')
             const image = await dispatch(uploadSingleImage(formFile))
             image && dispatch(PageStore({ page_name: name, page_title: title,page_detail: detail,page_link:link,page_type:type,public_image_id:"public_image_id", page_image: image?.payload?.metaData?.thumb_url }))
+            toast.success("Thêm trang đơn thành công!");
+
             navigate('/page/pagelist')
 
         } catch (error) {

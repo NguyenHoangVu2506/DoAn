@@ -5,6 +5,7 @@ import { cilPencil, cilPlus, cilTrash } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TrashCategory, getCategory } from '../../../store/actions';
+import { toast } from "react-toastify";
 
 function CategoryList() {
     const dispatch = useDispatch();
@@ -20,6 +21,8 @@ function CategoryList() {
 
     const handleTrash = (categoryId) => {
         dispatch(TrashCategory({ category_id: categoryId, isDeleted: false }));
+        toast.success("Xóa vào thùng rác thành công!");
+
     };
 
     const filteredCategories = Array.isArray(listCategory) ? listCategory.filter(category => !category.isDeleted) : [];
