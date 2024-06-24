@@ -489,9 +489,9 @@ function ProductDetail() {
                                 <div className="tab-content" id="ex1-content">
                                     <div className={`tab-pane fade ${activeTab === 'ex1-pills-1' ? 'show active' : ''} `} id="ex1-pills-1" role="tabpanel" aria-labelledby="ex1-tab-1">
 
+                                    Son Kem 3CE Velvet Lip Tint lên môi “mướt mườn mượt”. Chất 3CE cũng ở dạng kem mịn như nhung. Lên môi nhẹ, căng và bám môi rất tốt. Giá thành quá ổn cho 1 cây son Hàn xịn, màu son ko chỉ đa dạng mà màu nào cũng xinh. Swatch cũng “bao” chuẩn luôn nhé các chị em.
 
-
-                                        {detail}
+                                    
 
                                     </div>
                                     <div className={`tab-pane fade ${activeTab === 'ex1-pills-2' ? 'show active' : ''} mb-2`} id="ex1-pills-2" role="tabpanel" aria-labelledby="ex1-tab-2">
@@ -502,10 +502,7 @@ function ProductDetail() {
                                         nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo */}
                                     </div>
                                     <div className={`tab-pane fade ${activeTab === 'ex1-pills-3' ? 'show active' : ''} mb-2`} id="ex1-pills-3" role="tabpanel" aria-labelledby="ex1-tab-3">
-                                        {/* Another tab content or sample information now <br />
-                                        Dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                                        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-                                        mollit anim id est laborum. */}
+                                    Water, Dimethicone, Dimethicone/Vinyl Dimethicone Crosspolymer, Glycerin, Alcohol Denat., Pentylene Glycol, Polyglyceryl-10 Myristate, Polyacrylate Crosspolymer-6, Butylene Glycol, Dimethicone Crosspolymer, Ceteareth-20, Ethylhexylglycerin, Trisodium Ethylenediamine Disuccinate, Arginine, Aluminum Hydroxide, Ammonium Polyacrylate, Carbomer, Phenoxyethanol, Fragrance(Parfum), Titanium Dioxide (CI 77891), Acid Red 18 (CI 16255), Yellow 6 (CI 15985), Red 33 (CI 17200), Yellow 5 (CI 19140), Blue 1 (CI 42090)
                                     </div>
                                     <div className={`tab-pane fade ${activeTab === 'ex1-pills-4' ? 'show active' : ''} mb-2`} id="ex1-pills-4" role="tabpanel" aria-labelledby="ex1-tab-4">
                                         {/* Some other tab content or sample information now <br />

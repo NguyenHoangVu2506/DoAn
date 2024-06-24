@@ -66,7 +66,7 @@ function ListTrashCategory() {
                                             {listDelCategory.map((item, index) => (
                                                 <tr className="datarow" key={index}>
                                                     <td className="text-left">
-                                                        <img src={item.category_icon} alt={item.category_name} style={{ width: "70px" }} />
+                                                        <img src={item.category_image} alt={item.category_name} style={{ width: "70px" }} />
                                                     </td>
                                                     <td className="text-left">{item.category_name}</td>
                                                     <td className="text-left">{item.category_description

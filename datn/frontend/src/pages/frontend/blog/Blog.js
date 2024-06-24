@@ -109,6 +109,13 @@ function Blog() {
                         </div>
                       </div>
                     </div>
+                    <img
+            className="rounded w-100"
+            src="https://nuty.vn/Data/Sites/1/Banner/banner-01.jpg"
+            style={{ objectFit: 'cover', height: "160px" }}
+            alt="Banner"
+          />
+
                   </div>
                 </div>
               </div>

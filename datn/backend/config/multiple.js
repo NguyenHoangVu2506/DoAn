@@ -27,7 +27,7 @@ const multerFilter=(req, file, cb)=>{
 const uploadDisk=multer({
     storage: storage,
     fileFilter: multerFilter,
-    limits: {fileSize:1000000}
+    limits: {fileSize:10000000}
 })
 
 module.exports={

@@ -49,7 +49,7 @@ const Header = () => {
           <div class="">
             <div class="row gy-3">
               <div class="col-lg-2 col-sm-4 col-4">
-                <Link to='/' style={{ cursor: 'pointer', color: '#f6831f ' }}><h3>FRUIT STORE</h3></Link>
+                <Link to='/' style={{ cursor: 'pointer', color: '#f6831f ' }}><h3>BEAUTYSTORE</h3></Link>
               </div>
 
               <div class="order-lg-last col-lg-5 col-sm-8 ">

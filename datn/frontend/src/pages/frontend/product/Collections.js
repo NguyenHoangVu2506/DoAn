@@ -4,9 +4,10 @@ import ProductListItem from "../../../Components/product/productListItem";
 import React, { useEffect, useState } from "react";
 import ProductItem from "../../../Components/product/productItem";
 import { getListBrand } from "../../../store/actions/brand-actions";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 function Collections() {
+  const { category0_slug, category1_slug, category2_slug } = useParams();
   const dispatch = useDispatch();
   const [isList, setIsList] = useState(false)
   const [currentPage, setCurrentPage] = useState(1);
@@ -32,6 +33,10 @@ function Collections() {
   const [priceCollapsed, setPriceCollapsed] = useState(false);
   const [ratingCollapsed, setRatingCollapsed] = useState(false);
 
+
+  useEffect(() => {
+    all_category && setCategoriesParentNull(all_category?.filter((cat) => cat.parent_id == null))
+  }, [all_category])
 
 
   useEffect(() => {
@@ -429,15 +434,15 @@ function Collections() {
               <div className="pagination-container" style={{ display: 'flex', justifyContent: 'center' }}>
                   <ul className="pagination">
                     <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                      <button className="page-link" onClick={handlePrevious}>Previous</button>
+                      <button className="page-link" onClick={handlePrevious}>Trước</button>
                     </li>
                     {Array.from({ length: totalPages }, (_, index) => (
                       <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
-                        <button className="page-link" onClick={() => setCurrentPage(index + 1)}>{index + 1}</button>
+                        <button style={{ backgroundColor: '#f6831f', color: 'white' }} className="page-link" onClick={() => setCurrentPage(index + 1)}>{index + 1}</button>
                       </li>
                     ))}
                     <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                      <button className="page-link" onClick={handleNext}>Next</button>
+                      <button className="page-link" onClick={handleNext} >Next</button>
                     </li>
                   </ul>
                 </div>

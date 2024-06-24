@@ -79,7 +79,7 @@ export default function PageSingle() {
           </div>
           <img
             className="rounded w-100"
-            src="https://theme.hstatic.net/200000528965/1001037678/14/page_banner_image.jpg?v=534"
+            src="https://nuty.vn/Data/Sites/1/Banner/banner-01.jpg"
             style={{ objectFit: 'cover', height: "160px" }}
             alt="Banner"
           />

@@ -19,11 +19,11 @@ export default function PostDetailItem() {
     <body>
       <main role="main" className="px-4 py-2 ">
         <div className="row">
-          <div className="col-lg-9">
+          <div className="col-lg-8">
             <div className="blog-post">
               {blogDetails && (
                 <div className="blog-post">
-                  {/* <img src={blogDetails.post.blog_image} alt="Blog" /> */}
+                  <img style={{height:'500px'}} src={blogDetails.post.blog_image} alt="Blog" />
                   {/* <blockquote></blockquote> */}
                   <h3 className="blog-post-title">{blogDetails.post.blog_name}</h3>
                   <div dangerouslySetInnerHTML={{ __html: blogDetails.post.blog_detail }} />
@@ -35,7 +35,7 @@ export default function PostDetailItem() {
 
           </div>
 
-          <div className="col-lg-3">
+          <div className="col-lg-4">
             <div className="mb-3 bg-light rounded">
               <div className="">
                 <div className="px-0 border rounded-2 shadow-0">

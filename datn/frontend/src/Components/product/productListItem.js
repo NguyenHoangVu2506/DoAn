@@ -41,7 +41,7 @@ export default function ProductListItem({ product }) {
                     <div className="row g-0">
                         <div className="col-xl-3 col-md-4 d-flex justify-content-center">
                             <div className="bg-image hover-zoom ripple rounded ripple-surface me-md-3 mb-3 mb-md-0">
-                                <img src={product.product_thumb[0]} className="w-100" />
+                                <img src={product.product_thumb} className="w-100" />
                                 <Link to={`/product/${product.product_slug}-${product._id}`}>
                                     <div className="hover-overlay">
                                         <div className="mask" style={{ backgroundColor: 'rgba(253, 253, 253, 0.15)' }}></div>

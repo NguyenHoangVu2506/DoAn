@@ -78,7 +78,7 @@ function ProductList() {
                                             <tr className="datarow" key={index}>
                                                 <td>
                                                     <img
-                                                        src={item.product_thumb[0]}
+                                                        src={item.product_thumb}
                                                         alt={`product_${index}`}
                                                         style={{ width: "70px", marginRight: "5px" }}
                                                     />
