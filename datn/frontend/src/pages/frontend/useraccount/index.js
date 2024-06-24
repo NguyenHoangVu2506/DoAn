@@ -155,7 +155,7 @@ export default function UserAccount() {
               <nav class="nav flex-lg-column w-100 d-flex nav-pills mb-4">
                 <a class="nav-link my-0 active" href="#"><p class="pb-0 mb-0" style={{ width: '130px', color: '#f6831f' }}>Tài khoản</p></a>
                 <a class="nav-link my-0 bg-light" href="/userorder"><p class="pb-0 mb-0" style={{ width: '130px' }}>Đơn hàng</p></a>
-                <a class="nav-link my-0 bg-light" href="/userorderhistory"><p class="pb-0 mb-0" style={{ width: '130px' }}>Lịch sử đơn hàng</p></a>
+                {/* <a class="nav-link my-0 bg-light" href="/userorderhistory"><p class="pb-0 mb-0" style={{ width: '130px' }}>Lịch sử đơn hàng</p></a> */}
                 <Link to="/wish-list" class="nav-link my-0 bg-light" ><p class="pb-0 mb-0" style={{ width: '130px' }}>Sản phẩm yêu thích</p></Link>
                 <button class="nav-link my-0 bg-light"><p class="pb-0 mb-0" style={{ width: '100px' }} onClick={(e) => handleSubmit(e)}>Đăng xuất</p></button>
               </nav>

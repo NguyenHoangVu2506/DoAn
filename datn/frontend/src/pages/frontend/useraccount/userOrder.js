@@ -5,7 +5,8 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import "./UserOrder.css";
 import { NumericFormat } from 'react-number-format';
-
+import StarRatingComponent from 'react-star-rating-component';
+import { addCommnetByProduct } from '../../../store/actions/comment_rating-actions';
 export default function UserOrder() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -13,16 +14,22 @@ export default function UserOrder() {
   const { userInfo } = useSelector((state) => state.userReducer);
   const [productDetails, setProductDetails] = useState({});
   const [filterStatus, setFilterStatus] = useState('all');
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [reviewContent, setReviewContent] = useState('');
+  const [rating, setRating] = useState(0);
+
   const orderUser = async () => {
     const order = await dispatch(getOrderByUser({ user_id: userInfo._id }));
     setOrderItem(order.payload.metaData);
   };
-  const [showReviewForm, setShowReviewForm] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState('');
-  const handleReview = (productId) => {
+  const handleReview = (product) => {
+    setSelectedProductId(product.productId); // Thiết lập ID trực tiếp
     setShowReviewForm(true);
-    setSelectedProductId(productId);
+    setSelectedProduct(product);
   };
+  
   const fetchProductDetails = async (productId) => {
     const respon = await dispatch(productById({ spu_id: productId }));
     if (respon) {
@@ -87,32 +94,29 @@ export default function UserOrder() {
     setFilterStatus(status);
   };
   //////////////review
-  const [reviewContent, setReviewContent] = useState('');
-
+  console.log(rating)
+  console.log(reviewContent)
+  console.log(selectedProductId)
   const handleSubmitReview = async (event) => {
     event.preventDefault();
     // Gửi dữ liệu đánh giá lên server, ví dụ dispatch action hoặc gọi API ở đây
     // Sau khi gửi thành công, có thể cập nhật lại dữ liệu đánh giá của sản phẩm
     // Ví dụ:
-    // try {
-    //   // Gửi dữ liệu đánh giá lên server
-    //   const response = await dispatch(submitReview({ productId: selectedProductId, reviewContent }));
-    //   // Xử lý response nếu cần
-    //   if (response.success) {
-    //     // Đóng form đánh giá và làm mới dữ liệu
-    //     setShowReviewForm(false);
-    //     // Cập nhật lại dữ liệu đánh giá hoặc làm các thao tác cần thiết
-    //     // Ví dụ: dispatch action để load lại dữ liệu đánh giá sau khi gửi thành công
-    //     toast.success('Đánh giá sản phẩm thành công!');
-    //   } else {
-    //     toast.error('Đánh giá sản phẩm thất bại. Vui lòng thử lại sau!');
-    //   }
-    // } catch (error) {
-    //   console.error('Error submitting review:', error);
-    //   toast.error('Đánh giá sản phẩm thất bại. Vui lòng thử lại sau!');
-    // }
-  };
+    try {
+      // Gửi dữ liệu đánh giá lên server
+      const response = await dispatch(addCommnetByProduct({ productId: selectedProductId,userId:userInfo._id,rating:rating,content:reviewContent }));
+      // Xử lý response nếu cần
+      setShowReviewForm(false);
+      toast.success('Đánh giá sản phẩm thành công!');
 
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      toast.error('Đánh giá sản phẩm thất bại. Vui lòng thử lại sau!');
+    }
+  };
+  const onStarClick = (nextValue, prevValue, name) => {
+    setRating(nextValue);
+  };
   return (
     <>
       <div className="bg-primary">
@@ -139,9 +143,9 @@ export default function UserOrder() {
                 <a className="nav-link my-0 active" href="#">
                   <p className="pb-0 mb-0" style={{ width: '130px', color: '#f6831f' }}>Đơn hàng</p>
                 </a>
-                <a className="nav-link my-0 bg-light" href="/userorderhistory">
+                {/* <a className="nav-link my-0 bg-light" href="/userorderhistory">
                   <p className="pb-0 mb-0" style={{ width: '130px' }}>Lịch sử đơn hàng</p>
-                </a>
+                </a> */}
                 <Link to="/wish-list" className="nav-link my-0 bg-light">
                   <p className="pb-0 mb-0" style={{ width: '130px' }}>Sản phẩm yêu thích</p>
                 </Link>
@@ -176,53 +180,55 @@ export default function UserOrder() {
                               <button onClick={() => updateStatus(order._id, 'Received')} className="btn btn-sm btn-outline-success">Đã nhận hàng</button>
                             ) : order.order_status === 'Received' ? (
                               <>
-                                <button className="btn btn-sm btn-outline-primary" onClick={() => handleReview(order._id)}>Đánh giá</button>
-                                {showReviewForm && (
-                                  <div className="modal fade show" style={{ display: 'block' }} id="reviewModal" tabIndex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
-                                    <div className="modal-dialog modal-dialog-centered">
-                                      <div className="modal-content">
-                                        <div className="modal-header">
-                                          <h5 className="modal-title" id="reviewModalLabel">Đánh giá sản phẩm</h5>
-                                          <button type="button" className="btn-close" onClick={() => setShowReviewForm(false)} aria-label="Close"></button>
-                                        </div>
-                                        <div className="modal-body">
-                                          {/* Form đánh giá */}
-                                          {/* Ví dụ: */}
-                                          <form onSubmit={handleSubmitReview}>
-                                            
-                                            <div className="mb-3">
-                                            <div className="row mb-1" >
-                                              <div className="col-lg-7 mb-0">
-                                                <p className="small text-muted mb-1">Tên sản phẩm</p>
-                                                <p>a</p>
+                                {order && order.order_product.map((product, idx) => (
+                                  <div key={idx}>
+                                    {product.item_products.map((item, itemIndex) => {
+                                      getProductDetails(item); // Call function to fetch product details
+                                      const productDetail = productDetails[item.productId] || {};
+                                      const product_Id=item.productId;
+                                      return (
+                                        <div key={`${idx}-${itemIndex}`}>
+                                          <button className="btn btn-sm btn-outline-primary" onClick={() => handleReview(item)}>Đánh giá</button>
+                                          {showReviewForm && selectedProduct && selectedProduct.productId === item.productId && (
+                                            <div className="modal fade show" style={{ display: 'block' }} id="reviewModal" tabIndex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+                                              <div className="modal-dialog modal-dialog-centered">
+                                                <div className="modal-content">
+                                                  <div className="modal-header">
+                                                    <h5 className="modal-title" id="reviewModalLabel">Đánh giá sản phẩm</h5>
+                                                    <button type="button" className="btn-close" onClick={() => setShowReviewForm(false)} aria-label="Close"></button>
+                                                  </div>
+                                                  <div className="modal-body">
+                                                    <form onSubmit={handleSubmitReview}>
+                                                      <div className="col-lg-12 mb-0">
+                                                        <p className="small text-muted mb-1">Tên sản phẩm</p>
+                                                        <p> {productDetail.product_name}</p>
+                                                      </div>
+                                                      <div className="mb-3" style={{fontSize:"24px"}}>
+                                                        <label htmlFor="rating" className="form-label">Đánh giá</label>
+                                                        <StarRatingComponent
+                                                          name="rating"
+                                                          
+                                                          starCount={5}
+                                                          value={rating}
+                                                          onStarClick={onStarClick}
+                                                        />
+                                                      </div>
+                                                      <div className="mb-3">
+                                                        <label htmlFor="reviewContent" className="form-label">Nội dung đánh giá</label>
+                                                        <textarea className="form-control" id="reviewContent" rows="3" value={reviewContent} onChange={(e) => setReviewContent(e.target.value)} required></textarea>
+                                                      </div>
+                                                      <button type="submit" className="btn btn-primary">Gửi đánh giá</button>
+                                                    </form>
+                                                  </div>
+                                                </div>
                                               </div>
                                             </div>
-                                              <label htmlFor="rating" className="form-label">Đánh giá:</label>
-                                              <select className="form-select" id="rating" 
-                                              // onChange={(e) => setReviewProduct({ ...reviewProduct, rating: e.target.value })} required
-                                              >
-                                                <option value="">Chọn mức độ hài lòng</option>
-                                                <option value="1">1 sao - Rất không hài lòng</option>
-                                                <option value="2">2 sao - Không hài lòng</option>
-                                                <option value="3">3 sao - Bình thường</option>
-                                                <option value="4">4 sao - Hài lòng</option>
-                                                <option value="5">5 sao - Rất hài lòng</option>
-                                              </select>
-                                            </div>
-                                            <div className="mb-3">
-                                              <label htmlFor="comment" className="form-label">Nhận xét:</label>
-                                              <textarea className="form-control" id="comment" rows="3" 
-                                              // onChange={(e) => setReviewProduct({ ...reviewProduct, comment: e.target.value })}
-                                                ></textarea>
-                                            </div>
-                                            <button type="submit" className="btn btn-primary">Gửi đánh giá</button>
-                                          </form>
+                                          )}
                                         </div>
-                                      </div>
-                                    </div>
+                                      );
+                                    })}
                                   </div>
-                                )}
-
+                                ))}
                               </>
                             ) : (
                               <button onClick={() => updateStatus(order._id, 'cancelled')} className="btn btn-sm btn-outline-danger">Hủy đơn hàng</button>
@@ -290,7 +296,7 @@ export default function UserOrder() {
                                       <p className="text-danger">-<NumericFormat value={order.order_checkout?.totalDiscount} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" /></p>
                                     </div>
                                     <hr />
-                                   
+
                                     <div className="d-flex justify-content-between">
                                       <p className="fw-bold">Tổng cộng:</p>
                                       <p className="fw-bold"></p><NumericFormat className='text-success fw-bold' value={order.order_checkout?.totalCheckout} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />

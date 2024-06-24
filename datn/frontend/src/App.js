@@ -24,6 +24,7 @@ import UserOrderHistory from './pages/frontend/useraccount/userOrderHistory';
 import Brand from './pages/frontend/brand/Brand';
 import PageSingle from './pages/frontend/page/PageSingle';
 import Search from './pages/frontend/search';
+import ProductModel from './Components/product/productModel';
 
 
 
@@ -40,7 +41,7 @@ function App() {
           <Route path='/login-success/:userId?/:provider?' element={<LoginSuccess />} />
           <Route path='/signup' element={<Register />} />
           <Route path='/product/:product_slug_id' element={<ProductDetail />} />
-          {/* <Route path='/product-list' element={<ProList/>} /> */}
+          <Route path='/test' element={<ProductModel/>} />
           <Route path='/collections?/:category0_slug?/:category1_slug?/:category2_slug' element={<Collections />} />
 
           <Route path='/gio-hang' element={<Cart />} />

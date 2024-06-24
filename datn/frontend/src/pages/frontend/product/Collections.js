@@ -116,10 +116,9 @@ function Collections() {
     dispatch(AllCategory())
     dispatch(getAllAttribute({ isPublished: true }))
   }, [])
-  console.log(allProducts.length)
-  const totalPages = Math.ceil(allProducts.length / itemsPerPage);
-  const newproduct = allProducts.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-
+  const totalPages = Math.ceil(allProducts?.length / itemsPerPage);
+  const newproduct = allProducts?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  
   const handlePrevious = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);

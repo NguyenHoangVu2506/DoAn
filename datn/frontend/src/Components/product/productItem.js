@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { addProWishList, removeFromWishList } from "../../store/actions/wishlist-actions";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { addFavoriteToLocalStorage, getFavoritesFromLocalStorage, removeFavoriteFromLocalStorage } from "../../utils";
@@ -266,15 +266,13 @@ export default function ProductItem({ product }) {
                                                     <section>
                                                         <div className="container">
                                                             <div className="row gx-2">
-                                                                <aside className="col-lg-6">
+                                                                <aside className="col-lg-5">
                                                                     <div className="border rounded-4 mb-3 d-flex justify-content-center">
                                                                         <a className="rounded-4" target="_blank" data-type="image">
                                                                             <img style={{ maxWidth: '100%', maxHeight: '100vh', margin: 'auto' }} className="rounded-4 fit" src={selectedImage} alt="product" />
                                                                         </a>
                                                                     </div>
-                                                                    <div className="d-flex justify-content-center mb-3">
-
-
+                                                                    <div className="">
                                                                         {product.product_images.map((thumb, index) => (
                                                                             <a key={index} className="border mx-1 rounded-2" target="_blank" data-type="image" onClick={() => handleSizeChange(thumb.thumb_url)}>
                                                                                 <img width="50" height="50" className="rounded-2" src={thumb.thumb_url} alt="thumb" />
@@ -282,13 +280,13 @@ export default function ProductItem({ product }) {
                                                                         ))}
                                                                     </div>
                                                                 </aside>
-                                                                <main className="col-lg-6">
+                                                                <main className="col-lg-7">
                                                                     <div className="ps-lg-2">
                                                                         <h4 className="title text-dark">
                                                                             {product.product_name}
                                                                         </h4>
-                                                                        <div className="d-flex flex-row my-3">
-                                                                            <div className="text-warning mb-1 me-2" style={{ cursor: 'pointer', color: '#f6831f ' }}>
+                                                                        <div className="d-flex flex-row my-2">
+                                                                            <div className="text-warning mb-1 me-1" style={{ cursor: 'pointer', color: '#f6831f ' }}>
                                                                                 <i className="fa fa-star" style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
                                                                                 <i className="fa fa-star" style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
                                                                                 <i className="fa fa-star" style={{ cursor: 'pointer', color: '#f6831f ' }}></i>
@@ -331,31 +329,44 @@ export default function ProductItem({ product }) {
                                                                                     ))}
                                                                                 </div>
                                                                             </div> */}
-                                                                            {product && product.product_variations.map((variation, indexVariation) => {
-                                                                                return (
-                                                                                    <div className="row mb-2">
-                                                                                        <div className="col-md-4 mb-3">
-                                                                                            <div className="d-flex flex-row" key={indexVariation}>
-                                                                                                <p class="d-none d-md-block mb-1" style={{ cursor: 'pointer', color: '#f6831f ' }}>{variation.name}</p>
-
-                                                                                                {variation.options.map((option, indexOption) => {
-                                                                                                    return (
-                                                                                                        <div key={indexOption} >
-                                                                                                            <input type="radio" class="btn btn-check" name="options" id={option} autocomplete="off"
-                                                                                                                value={indexOption} onClick={() => onChangeVariation(indexOption, indexVariation)} />
-                                                                                                            <label class={`btn ${product.product_variations[indexVariation].options[sku_tier_idx.length == 1 ? sku_tier_idx[0] : `${sku_tier_idx[0]},${sku_tier_idx[1]}`].toString() == option.toString() ? "btn-warning" : "btn-warning-outlined"}`} for={option}>{option}</label>
-
-                                                                                                            {/* <label class="btn mx-1 my-1" for={option} data-mdb-ripple-init>{option}</label> */}
-                                                                                                        </div>
-                                                                                                    )
-                                                                                                })}
-
-                                                                                            </div>
+                                                                            <div className="row mb-2">
+                                                                                {product && product.product_variations.map((variation, indexVariation) => {
+                                                                                    return (
+                                                                                        <div className="col-12 mb-3" key={indexVariation}>
+                                                                                            {/* <div className=""  style={{ flexWrap: 'wrap' }}> */}
+                                                                                                <label className="d-none d-md-block mb-1" style={{ cursor: 'pointer', color: '#f6831f' }}>{variation.name}</label>
+                                                                                                {/* <div className="d-flex flex-row align-items-center"> */}
+                                                                                                    {variation.options.map((option, indexOption) => (
+                                                                                                        // <div key={indexOption}>
+                                                                                                        <React.Fragment key={indexOption}>
+                                                                                                            <input
+                                                                                                                type="radio"
+                                                                                                                className="btn-check visually-hidden"
+                                                                                                                name={`variation_${indexVariation}`}
+                                                                                                                id={`${variation.name}_${option}`}
+                                                                                                                autoComplete="off"
+                                                                                                                value={option}
+                                                                                                                onChange={() => onChangeVariation(indexOption, indexVariation)}
+                                                                                                                style={{ display: 'none' }}
+                                                                                                            />
+                                                                                                            <label
+                                                                                                                className={`btn ${product.product_variations[indexVariation].options[sku_tier_idx.length === 1 ? sku_tier_idx[0] : `${sku_tier_idx[0]},${sku_tier_idx[1]}`] === option ? "btn-warning active" : "btn-warning"}`}
+                                                                                                                htmlFor={`${variation.name}_${option}`}
+                                                                                                                style={{ cursor: 'pointer', marginBottom: '5px', marginRight: '5px' }}
+                                                                                                            >
+                                                                                                                {option}
+                                                                                                            </label>
+                                                                                                        {/* // </div> */}
+                                                                                                        </React.Fragment>
+                                                                                                    ))}
+                                                                                                {/* </div> */}
+                                                                                            {/* </div> */}
                                                                                         </div>
-                                                                                    </div>
-                                                                                )
-                                                                            })}
 
+
+                                                                                    )
+                                                                                })}
+                                                                            </div>
 
                                                                         </div>
                                                                         <hr />
