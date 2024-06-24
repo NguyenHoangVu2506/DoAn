@@ -141,8 +141,9 @@ function ProductDetail() {
         })
     }
     console.log(sku_tier_idx)
+
     useEffect(() => {
-        if (special_offer?.special_offer_spu_list?.length > 0) {
+        if (special_offer && special_offer?.special_offer_spu_list?.length > 0) {
             special_offer.special_offer_spu_list.forEach((spu) => {
                 if (spu.product_id.toString() === productDetail.product_detail._id.toString() && spu.sku_list?.length > 0) {
                     const sku = spu.sku_list.find((item) => item?.sku_id == selected_sku._id);

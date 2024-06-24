@@ -42,7 +42,8 @@ const Categories = () => {
 
 
     return (
-            <nav class="navbar navbar-expand-lg navbar-light " style={{backgroundColor:'#fef1e6'}}>
+        <section className="">
+            <nav class="navbar navbar-expand-lg navbar-light " style={{backgroundColor:'#f6831f'}}>
                 <div class="container justify-content-center justify-content-md-between">
                     <button className="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarLeftAlignExample"
                         aria-controls="navbarLeftAlignExample" aria-expanded="false" aria-label="Toggle navigation" onClick={() => {
@@ -56,8 +57,8 @@ const Categories = () => {
                                 onMouseEnter={handleDropdownMouseEnter}
                                 onMouseLeave={handleDropdownMouseLeave}
                             >
-                                <button type="button" class="btn btn-light category-name fw-bold me-5 " style={{ cursor: 'pointer', color: '#f6831f', marginRight: '3px',backgroundColor:'#fef1e6',textTransform: "uppercase" }} >
-                                    <i class="fas fa-bars" style={{ cursor: 'pointer', color: '#f6831f', marginRight: '3px' }}></i>
+                                <button type="button" class="btn btn-light category-name fw-bold me-5 " style={{ cursor: 'pointer',borderBlockColor:'white', color: 'white', marginRight: '3px',backgroundColor:'#f6831f',textTransform: "uppercase" }} >
+                                    <i class="fas fa-bars" style={{ cursor: 'pointer', color: 'white', marginRight: '3px' }}></i>
                                  DANH MỤC
                                 </button>
 
@@ -130,6 +131,7 @@ const Categories = () => {
                 </div>
 
             </nav>
+            </section>
     );
 
 }

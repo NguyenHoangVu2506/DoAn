@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { getListBlog } from "../../../store/actions/blog-actions";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PostItem from "../../../Components/blog/postItem";
 import { getTopic } from "../../../store/actions";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +10,8 @@ export default function PostHome() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { allBlog } = useSelector((state) => state.blogReducer);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 4;
 
 
   useEffect(() => {
@@ -17,6 +19,9 @@ export default function PostHome() {
       dispatch(getListBlog({ sort: 'ctime', filter: { isPublished: true } }));
     }
   }, [allBlog]);
+
+  const totalPages = Math.ceil(allBlog?.length / itemsPerPage);
+  const blog = allBlog?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const handleSubmit = () => {
     navigate('/blog');
@@ -26,7 +31,7 @@ export default function PostHome() {
 
   return (
     // <!-- Blog -->
-    <section class="container pt-5">
+    <section class="" style={{backgroundColor:' '}}>
       <div class="container text-dark">
         <header class="mb-4 d-flex justify-content-between align-items-center">
           <h3>Bài viết mới</h3>
@@ -38,7 +43,7 @@ export default function PostHome() {
 
         <div class="row">
 
-          {allBlog && allBlog.map((blog, index) => {
+          {blog && blog.map((blog, index) => {
             return <PostHomeItem blog={blog} key={index} />
           })}
 
