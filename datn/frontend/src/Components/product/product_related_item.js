@@ -2,6 +2,7 @@ import { NumericFormat } from "react-number-format";
 import { Link } from "react-router-dom";
 
 export default function ProductRelatedItem({product}) {
+    
     return (
         <>
             <div className="d-flex mb-3">

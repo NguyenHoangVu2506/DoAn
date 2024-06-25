@@ -119,16 +119,16 @@ function Checkout() {
   return (
     <>
       <div className="bg-primary">
-        <div className="bg-2" style={{ backgroundColor: '#f6831f' }}>
+        <div className="bg-2" style={{ backgroundColor: 'white' }}>
           <div className="container py-4">
             {/* Breadcrumb */}
             <nav className="d-flex">
               <h6 className="mb-0">
-                <Link to={'/'} className="text-white-50">Home</Link>
-                <span className="text-white-50 mx-2"> - </span>
-                <Link to={'/gio-hang'} className="text-white-50">Giỏ hàng</Link>
-                <span className="text-white-50 mx-2"> - </span>
-                <Link to={'/checkout'} className="text-white"><u>Thanh toán</u></Link>
+                <Link to={'/'} className=" " style={{ color: '#f6831f'}}>Trang Chủ</Link>
+                <span className=" mx-2" style={{ color: '#f6831f'}}> - </span>
+                <Link to={'/gio-hang'} style={{ color: '#f6831f'}}>Giỏ hàng</Link>
+                <span className="mx-2" style={{ color: '#f6831f'}}> - </span>
+                <Link to={'/checkout'} style={{ color: '#f6831f'}}><u>Thanh toán</u></Link>
               </h6>
             </nav>
             {/* Breadcrumb */}

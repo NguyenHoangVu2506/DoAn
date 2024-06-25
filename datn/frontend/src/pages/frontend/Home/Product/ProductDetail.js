@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { NumericFormat } from "react-number-format";
 import ProductRelatedItem from "../../../../Components/product/product_related_item";
 import { addCart, addProWishList, removeFromWishList, productImageList, onProductDetail, getUserByID } from "../../../../store/actions";
@@ -234,14 +234,14 @@ function ProductDetail() {
     console.log(productReview)
     return (
         <>
-            <div className="bg-" style={{ backgroundColor: '#f6831f' }} >
+            <div className="bg-" style={{ backgroundColor: 'white' }} >
                 <div className="container py-4 " >
                     {/*<!-- Breadcrumb --> */}
                     <nav className="d-flex" >
                         <h6 className="mb-0">
-                            <a href="" className="text-white-50">Trang chủ</a>
-                            <span className="text-white-50 mx-2">/ </span>
-                            <a href="" className="text-white-50">Chi tiết</a>
+                            <Link href="" className="" style={{ color: '#f6831f' }}>Trang chủ</Link>
+                            <span className=" mx-2" style={{ color: '#f6831f' }}>/ </span>
+                            <Link href="" className="" style={{ color: '#f6831f' }}>Chi tiết</Link>
 
                         </h6>
                     </nav>
