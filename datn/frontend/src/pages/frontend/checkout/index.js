@@ -306,11 +306,11 @@ function Checkout() {
                   <hr />
                   <div className="d-flex justify-content-between">
                     <p className="mb-2">Tạm tính:</p>
-                    <p className="mb-2">{accounting.formatNumber(price_total_checkout, 0, ".", ",")} <span className="text-muted">đ</span></p>
+                    <p className="mb-2">{accounting.formatNumber(price_total, 0, ".", ",")} <span className="text-muted">đ</span></p>
                   </div>
                   <div className="d-flex justify-content-between">
                     <p className="mb-2">Giảm giá:</p>
-                    <p className="mb-2 text-success">{accounting.formatNumber(price_total - price_total_discount, 0, ".", ",")} <span className="text-muted">đ</span></p>
+                    <p className="mb-2 text-success">{accounting.formatNumber(price_total - price_total_checkout, 0, ".", ",")} <span className="text-muted">đ</span></p>
                   </div>
                   {/* <div className="d-flex justify-content-between">
                     <p className="mb-2">Phí vận chuyển:</p>
