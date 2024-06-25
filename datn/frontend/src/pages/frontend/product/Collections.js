@@ -4,23 +4,29 @@ import ProductListItem from "../../../Components/product/productListItem";
 import React, { useEffect, useState } from "react";
 import ProductItem from "../../../Components/product/productItem";
 import { getListBrand } from "../../../store/actions/brand-actions";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 function Collections() {
-  const { category0_slug, category1_slug, category2_slug } = useParams();
+  const { category1, category2, category3 } = useParams();
   const dispatch = useDispatch();
-  const [isList, setIsList] = useState(false)
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8;
+  const navigate=useNavigate()
+
+   const [isList, setIsList] = useState(false)
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const itemsPerPage = 8;
+  const limit = 10;
 
   const { allProducts } = useSelector((state) => state.productReducer);
   const { all_brand } = useSelector((state) => state.brandReducer);
   const { all_category } = useSelector((state) => state.categoryReducer);
   const { all_attribute } = useSelector((state) => state.attributeReducer);
 
+  const [page, setPage] = useState(1);
 
   const [categoriesParentNull, setCategoriesParentNull] = useState([])
   const [productByFilter, setProductByFilter] = useState([])
+  const [products, setProducts] = useState([])
+  const [pagedProducts, setPagedProducts] = useState([]);
 
   const [selectedBrand, setSelectedBrand] = useState([])
   const [selectedAttribute, setSelectedAttribute] = useState([])
@@ -32,16 +38,244 @@ function Collections() {
   const [attributeCollapsedStatus, setAttributeCollapsedStatus] = useState(false);
   const [priceCollapsed, setPriceCollapsed] = useState(false);
   const [ratingCollapsed, setRatingCollapsed] = useState(false);
+console.log(pagedProducts,selectedAttribute,selectedBrand,productByFilter,products,allProducts)
 
+  useEffect(() => {
+    if (!allProducts) {
+      dispatch(onAllProduct({ limit: 50, sort: 'ctime', page: 1, filter: { isPublished: true } }));
+    }
+  }, [allProducts])
 
+  React.useEffect(() => {
+    dispatch(getListBrand({ isPublished: true }))
+    dispatch(AllCategory())
+    dispatch(getAllAttribute({ isPublished: true }))
+  }, [])
   useEffect(() => {
     all_category && setCategoriesParentNull(all_category?.filter((cat) => cat.parent_id == null))
   }, [all_category])
 
+ 
+  useEffect(() => {
+    if (
+      category1 !== undefined &&
+      category2 === undefined &&
+      category3 === undefined &&
+      all_category
+        ?.slice()
+        .findIndex((item) => item.category_slug === category1) === -1
+    ) {
+      navigate('/404');
+    }
+    if (
+      category1 !== undefined &&
+      category2 !== undefined &&
+      category3 === undefined &&
+      all_category
+        ?.slice()
+        .findIndex(
+          (item) =>
+            item.parent_id ===
+            all_category
+              ?.slice()
+              .find(
+                (item) => item.category_slug === category1
+              )?._id && item.category_slug === category2
+        ) === -1
+    ) {
+      navigate('/404');
+    }
+    if (
+      category1 !== undefined &&
+      category2 !== undefined &&
+      category3 !== undefined &&
+      all_category
+        ?.slice()
+        .findIndex(
+          (item) =>
+            item.parent_id ===
+            all_category
+              ?.slice()
+              .find(
+                (subitem) =>
+                  subitem.parent_id ===
+                  all_category
+                    ?.slice()
+                    .find(
+                      (subsubitem) =>
+                        subsubitem.category_slug ===
+                        category1
+                    )?._id &&
+                  subitem.category_slug === category2
+              )?._id && item.category_slug === category3
+        ) === -1
+    ) {
+      navigate('/404');
+    }
+    setSelectedBrand([]);
+    setSelectedAttribute([]);
+    setPage(1);
+    if (
+      category1 === undefined &&
+      category2 === undefined &&
+      category3 === undefined
+    ) {
+      setProducts(allProducts);
+    }
+    if (
+      category1 !== undefined &&
+      category2 === undefined &&
+      category3 === undefined
+    ) {
+      setProducts(
+        allProducts
+          ?.slice()
+          .filter((item) =>
+            item.product_category.includes(
+              all_category?.find(
+                (item) => item.category_slug === category1
+              )?._id
+            )
+          )
+      );
+    }
+
+    if (
+      category1 !== undefined &&
+      category2 !== undefined &&
+      category3 === undefined
+    ) {
+      setProducts(
+        allProducts
+          ?.slice()
+          .filter((item) =>
+            item.product_category.includes(
+              all_category?.find(
+                (item) =>
+                  item.parent_id ===
+                  all_category?.find(
+                    (subitem) =>
+                      subitem.category_slug ===
+                      category1
+                  )?._id &&
+                  item.category_slug === category2
+              )?._id
+            )
+          )
+      );
+    }
+    if (
+      category1 !== undefined &&
+      category2 !== undefined &&
+      category3 !== undefined
+    ) {
+      setProducts(
+        allProducts
+          ?.slice()
+          .filter((item) =>
+            item.product_category.includes(
+              all_category
+                ?.slice()
+                .find(
+                  (item) =>
+                    item.parent_id ===
+                    all_category
+                      ?.slice()
+                      .find(
+                        (subitem) =>
+                          subitem.parent_id ===
+                          all_category
+                            ?.slice()
+                            .find(
+                              (
+                                subsubitem
+                              ) =>
+                                subsubitem.category_slug ===
+                                category1
+                            )?._id &&
+                          subitem.category_slug ===
+                          category2
+                      )?._id &&
+                    item.category_slug === category3
+                )?._id
+            )
+          )
+      );
+    }
+  }, [allProducts, category1, category2, category3]);
 
   useEffect(() => {
-    all_category && setCategoriesParentNull(all_category?.filter((cat) => cat.parent_id == null))
-  }, [all_category])
+    setPage(1);
+    if (selectedBrand?.length > 0 && selectedAttribute?.length > 0) {
+      setProducts(
+        products
+          ?.slice()
+          .filter(
+            (item) =>
+              selectedBrand?.includes(item.product_brand) &&
+              selectedAttribute?.some((UUID) =>
+                item.product_attributes.some((attribute) =>
+                  attribute.attribute_value.some(
+                    (subitem) => subitem.value === UUID
+                  )
+                )
+              )
+          )
+      );
+    } else {
+      setProducts(
+        products
+          ?.slice()
+          .filter((item) =>
+            selectedBrand?.includes(item.product_brand)
+          )
+      );
+    }
+
+  }, [selectedBrand]);
+
+  useEffect(() => {
+    setPage(1);
+    if (selectedAttribute?.length > 0 && selectedBrand?.length > 0) {
+      setProducts(
+        products
+          ?.slice()
+          .filter(
+            (item) =>
+              selectedAttribute.some((UUID) =>
+                item.product_attributes.some((attribute) =>
+                  attribute.attribute_value.some(
+                    (subitem) => subitem.value === UUID
+                  )
+                )
+              ) && selectedBrand.includes(item.product_brand)
+          ))
+    } else {
+      setProducts(
+        products
+          ?.slice()
+          .filter((item) =>
+            selectedAttribute.some((UUID) =>
+              item.product_attributes.some((attribute) =>
+                attribute.attribute_value.some(
+                  (subitem) => subitem.value === UUID
+                )
+              )
+            )
+          ))
+    }
+
+  }, [selectedAttribute]);
+  useEffect(() => {
+    setProductByFilter(products);
+  }, [products]);
+  useEffect(() => {
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+    setPagedProducts(productByFilter?.slice(startIndex, endIndex));
+}, [productByFilter, page]);
+
+
 
   const changeSelectedCategory = async (category) => {
   }
@@ -54,25 +288,6 @@ function Collections() {
       setSelectedBrand(selectedBrand.length > 0 && selectedBrand?.filter((brandId) => brandId != brand_id))
     }
   }
-  const loadData = async () => {
-    const filterByBrand = await allProducts?.length > 0 ? allProducts?.filter((prod) => selectedBrand.includes(prod.product_brand) === true) : []
-
-    const filterByAttribute = await allProducts?.length > 0 ? allProducts?.map(({ product_attributes }) => {
-      return product_attributes.map(({ attribute_value }) => {
-        return attribute_value.map(({ value_id }) => selectedAttribute.includes(value_id) === true)
-      })
-    }) : []
-    const arrConcat = filterByBrand.concat(...filterByAttribute)
-    // const uniqueProduct = new Set(...arrConcat)
-    console.log(arrConcat)
-    // setProductByFilter([...uniqueProduct])
-  }
-
-  useEffect(() => {
-    loadData()
-  }, [selectedBrand, selectedAttribute])
-
-
   const handleChangeAtribute = async (checked, attribute_value_id) => {
     if (checked === true) {
       setSelectedAttribute([...selectedAttribute, attribute_value_id])
@@ -105,31 +320,21 @@ function Collections() {
     setRatingCollapsed(!ratingCollapsed);
   };
 
-  useEffect(() => {
-    if (!allProducts) {
-      dispatch(onAllProduct({ limit: 50, sort: 'ctime', page: 1, filter: { isPublished: true } }));
-    }
-  }, [allProducts])
 
-  React.useEffect(() => {
-    dispatch(getListBrand({ isPublished: true }))
-    dispatch(AllCategory())
-    dispatch(getAllAttribute({ isPublished: true }))
-  }, [])
-  const totalPages = Math.ceil(allProducts?.length / itemsPerPage);
-  const newproduct = allProducts?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-  
-  const handlePrevious = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
+  // const totalPages = Math.ceil(allProducts?.length / itemsPerPage);
+  // const newproduct = allProducts?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-  const handleNext = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
+  // const handlePrevious = () => {
+  //   if (currentPage > 1) {
+  //     setCurrentPage(currentPage - 1);
+  //   }
+  // };
+
+  // const handleNext = () => {
+  //   if (currentPage < totalPages) {
+  //     setCurrentPage(currentPage + 1);
+  //   }
+  // };
 
   return (
     <>
@@ -403,7 +608,7 @@ function Collections() {
 
 
 
-                {newproduct && allProducts.length > 0 ? newproduct.map((product, index) => {
+                {pagedProducts && pagedProducts.length > 0 ? pagedProducts.map((product, index) => {
 
                   return (
                     isList === true ? (
@@ -422,7 +627,7 @@ function Collections() {
                     </div>
                   </div>
                 }
-                
+
               </div>
 
 
@@ -430,21 +635,21 @@ function Collections() {
 
 
               {/*<!-- Pagination -->*/}
-              <div className="pagination-container" style={{ display: 'flex', justifyContent: 'center' }}>
-                  <ul className="pagination">
-                    <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                      <button className="page-link" onClick={handlePrevious}>Trước</button>
+              {/* <div className="pagination-container" style={{ display: 'flex', justifyContent: 'center' }}>
+                <ul className="pagination">
+                  <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                    <button className="page-link" onClick={handlePrevious}>Trước</button>
+                  </li>
+                  {Array.from({ length: totalPages }, (_, index) => (
+                    <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
+                      <button style={{ backgroundColor: '#f6831f', color: 'white' }} className="page-link" onClick={() => setCurrentPage(index + 1)}>{index + 1}</button>
                     </li>
-                    {Array.from({ length: totalPages }, (_, index) => (
-                      <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
-                        <button style={{ backgroundColor: '#f6831f', color: 'white' }} className="page-link" onClick={() => setCurrentPage(index + 1)}>{index + 1}</button>
-                      </li>
-                    ))}
-                    <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                      <button className="page-link" onClick={handleNext} >Next</button>
-                    </li>
-                  </ul>
-                </div>
+                  ))}
+                  <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                    <button className="page-link" onClick={handleNext} >Next</button>
+                  </li>
+                </ul>
+              </div> */}
               {/*<!-- Pagination -->*/}
             </div>
           </div>

@@ -47,7 +47,7 @@ const Server = async () => {
         })
 
 
-
+console.log("paypal",process.env.CLIENT_ID)
     routes(app)
     app.use((error, req, res, next) => {
 

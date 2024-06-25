@@ -345,6 +345,7 @@ export default function UserOrder() {
                           </div>
                           <div className="col-lg-4 border-start">
                             <p className="mb-0 text-dark fw-bold">Phương thức thanh toán</p>
+                            <p>{order.order_payment}</p>
                             <em className="   m-0">
                               Tổng tiền thanh toán: <NumericFormat className='text-success fw-bold' value={order.order_checkout?.totalCheckout} displayType="text" thousandSeparator={true} decimalScale={0} id="price" suffix="đ" />
                             </em>

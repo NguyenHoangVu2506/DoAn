@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { deleteCartIdUserId, getCart, newOrder, onGetAddress, productById } from "../../../store/actions";
-import { deleteOrderFromCart, getCartFromLocalStorage, getOrderFromCart } from "../../../utils";
-import { toast } from "react-toastify";
-import { Link, useNavigate } from "react-router-dom";
-import accounting from "accounting";
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import accounting from 'accounting';
+import { toast } from 'react-toastify';
+import { PayPalButton } from 'react-paypal-button-v2';
+import { newOrder, deleteCartIdUserId } from '../../../store/actions';
+import { getOrderFromCart, getCartFromLocalStorage, deleteOrderFromCart } from '../../../utils';
 
 function Checkout() {
   const dispatch = useDispatch();
@@ -21,18 +22,17 @@ function Checkout() {
     ...inputStyle,
     height: '100px'
   };
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const { price_total, price_total_discount, price_total_promotion, price_total_checkout,
-    discountsApply = []
-  } = getOrderFromCart()
+  const { price_total, price_total_discount, price_total_promotion, price_total_checkout, discountsApply = [] } = getOrderFromCart();
 
   const { userInfo } = useSelector((state) => state.userReducer);
 
   const [shippingMethod, setShippingMethod] = useState('normal');
   const [shippingFee, setShippingFee] = useState(30000);
-  const [cart_products] = useState(getCartFromLocalStorage())
-  // const [productItems, setProductItems] = useState([]);
+  const [paymentMethod, setPaymentMethod] = useState('cod'); // State to track payment method
+  const [cart_products] = useState(getCartFromLocalStorage());
+  const [sdkReady, setSdkReady] = useState(false);
 
   const handleShippingChange = (event) => {
     const selectedShippingMethod = event.target.value;
@@ -45,37 +45,77 @@ function Checkout() {
     }
   };
 
+  const handlePaymentMethodChange = (event) => {
+    setPaymentMethod(event.target.value);
+  };
+
   const handleOrder = async () => {
-
-
-    const discounts = discountsApply.map((discount) => { return { discountId: discount._id, codeId: discount.discount_code } })
-
+    const discounts = discountsApply.map((discount) => { return { discountId: discount._id, codeId: discount.discount_code } });
 
     const new_order = await dispatch(newOrder({
-      //  cartId: cart,
       userId: userInfo._id,
       user_address: {},
       user_payment: {},
-      order_ids:
-      {
+      order_ids: {
         shop_discounts: discounts,
         item_products: cart_products
       }
-    }))
+    }));
 
     if (new_order?.payload?.status === (200 || 201)) {
-      toast.success("Đặt hàng thành công")
-      dispatch(deleteCartIdUserId({ userId: userInfo._id }))
-      deleteOrderFromCart()
-      
-      navigate('/')
+      toast.success("Đặt hàng thành công");
+      dispatch(deleteCartIdUserId({ userId: userInfo._id }));
+      deleteOrderFromCart();
+
+      navigate('/');
     } else {
-      toast.error("Đặt hàng không thành công")
-
+      toast.error("Đặt hàng không thành công");
     }
+  };
+  const addPaypalScript = async () => {
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = "https://www.paypal.com/sdk/js?client-id=AfEnMkMTk9Mp4mE6TQkrboXYlSLLZdK-golmOEr_4nRMDyHRDxmW53pWT_IsPwvZPIRkVWdw4lDbHhA4";
+    script.async = true;
+    script.onload = () => {
+      setSdkReady(true);
+    };
+    script.onerror = () => {
+      console.error("Failed to load PayPal script.");
+      setSdkReady(false);
+    };
+    document.body.appendChild(script);
+  };
 
+  useEffect(() => {
+    if (!window.paypal) {
+      addPaypalScript();
+    } else {
+      setSdkReady(true);
+    }
+  }, []);
+  const onSuccessPaypal = async (details, data) => {
+    const discounts = discountsApply.map((discount) => { return { discountId: discount._id, codeId: discount.discount_code } });
+
+    const new_order = await dispatch(newOrder({
+      userId: userInfo._id,
+      user_address: {},
+      user_payment: 'paypal',
+      order_ids: {
+        shop_discounts: discounts,
+        item_products: cart_products
+      }
+    }));
+    if (new_order?.payload?.status === (200 || 201)) {
+      toast.success("Đặt hàng thành công");
+      dispatch(deleteCartIdUserId({ userId: userInfo._id }));
+      deleteOrderFromCart();
+
+      navigate('/');
+    } else {
+      toast.error("Đặt hàng không thành công");
+    }
   }
-
   return (
     <>
       <div className="bg-primary">
@@ -98,7 +138,7 @@ function Checkout() {
       <section className="bg-light my-5">
         <div className="container">
           <div className="row">
-            {/* <!-- giỏ hàng --> */}
+            {/* Giỏ hàng */}
             <div className="col-lg-9">
               <div className="card shadow-0 border">
                 <div className="p-4">
@@ -112,8 +152,8 @@ function Checkout() {
                           className="form-control"
                           placeholder="Nhập tên"
                           style={inputStyle}
-
-                          value={userInfo.user_name} />
+                          value={userInfo.user_name}
+                        />
                       </div>
                     </div>
                     <div className="col-6 mb-3">
@@ -125,7 +165,6 @@ function Checkout() {
                           placeholder="Nhập số điện thoại"
                           style={inputStyle}
                           value={userInfo.user_phone}
-
                         />
                       </div>
                     </div>
@@ -206,11 +245,12 @@ function Checkout() {
                             type="radio"
                             name="paymentMethod"
                             id="flexRadioDefault3"
-                            checked
+                            value="cod"
+                            checked={paymentMethod === 'cod'}
+                            onChange={handlePaymentMethodChange}
                           />
                           <label className="form-check-label" htmlFor="flexRadioDefault3">
                             Thanh toán khi nhận hàng <br />
-                            <small className="text-muted">3-4 days via Fedex </small>
                           </label>
                         </div>
                       </div>
@@ -223,10 +263,12 @@ function Checkout() {
                             type="radio"
                             name="paymentMethod"
                             id="flexRadioDefault4"
+                            value="paypal"
+                            checked={paymentMethod === 'paypal'}
+                            onChange={handlePaymentMethodChange}
                           />
                           <label className="form-check-label" htmlFor="flexRadioDefault4">
-                            Thanh toán bằng momo <br />
-                            <small className="text-muted">20-30 days via post </small>
+                            Thanh toán bằng Paypal <br />
                           </label>
                         </div>
                       </div>
@@ -239,72 +281,79 @@ function Checkout() {
                             type="radio"
                             name="paymentMethod"
                             id="flexRadioDefault5"
+                            value="bank"
+                            checked={paymentMethod === 'bank'}
+                            onChange={handlePaymentMethodChange}
                           />
                           <label className="form-check-label" htmlFor="flexRadioDefault5">
-                            Thanh toán bằng Zalopay <br />
-                            <small className="text-muted">Come to our shop </small>
+                            Thanh toán qua ngân hàng <br />
                           </label>
                         </div>
                       </div>
                     </div>
                   </div>
-
+                  {/* Render PayPal button only if payment method is PayPal */}
                 </div>
               </div>
             </div>
-            {/* <!-- giỏ hàng --> */}
-            {/* <!-- tóm tắt --> */}
+            {/* Giỏ hàng */}
+
+            {/* Tóm tắt */}
             <div className="col-lg-3">
               <div className="card shadow-0 border">
-                <div className="card-body">
+                <div className="p-4">
+                  <h5 className="card-title mb-3">Tóm tắt</h5>
+                  <hr />
                   <div className="d-flex justify-content-between">
-                    <p className="mb-2">Tổng giá:</p>
-                    <p className="mb-2">{accounting.formatNumber(price_total, 0, ".", ",")} <span className="text-muted">đ</span></p>
+                    <p className="mb-2">Tạm tính:</p>
+                    <p className="mb-2">{accounting.formatNumber(price_total_checkout, 0, ".", ",")} <span className="text-muted">đ</span></p>
                   </div>
                   <div className="d-flex justify-content-between">
                     <p className="mb-2">Giảm giá:</p>
-                    <p className="mb-2 text-success">{accounting.formatNumber(price_total_promotion, 0, ".", ",")} <span className="text-muted">đ</span></p>
+                    <p className="mb-2 text-success">{accounting.formatNumber(price_total - price_total_discount, 0, ".", ",")} <span className="text-muted">đ</span></p>
                   </div>
+                  {/* <div className="d-flex justify-content-between">
+                    <p className="mb-2">Phí vận chuyển:</p>
+                    <p className="mb-2">{accounting.formatNumber(shippingFee, 0, ".", ",")} <span className="text-muted">đ</span></p>
+                  </div> */}
                   <div className="d-flex justify-content-between">
-                    <p className="mb-2">Mã giảm giá giảm:</p>
-                    <p className="mb-2 text-success">{accounting.formatNumber(price_total_discount, 0, ".", ",")} <span className="text-muted">đ</span></p>
+                    <p className="mb-2">Tổng thanh toán:</p>
+                    <p className="mb-2 fw-bold h6">{accounting.formatNumber(price_total_checkout , 0, ".", ",")} <span className="text-muted">đ</span></p>
                   </div>
-                  <hr />
-                  <div className="d-flex justify-content-between">
-                    <p className="mb-2">Thành Tiền:</p>
-                    <p className="mb-2 fw-bold">{accounting.formatNumber(price_total_checkout, 0, ".", ",")} <span className="text-muted">đ</span></p>
-                  </div>
+
                   <div className="mt-3">
-                    {price_total > 0 ? (
-                      <button
-                        disabled={false}
-                        className="btn btn-success w-100 shadow-0 mb-2"
-                        style={{ backgroundColor: '#f6831f ' }}
-                        onClick={() => handleOrder()}
-                      >
-                        Thanh toán
-                      </button>
+                    {paymentMethod === 'paypal' ? (
+                      sdkReady ? (
+                        <div className="row mb-3">
+                          <div className="col-lg-12 mb-3">
+                            <div className="h-100 border rounded-3">
+                              <div className="p-3">
+                                <PayPalButton
+                                  amount={price_total_checkout}
+                                  onSuccess={onSuccessPaypal}
+                                  onError={() => {
+                                    toast.error("Thanh toan không thành công");
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="alert alert-danger">Failed to load PayPal script. Please try again later.</div>
+                      )
                     ) : (
-                      <button
-                        disabled={true}
-                        className="btn btn-success w-100 shadow-0 mb-2"
-
-                      >
-                        Thanh toán
-                      </button>
+                      <button onClick={handleOrder} className="btn btn-success w-100 shadow-0 mb-2"> Đặt hàng </button>
                     )}
-
+                    <Link to={'/gio-hang'} className="btn btn-light w-100 border mt-2">Trở lại giỏ hàng</Link>
                   </div>
                 </div>
               </div>
             </div>
-            {/* <!-- tóm tắt --> */}
+            {/* Tóm tắt */}
           </div>
         </div>
       </section>
-
-
-
     </>
   );
 }
