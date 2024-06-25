@@ -57,8 +57,17 @@ export default function Cart() {
         setPrice_total_checkout(applyDiscount?.payload.metaData.checkout_order?.totalCheckout)
     }
     useEffect(() => {
-        cart?.cart_products?.length > 0 && loadPrice()
-    }, [cart])
+        if (cart?.cart_products?.length > 0) {
+            console.log('Cart has products, loading prices...');
+            loadPrice();
+        } else {
+            console.log('Cart is empty, resetting prices...');
+            setPriceTotal(0);
+            setPrice_total_promotion(0);
+            setPriceTotalDiscount(0);
+            setPrice_total_checkout(0);
+        }
+    }, [cart]);
 
     const handleApplyDiscount = () => {
         onSelectedDiscount(discountCodeInput);
@@ -134,6 +143,7 @@ export default function Cart() {
             setPrice_total_promotion(0)
             setAppliedDiscountCode(null); // Bỏ lưu mã giảm giá đã áp dụng khi không có mã nào được chọn
         }
+        
     };
 
     return (
@@ -147,10 +157,32 @@ export default function Cart() {
                             <div className="card border shadow-0">
                                 <div className="m-4">
                                     <h4 className="card-title mb-4">Giỏ hàng của bạn</h4>
-                                    {cart?.cart_products?.length > 0 && cart?.cart_products.map((product, index) => {
-                                        return <CartItem product={product} special_offer_today={special_offer_today}
-                                            update={updateItemFromCart} key={index} />;
-                                    })}
+                                    {cart?.cart_products?.length > 0 ? (
+                                        cart.cart_products.map((product, index) => (
+                                            <CartItem
+                                                product={product}
+                                                special_offer_today={special_offer_today}
+                                                update={updateItemFromCart}
+                                                key={index}
+                                            />
+                                        ))
+                                    ) : (
+                                        <div className="row" style={{ height: "300px" }}>
+                                            <div className="col-md-4"></div>
+                                            <div className="col-md-4 text-center d-flex flex-column justify-content-center align-items-center">
+                                                <h6 className="">Không có sản phẩm nào trong giỏ hàng !</h6>
+                                                <br />
+                                                <Link
+                                                    className="btn btn-light"
+                                                    style={{ backgroundColor: '#f6831f', color: 'white' }}
+                                                    to={`/`}
+                                                >
+                                                    Về trang chủ
+                                                </Link>
+                                            </div>
+                                            <div className="col-md-4"></div>
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="border-top pt-4 mx-4 mb-4">
                                     <div className="row">
@@ -226,7 +258,7 @@ export default function Cart() {
                                         ) : (
                                             <button
                                                 disabled={true}
-                                                className="btn btn-success w-100 shadow-0 mb-2"
+                                                className="btn btn-success w-100 shadow-0 mb-2" style={{ backgroundColor: '#f6831f', color: 'white' }}
                                             >
                                                 Thanh toán
                                             </button>

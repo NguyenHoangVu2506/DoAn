@@ -60,6 +60,7 @@ function ProductDetail() {
     };
 
     ////comment
+
     const renderStars = (rating) => {
         const fullStars = Math.floor(rating);
         const halfStars = rating % 1 !== 0 ? 1 : 0;
@@ -73,14 +74,18 @@ function ProductDetail() {
             </>
         );
     };
+    console.log(productReview,'aaaaaaaaaaaaaaaaaaaa')
+    // const review = prod
 
     const calculateAverageRating = () => {
-        if (getComentProduct && getComentProduct.length > 0) {
-            const totalRatings = getComentProduct.reduce((acc, comment) => acc + comment.comment_rating, 0);
-            return (totalRatings / getComentProduct.length).toFixed(1);
+        if (productReview && productReview.length > 0) {
+            const totalRatings = productReview.reduce((acc, comment) => acc + comment.comment_rating, 0);
+
+            return (totalRatings / productReview.length).toFixed(1);
         }
         return 0; // Default to 0 if there are no comments
     };
+    // console.log("rating",calculateAverageRating)
     ////addtoCart
     const handleAddToCart = async (userId, { productId, sku_id = null, quantity }) => {
         console.log("productId, sku_id, quantity", productId, sku_id, quantity, userId)
@@ -527,7 +532,7 @@ function ProductDetail() {
                                                 <span className="text-success"> {productReview.length} đánh giá</span>
 
                                                 {productReview && productReview.map((comment, index) => {
-                                                    console.log(comment.user)
+                                                    console.log(comment.comment_rating)
                                                     return (
                                                         <div class="card mb-3" key={index}>
                                                             <div class="card-body">
