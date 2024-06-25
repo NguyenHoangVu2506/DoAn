@@ -45,7 +45,7 @@ function Blog() {
 
   return (
     <body>
-      <div className="pt-2" style={{ backgroundColor: 'white' }} >
+      <div className="" style={{ backgroundColor: 'white' }} >
         <div className="container py-4">
           <nav className="d-flex">
             <h6 className="mb-0">

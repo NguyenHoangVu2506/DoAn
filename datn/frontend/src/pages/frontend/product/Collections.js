@@ -9,9 +9,9 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 function Collections() {
   const { category1, category2, category3 } = useParams();
   const dispatch = useDispatch();
-  const navigate=useNavigate()
+  const navigate = useNavigate()
 
-   const [isList, setIsList] = useState(false)
+  const [isList, setIsList] = useState(false)
   // const [currentPage, setCurrentPage] = useState(1);
   // const itemsPerPage = 8;
   const limit = 10;
@@ -38,7 +38,7 @@ function Collections() {
   const [attributeCollapsedStatus, setAttributeCollapsedStatus] = useState(false);
   const [priceCollapsed, setPriceCollapsed] = useState(false);
   const [ratingCollapsed, setRatingCollapsed] = useState(false);
-console.log(pagedProducts,selectedAttribute,selectedBrand,productByFilter,products,allProducts)
+  console.log(pagedProducts, selectedAttribute, selectedBrand, productByFilter, products, allProducts)
 
   useEffect(() => {
     if (!allProducts) {
@@ -55,7 +55,7 @@ console.log(pagedProducts,selectedAttribute,selectedBrand,productByFilter,produc
     all_category && setCategoriesParentNull(all_category?.filter((cat) => cat.parent_id == null))
   }, [all_category])
 
- 
+
   useEffect(() => {
     if (
       category1 !== undefined &&
@@ -273,7 +273,7 @@ console.log(pagedProducts,selectedAttribute,selectedBrand,productByFilter,produc
     const startIndex = (page - 1) * limit;
     const endIndex = startIndex + limit;
     setPagedProducts(productByFilter?.slice(startIndex, endIndex));
-}, [productByFilter, page]);
+  }, [productByFilter, page]);
 
 
 
@@ -442,27 +442,25 @@ console.log(pagedProducts,selectedAttribute,selectedBrand,productByFilter,produc
                       id="panelsStayOpen-collapseThree"
                       className={`accordion-collapse collapse ${priceCollapsed ? "show" : ""}`}
                       aria-labelledby="headingThree"
-                    >                      <div class="accordion-body">
-                        <div class="range">
-                          <input type="range" class="form-range" id="customRange1" />
-                        </div>
+                    >                      
+                    <div class="accordion-body">
                         <div class="row mb-3">
                           <div class="col-6">
-                            <p class="mb-0">
+                            {/* <p class="mb-0">
                               Min
-                            </p>
+                            </p> */}
                             <div class="form-outline">
-                              <input type="number" id="typeNumber" class="form-control" />
-                              <label class="form-label" for="typeNumber">$0</label>
+                              <input type="number" id="typeNumber" class="form-control border-secondary" />
+                              <label class="form-label border-secondary" for="typeNumber">0</label>
                             </div>
                           </div>
                           <div class="col-6">
-                            <p class="mb-0">
+                            {/* <p class="mb-0">
                               Max
-                            </p>
+                            </p> */}
                             <div class="form-outline">
-                              <input type="number" id="typeNumber" class="form-control" />
-                              <label class="form-label" for="typeNumber">$1,0000</label>
+                              <input type="number" id="typeNumber" class="form-control border-secondary" />
+                              <label class="form-label border-secondary" for="typeNumber">1,0000</label>
                             </div>
                           </div>
                         </div>
@@ -595,21 +593,17 @@ console.log(pagedProducts,selectedAttribute,selectedBrand,productByFilter,produc
 
                   <div class="btn-group shadow-0 border">
                     <button onClick={() => setIsList(true)} class="btn btn-light" title="List view">
-                      <i class="fa fa-bars fa-lg"></i>
+                      <i class="fa fa-bars fa-lg" style={{ color: '#f6831f' }}></i>
                     </button>
                     <button onClick={() => setIsList(false)} class="btn btn-light active" title="Grid view">
-                      <i class="fa fa-th fa-lg"></i>
+                      <i class="fa fa-th fa-lg" style={{ color: '#f6831f' }}></i>
                     </button>
                   </div>
                 </div>
               </header>
 
               <div class="row justify-content-start mb-3">
-
-
-
                 {pagedProducts && pagedProducts.length > 0 ? pagedProducts.map((product, index) => {
-
                   return (
                     isList === true ? (
                       <ProductListItem product={product} key={index} />
