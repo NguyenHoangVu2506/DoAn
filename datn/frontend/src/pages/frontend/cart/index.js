@@ -153,6 +153,22 @@ export default function Cart() {
     };
     return (
         <>
+            <div className="bg-primary">
+                <div className="bg-2" style={{ backgroundColor: 'white' }}>
+                    <div className="container py-4">
+                        {/* Breadcrumb */}
+                        <nav className="d-flex">
+                            <h6 className="mb-0">
+                                <Link to={'/'} className=" " style={{ color: '#f6831f' }}>Trang Chủ</Link>
+                                <span className=" mx-2" style={{ color: '#f6831f' }}> - </span>
+                                <Link to={'/gio-hang'} style={{ color: '#f6831f' }}><u>Giỏ hàng</u></Link>
+                            </h6>
+                        </nav>
+                        {/* Breadcrumb */}
+                    </div>
+                </div>
+            </div>
+
             {/* <!-- giỏ hàng + tóm tắt --> */}
             <section className="bg-light my-5">
                 <div className="container">
@@ -288,7 +304,32 @@ export default function Cart() {
                     <header className="mb-4">
                         <h3>Sản phẩm đề xuất</h3>
                     </header>
-                    <div className="row">{/* Hiển thị các sản phẩm đề xuất ở đây */}</div>
+                    <div className="row">{/* Hiển thị các sản phẩm đề xuất ở đây */}
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                            <div class="card px-4 border shadow-0 mb-4 mb-lg-0">
+                                <div class="mask px-2" style={{ height: '50px' }}>
+                                    <div class="d-flex justify-content-between">
+                                        <h6><span class="badge bg-danger pt-1 mt-3 ms-2">New</span></h6>
+                                        <a href="#"><i class="fas fa-heart text-primary fa-lg float-end pt-3 m-2"></i></a>
+                                    </div>
+                                </div>
+                                <a href="#" class="">
+                                    <img src="https://www.guardian.com.vn/media/catalog/product/cache/3965315a10862e276fd3fdea4a2f2bdf/t/h/thay_doi_bao_bi__5__bb53fcaec552445ab730654cec143286_x0qflobuasj2qemd.png" class="card-img-top rounded-2" />
+                                </a>
+                                <div class="card-body d-flex flex-column pt-3 border-top">
+                                    <a href="#" class="nav-link">Gaming Headset with Mic</a>
+                                    <div class="price-wrap mb-2">
+                                        <strong class="">$18.95</strong>
+                                        <del class="">$24.99</del>
+                                    </div>
+                                    <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
+                                        <a href="#" class="btn btn-outline-primary w-100">Add to cart</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </section>
             {/* <!-- Sản phẩm đề xuất --> */}

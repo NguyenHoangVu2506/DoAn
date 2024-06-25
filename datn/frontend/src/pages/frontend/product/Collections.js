@@ -38,6 +38,7 @@ function Collections() {
   const [attributeCollapsedStatus, setAttributeCollapsedStatus] = useState(false);
   const [priceCollapsed, setPriceCollapsed] = useState(false);
   const [ratingCollapsed, setRatingCollapsed] = useState(false);
+  
   console.log(pagedProducts, selectedAttribute, selectedBrand, productByFilter, products, allProducts)
 
   useEffect(() => {
