@@ -17,7 +17,7 @@ export default function Wishlist() {
     const handleSubmit = async () => {
         try {
             await dispatch(onLogout({}));
-            toast.success('logout success');
+            toast.success('Đăng xuất thành công');
             navigate('/');
         } catch (error) {
             console.error(error);
@@ -60,13 +60,13 @@ export default function Wishlist() {
     return (
         <>
             <div className="bg-primary">
-                <div className="bg-2" style={{ backgroundColor: '#f6831f' }}>
+                <div className="bg-2" style={{ backgroundColor: 'white' }}>
                     <div className="container py-4">
                         <nav className="d-flex">
                             <h6 className="mb-0">
-                                <Link to="/" className="text-white">Trang chủ</Link>
-                                <span className="text-white mx-2">/ </span>
-                                <Link to="/account" className="text-white">Quản lý tài khoản</Link>
+                                <Link to="/" style={{ color: '#f6831f' }}>Trang chủ</Link>
+                                <span className=" mx-2" style={{ color: '#f6831f' }}>/ </span>
+                                <Link to="/wish-list" style={{ color: '#f6831f' }}>Yêu thích</Link>
                             </h6>
                         </nav>
                     </div>

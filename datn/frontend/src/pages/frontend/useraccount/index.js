@@ -132,14 +132,14 @@ export default function UserAccount() {
   return (
     <>
       <div class="bg-primary">
-        <div className="bg-" style={{ backgroundColor: '#f6831f' }} >
+        <div className="bg-" style={{ backgroundColor: 'white' }} >
           <div className="container py-4 " >
             {/*<!-- Breadcrumb --> */}
             <nav className="d-flex" >
               <h6 className="mb-0">
-                <a href="" className="text-white">Trang chủ</a>
-                <span className="text-white mx-2">/ </span>
-                <a href="" className="text-white">Chi tiết</a>
+                <Link to="/" style={{ color: '#f6831f' }}>Trang chủ</Link>
+                <span className=" mx-2" style={{ color: '#f6831f' }}>/ </span>
+                <Link to="/profile" style={{ color: '#f6831f' }}>Quản lý tài khoản</Link>
 
               </h6>
             </nav>

@@ -45,13 +45,13 @@ function Blog() {
 
   return (
     <body>
-      <div className="bg-" style={{ backgroundColor: '#f6831f' }} >
+      <div className="pt-2" style={{ backgroundColor: 'white' }} >
         <div className="container py-4">
           <nav className="d-flex">
             <h6 className="mb-0">
-              <Link to="/" className="text-white">Trang chủ</Link>
-              <span className="text-white-50 mx-2">/ </span>
-              <Link to="/blog" className="text-white">Tin Tức</Link>
+              <Link to="/" style={{ color: '#f6831f' }}>Trang chủ</Link>
+              <span className=" mx-2" style={{ color: '#f6831f' }}> / </span>
+              <Link to="/blog" style={{ color: '#f6831f' }}>Tin Tức</Link>
             </h6>
           </nav>
         </div>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { newContact } from "../../../store/actions";
 import { toast } from 'react-toastify';
 import { MDBBtn, MDBCardText, MDBCol, MDBInput, MDBRow, MDBTextArea, MDBValidationItem } from "mdb-react-ui-kit";
@@ -41,14 +41,14 @@ export default function Contact() {
 
     return (
         <section class="Contact">
-            <div className="bg-" style={{ backgroundColor: '#f6831f' }} >
+            <div className="bg-" style={{ backgroundColor: 'white' }} >
                 <div className="container py-4 " >
                     {/*<!-- Breadcrumb --> */}
                     <nav className="d-flex" >
                         <h6 className="mb-0">
-                            <a href="" className="text-white">Trang chủ</a>
-                            <span className="text-white-50 mx-2">/ </span>
-                            <a href="" className="text-white">Liên Hệ</a>
+                            <Link to="/" style={{ color: '#f6831f' }}>Trang chủ</Link>
+                            <span className=" mx-2" style={{ color: '#f6831f' }}> / </span>
+                            <Link to="/lien-he"style={{ color: '#f6831f' }}>Liên Hệ</Link>
 
                         </h6>
                     </nav>

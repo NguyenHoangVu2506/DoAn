@@ -31,7 +31,7 @@ export default function PostHome() {
 
   return (
     // <!-- Blog -->
-    <section class="" style={{backgroundColor:' '}}>
+    <section class="pt-3" style={{backgroundColor:' '}}>
       <div class="container text-dark">
         <header class="mb-4 d-flex justify-content-between align-items-center">
           <h3>Bài viết mới</h3>

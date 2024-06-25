@@ -120,13 +120,13 @@ export default function UserOrder() {
   return (
     <>
       <div className="bg-primary">
-        <div className="bg-2" style={{ backgroundColor: '#f6831f' }}>
+        <div className="bg-2" style={{ backgroundColor: 'white' }}>
           <div className="container py-4">
-            <nav className="d-flex">
+            <nav className="d-flex" >
               <h6 className="mb-0">
-                <a href="/" className="text-white">Trang chủ</a>
-                <span className="text-white mx-2">/ </span>
-                <a href="/account" className="text-white">Quản lý tài khoản</a>
+                <Link href="/" style={{ color: '#f6831f' }}>Trang chủ</Link>
+                <span className=" mx-2" style={{ color: '#f6831f' }}>/ </span>
+                <Link href="/userorder" style={{ color: '#f6831f' }}>Đơn hàng</Link>
               </h6>
             </nav>
           </div>
