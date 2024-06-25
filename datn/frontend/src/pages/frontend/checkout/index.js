@@ -54,7 +54,7 @@ function Checkout() {
 
     const new_order = await dispatch(newOrder({
       userId: userInfo._id,
-      user_address: {},
+      user_address:userInfo.user_email,
       user_payment: {},
       order_ids: {
         shop_discounts: discounts,
