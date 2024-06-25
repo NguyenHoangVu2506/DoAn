@@ -301,7 +301,7 @@ function Checkout() {
             {/* Tóm tắt */}
             <div className="col-lg-3">
               <div className="card shadow-0 border">
-                <div className="p-4">
+                <div className="p-2">
                   <h5 className="card-title mb-3">Tóm tắt</h5>
                   <hr />
                   <div className="d-flex justify-content-between">
@@ -321,19 +321,21 @@ function Checkout() {
                     <p className="mb-2 fw-bold h6">{accounting.formatNumber(price_total_checkout , 0, ".", ",")} <span className="text-muted">đ</span></p>
                   </div>
 
-                  <div className="mt-3">
+                  <div className="mt-1">
                     {paymentMethod === 'paypal' ? (
                       sdkReady ? (
-                        <div className="row mb-3">
-                          <div className="col-lg-12 mb-3">
+                        <div className="row mb-2">
+                          <div className="col-lg-12">
                             <div className="h-100 border rounded-3">
-                              <div className="p-3">
+                              <div className="p-3 w-100 "  style={{width:'90%'}}>
                                 <PayPalButton
+                               
                                   amount={price_total_checkout}
                                   onSuccess={onSuccessPaypal}
                                   onError={() => {
                                     toast.error("Thanh toan không thành công");
                                   }}
+                                 
                                 />
                               </div>
                             </div>

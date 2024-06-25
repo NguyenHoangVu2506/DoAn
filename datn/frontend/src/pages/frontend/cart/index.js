@@ -149,7 +149,7 @@ export default function Cart() {
     const isDiscountApplicable = (discount) => {
         if (discount.discount_applies_to === 'all') return true;
         const applicableProductIds = discount.discount_product_ids || [];
-        return cart.cart_products.some(product => applicableProductIds.includes(product.productId));
+        return cart?.cart_products.some(product => applicableProductIds.includes(product.productId));
     };
     return (
         <>
