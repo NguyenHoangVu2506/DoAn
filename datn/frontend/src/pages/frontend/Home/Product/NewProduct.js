@@ -3,6 +3,8 @@ import { onAllProduct } from "../../../../store/actions";
 import { useEffect, useState } from "react";
 import ProductItem from "../../../../Components/product/productItem";
 import { Link } from "react-router-dom";
+import SaleProduct from "./SaleProduct";
+
 
 export default function NewProduct() {
     const dispatch = useDispatch();
@@ -38,12 +40,13 @@ export default function NewProduct() {
     };
 
     return (
-        <section>
-            <div className="container my-5">
+        <section   >
+            <div style={{ background: '#faba82 linear-gradient(180deg, #fff3ea 0%, #ffd6b2 100%)' }}>
+            <div className="container pt-3 my-5">
                 <header className="mb-4">
-                    <div className="container">
+                    <div className="container " >
                         <h3>Sản phẩm mới</h3>
-                        <Link to={"/collections/"}>
+                        {/* <Link to={"/collections/"}>
                             <button
                                 type="button"
                                 className="btn btn-rounded mr-2 left"
@@ -52,14 +55,30 @@ export default function NewProduct() {
                             >
                                 Xem Thêm
                             </button>
-                        </Link>
+                        </Link> */}
                     </div>
                 </header>
-                <div className="row">
+                <div className=" row justify-content-center">
+                    <div className="row ">
                     {newproduct && newproduct.map((product, index) => (
                         <ProductItem product={product} key={index} />
                     ))}
+                    </div>
                 </div>
+                <div className="container justify-content-center text-center pt-2 pb-2">
+            <Link to={"/collections/"}>
+                            <button
+                                type="button"
+                                className="btn btn-rounded"
+                                style={{ backgroundColor: 'white', color: '#f6831f' }}
+                                data-mdb-ripple-init
+                            >
+                                Xem Thêm
+                            </button>
+                        </Link>
+            </div>
+
+
                 {/* <div className="pagination-container" style={{ display: 'flex', justifyContent: 'center' }}>
                     <ul className="pagination">
                         <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
@@ -76,6 +95,55 @@ export default function NewProduct() {
                     </ul>
                 </div> */}
             </div>
+
+            </div>
+            <div style={{ background: '#ffd6b2 linear-gradient(180deg, #fff3ea 0%, #ffd6b2 100%)' }}>
+            <div className=" container pt-3" >
+                <header className="mb-4">
+                    <div className="container text-center" >
+                        <h3>Sản Phẩm Khuyến Mãi</h3>
+                    </div>
+                </header>
+                <div className="row justify-content-center">
+                {allProducts ? ( (() => {
+                        const listSale = allProducts[0]?.special_offer?.special_offer_spu_list;
+                        const saleProducts = allProducts?.slice()?.filter((item) => item._id ===
+                                    listSale
+                                        ?.slice()
+                                        ?.find((subitem) => subitem?.product_id === item._id)?.product_id
+                            );
+                            console.log("saleProducts",saleProducts)
+
+                        if (saleProducts?.length > 0 ) {
+                                return  <SaleProduct products={saleProducts} />                            
+                        } else {
+                            return '';
+                        }
+                        
+                    })()
+                ) : (
+                    <></>
+                )}
+                </div>
+            </div>
+            <div className="container justify-content-center text-center pt-2 pb-2">
+            <Link to={"/collections/"}>
+                            <button
+                                type="button"
+                                className="btn btn-rounded"
+                                style={{ backgroundColor: 'white', color: '#f6831f' }}
+                                data-mdb-ripple-init
+                            >
+                                Xem Thêm
+                            </button>
+                        </Link>
+            </div>
+
+            </div>
+
+
+
+
         </section>
     );
 }

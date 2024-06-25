@@ -25,9 +25,9 @@ export default function Menu() {
                 {all_menu && all_menu.map((menu, index) => {
                     return (
                         <>
-                            <li class="category-name fw-bold  me-5 " style={{ textTransform: "uppercase" }}>
+                            <li class="category-name fw-bold text-light  me-5 " style={{ textTransform: "uppercase" }}>
                                 <Link to={menu.menu_link} className=" category-name fw-bold " >
-                                  <p style={{color: '#f6831f'}} >{menu.menu_name}</p> 
+                                  <p style={{color: 'white'}} >{menu.menu_name}</p> 
                                 </Link>
                             </li>
                         </>

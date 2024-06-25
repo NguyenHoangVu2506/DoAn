@@ -28,8 +28,8 @@ export default function Slider() {
   
 
   return (
-    <section className="pt-3">
-      <div className="container">
+    <section className="">
+      <div className="">
         <div className="row gx-3">
           <main className="col-lg-12 ">
             <Carousel autoplay class="card-banner p-4 bg-primary ">

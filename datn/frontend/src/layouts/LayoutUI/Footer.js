@@ -25,7 +25,7 @@ export default function Footer({ }) {
     borderRadius: '200px'
   };
   return (
-    <MDBFooter className='text-center text-lg-start text-light' style={{ backgroundColor: '#f6831f' }}>
+    <MDBFooter className='text-center text-lg-start text-light fw-bold' style={{ backgroundColor: '#f6831f'  }}>
       {info &&
         <section className='border-top'>
           <MDBContainer className='text-center text-md-start mt-5'>
