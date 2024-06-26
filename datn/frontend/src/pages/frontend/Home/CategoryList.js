@@ -25,6 +25,7 @@ export default function CategoryList({ category_parent, all_product_category, al
   useEffect(() => {
     selectedCategory && setProductByCategory(all_product_category?.filter((product) => product.product_category.includes(selectedCategory._id)))
   }, [selectedCategory]);
+  
   const totalPages = Math.ceil(productByCategory.length / itemsPerPage);
   const productcate = productByCategory.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 

@@ -305,14 +305,16 @@ class CheckoutService {
         return newOrder
     }
 
-    static async findOrderByUser({ user_id }) {
+    static async findOrderByUser({ sort, user_id }) {
+        const sortBy = sort === 'ctime' ? { _id: -1 } : { _id: 1 }
         const Order = await order.find({
             order_userId: user_id
-        })
+        }).sort(sortBy)
         return Order
     }
-    static async findAllOrder() {
-        const Order = await order.find()
+    static async findAllOrder({sort}) {
+        const sortBy = sort === 'ctime' ? { _id: -1 } : { _id: 1 }
+        const Order = await order.find().sort(sortBy)
         return Order
     }
     static async updateOrderStatusByOrder({order_id, order_status}) {

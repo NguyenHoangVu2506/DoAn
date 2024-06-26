@@ -5,6 +5,8 @@ import React, { useEffect, useState } from "react";
 import ProductItem from "../../../Components/product/productItem";
 import { getListBrand } from "../../../store/actions/brand-actions";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import SaleProduct from "../Home/Product/SaleProduct";
+import { all } from "axios";
 
 function Collections() {
   const { category1, category2, category3 } = useParams();
@@ -12,6 +14,8 @@ function Collections() {
   const navigate = useNavigate()
 
   const [isList, setIsList] = useState(false)
+  //
+  const [isOption, setOption] = useState(false)
   // const [currentPage, setCurrentPage] = useState(1);
   // const itemsPerPage = 8;
   const limit = 10;
@@ -38,8 +42,16 @@ function Collections() {
   const [attributeCollapsedStatus, setAttributeCollapsedStatus] = useState(false);
   const [priceCollapsed, setPriceCollapsed] = useState(false);
   const [ratingCollapsed, setRatingCollapsed] = useState(false);
-  
+
   console.log(pagedProducts, selectedAttribute, selectedBrand, productByFilter, products, allProducts)
+
+
+  const listSale =allProducts&& allProducts[0]?.special_offer?.special_offer_spu_list;
+  const saleProducts = allProducts?.slice()?.filter((item) => item._id ===
+    listSale
+      ?.slice()
+      ?.find((subitem) => subitem?.product_id === item._id)?.product_id
+  );
 
   useEffect(() => {
     if (!allProducts) {
@@ -52,6 +64,7 @@ function Collections() {
     dispatch(AllCategory())
     dispatch(getAllAttribute({ isPublished: true }))
   }, [])
+
   useEffect(() => {
     all_category && setCategoriesParentNull(all_category?.filter((cat) => cat.parent_id == null))
   }, [all_category])
@@ -277,7 +290,15 @@ function Collections() {
   }, [productByFilter, page]);
 
 
+  useEffect(()=>{
+    if (saleProducts?.length > 0) {
+      setOption(true)
 
+    } else {
+     setOption(false)
+    }
+
+  })
   const changeSelectedCategory = async (category) => {
   }
   const handleChangeBrand = async (checked, brand_id) => {
@@ -443,8 +464,8 @@ function Collections() {
                       id="panelsStayOpen-collapseThree"
                       className={`accordion-collapse collapse ${priceCollapsed ? "show" : ""}`}
                       aria-labelledby="headingThree"
-                    >                      
-                    <div class="accordion-body">
+                    >
+                      <div class="accordion-body">
                         <div class="row mb-3">
                           <div class="col-6">
                             {/* <p class="mb-0">
@@ -591,6 +612,12 @@ function Collections() {
 
               <header class="d-sm-flex align-items-center border-bottom mb-4 pb-3">
                 <div class="ms-auto">
+                  <select class="form-select d-inline-block w-auto border pt-1">
+                    <option onClick={()=>setOption(false)} value="0">Tất Cả</option>
+                    <option onClick={() => setOption(true)} value="1">Khuyến Mãi</option>
+                    {/* <option value="2">High rated</option>
+                    <option value="3">Randomly</option> */}
+                  </select>
 
                   <div class="btn-group shadow-0 border">
                     <button onClick={() => setIsList(true)} class="btn btn-light" title="List view">
@@ -604,7 +631,11 @@ function Collections() {
               </header>
 
               <div class="row justify-content-start mb-3">
-                {pagedProducts && pagedProducts.length > 0 ? pagedProducts.map((product, index) => {
+                
+
+
+
+                 {allProducts && allProducts.length > 0 ? allProducts.map((product, index) => {
                   return (
                     isList === true ? (
                       <ProductListItem product={product} key={index} />
@@ -622,6 +653,7 @@ function Collections() {
                     </div>
                   </div>
                 }
+
 
               </div>
 

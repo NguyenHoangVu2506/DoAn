@@ -341,7 +341,7 @@ export default function ProductItem({ product }) {
                                                                                                         <React.Fragment key={indexOption}>
                                                                                                             <input
                                                                                                                 type="radio"
-                                                                                                                className="btn-check visually-hidden"
+                                                                                                                className="btn-check"
                                                                                                                 name={`variation_${indexVariation}`}
                                                                                                                 id={`${variation.name}_${option}`}
                                                                                                                 autoComplete="off"
@@ -350,7 +350,7 @@ export default function ProductItem({ product }) {
                                                                                                                 style={{ display: 'none' }}
                                                                                                             />
                                                                                                             <label
-                                                                                                                className={`btn ${product.product_variations[indexVariation].options[sku_tier_idx.length === 1 ? sku_tier_idx[0] : `${sku_tier_idx[0]},${sku_tier_idx[1]}`] === option ? "btn-warning active" : "btn-warning"}`}
+                                                                                                                className={`btn ${product.product_variations[indexVariation].options[sku_tier_idx.length === 1 ? sku_tier_idx[0] : `${sku_tier_idx[0]},${sku_tier_idx[1]}`] === option ? "btn-warning" : "btn-warning-outlined"}`}
                                                                                                                 htmlFor={`${variation.name}_${option}`}
                                                                                                                 style={{ cursor: 'pointer', marginBottom: '5px', marginRight: '5px' }}
                                                                                                             >

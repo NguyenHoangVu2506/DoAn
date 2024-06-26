@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 export default function SaleProduct({ products }) {
     const dispatch = useDispatch();
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 4;
+    const itemsPerPage = 8;
 
     const { allProducts } = useSelector((state) => state.productReducer);
 

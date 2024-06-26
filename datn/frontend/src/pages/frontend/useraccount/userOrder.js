@@ -87,7 +87,7 @@ export default function UserOrder() {
   };
   const updateStatus = (orderId, status) => {
     dispatch(UpdateStatusOrder({ order_id: orderId, order_status: status }));
-    toast.success("Hủy đơn hàng thành công!");
+    toast.success("Cập nhật trạng thái thành công!");
 
   };
   const handleFilterChange = (status) => {

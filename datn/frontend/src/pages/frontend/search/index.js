@@ -24,13 +24,13 @@ function Search() {
 
     return (
         <body>
-            <div className="bg-" style={{ backgroundColor: '#f6831f' }} >
+            <div className="bg-" style={{ backgroundColor: 'white' }} >
                 <div className="container py-4">
                     <nav className="d-flex">
                         <h6 className="mb-0">
-                            <Link to="/" className="text-white">Trang chủ</Link>
-                            <span className="text-white-50 mx-2">/ </span>
-                            <Link to="/blog" className="text-white"></Link>
+                            <Link to="/" style={{ color: '#f6831f' }}>Trang chủ</Link>
+                            <span className=" mx-2" style={{ color: '#f6831f' }}>/ </span>
+                            <Link to="/blog" style={{ color: '#f6831f' }}></Link>
                         </h6>
                     </nav>
                 </div>

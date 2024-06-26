@@ -40,6 +40,14 @@ function ProductDetail() {
     const [selected_sku, set_selected_sku] = useState(null);
     const [sale, setSale] = useState(null);
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 4;
+  
+
+    const totalPages = Math.ceil(productDetail?.related_products.length / itemsPerPage);
+    const productRelated = productDetail?.related_products.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  
+
     // const [special_offer, setSpecial_offer] = useState(null);
     const [quantity, setQuantity] = useState(1);
 
@@ -400,7 +408,7 @@ function ProductDetail() {
                                         </div>
                                     </div>
                                 </div>
-                                <button href="#" className="btn btn-warning shadow-0 me-1"> Mua Ngay </button>
+                                {/* <button href="#" className="btn btn-warning shadow-0 me-1"> Mua Ngay </button> */}
 
                                 {productDetail ? (
                                     <button className="btn btn-primary shadow-0 me-1"
@@ -590,7 +598,7 @@ function ProductDetail() {
                                 <div className="card">
                                     <div className="card-body">
                                         <h5 className="card-title">Sản phẩm liên quan</h5>
-                                        {productDetail && productDetail.related_products.map((product, index) => {
+                                        {productRelated && productRelated.map((product, index) => {
                                             return (
                                                 <ProductRelatedItem key={index} product={product} />
                                             )
