@@ -82,7 +82,7 @@ function Brand() {
                             return (
                                 <>
                                     {/* <img src={brand.brand_image} class="rounded-circle" style={{ height: '150px', width: '150px' }} /> */}
-                                    <button onClick={() => onChangeBrand(brand._id)} key={index} type="button" class="btn btn-rounded me-2 pb-1 fw-bold " style={{ backgroundColor: 'white', color: '#f6831f' }} data-mdb-ripple-init >
+                                    <button onClick={() => onChangeBrand(brand._id)} key={index} type="button" class="btn btn-rounded me-2 pb-1 fw-bold mb-1 " style={{ backgroundColor: 'white', color: '#f6831f' }} data-mdb-ripple-init >
                                         {brand.brand_name}
                                     </button>
                                 </>)

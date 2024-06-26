@@ -8,6 +8,7 @@ import { Amount, getAllDiscount } from "../../../store/actions/discount-actions"
 import accounting from "accounting";
 import { Tooltip, initMDB } from "mdb-ui-kit";
 import { addOrderFromCart } from "../../../utils";
+import './tooltip.css';
 
 initMDB({ Tooltip });
 export default function Cart() {
@@ -27,7 +28,7 @@ export default function Cart() {
     const [special_offer_today, setSpecialOfferToday] = useState(null);
     const [discountCodeInput, setDiscountCodeInput] = useState('');
     const [appliedDiscountCode, setAppliedDiscountCode] = useState(null); // State lưu mã giảm giá đã áp dụng
-
+    console.log('discounts', discounts)
     const fetchDataCart = async () => {
 
         const resultCart = await dispatch(getCart({ userId: userInfo._id }));
@@ -143,9 +144,13 @@ export default function Cart() {
             setPrice_total_promotion(0)
             setAppliedDiscountCode(null); // Bỏ lưu mã giảm giá đã áp dụng khi không có mã nào được chọn
         }
-        
-    };
 
+    };
+    const isDiscountApplicable = (discount) => {
+        if (discount.discount_applies_to === 'all') return true;
+        const applicableProductIds = discount.discount_product_ids || [];
+        return cart?.cart_products.some(product => applicableProductIds.includes(product.productId));
+    };
     return (
         <>
             <div className="bg-primary">
@@ -215,17 +220,20 @@ export default function Cart() {
                                                             <p className="mb-2">Mã: {item.discount_code}</p>
                                                         </div>
                                                         <div className="d-flex justify-content-between">
+
                                                             <p className="mb-2">HSD: {item.discount_end_date ? new Date(item.discount_end_date).toLocaleDateString() : ''}</p>
-                                                            <a href="" data-mdb-tooltip-init title={`Giảm tối đa ${(item.discount_max_value)}đ cho đơn hàng từ  ${(item.discount_min_order_value)}đ`}
-                                                            >!</a>
+                                                            <div className="tooltip1">!
+                                                                <span className="tooltiptext" >
+                                                                    {`Giảm tối đa ${item.discount_max_value}đ cho đơn hàng từ ${item.discount_min_order_value}đ và áp dụng cho ${item.discount_applies_to === 'all' ? 'tất cả sản phẩm' : `các sản phẩm với ID: ${item.discount_product_ids.join(', ')}`}`}
+                                                                </span>
+                                                            </div>
                                                         </div>
                                                         <div className="d-flex justify-content-between">
                                                             <button
                                                                 className="btn btn-light border"
                                                                 style={{ backgroundColor: '#f6831f', color: 'white' }}
                                                                 onClick={() => onSelectedDiscount(item)}
-
-                                                                disabled={appliedDiscountCode?.discount_code == item?.discount_code ? true : false}
+                                                                disabled={!isDiscountApplicable(item) || appliedDiscountCode?.discount_code === item?.discount_code}
                                                             >
                                                                 Áp dụng
                                                             </button>

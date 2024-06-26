@@ -57,10 +57,10 @@ const Categories = () => {
                                 onMouseEnter={handleDropdownMouseEnter}
                                 onMouseLeave={handleDropdownMouseLeave}
                             >
-                                <button type="button" class="btn btn-light category-name fw-bold me-5 " style={{ cursor: 'pointer',borderBlockColor:'white', color: 'white', marginRight: '3px',backgroundColor:'#f6831f',textTransform: "uppercase" }} >
+                                <Link class="category-name fw-bold me-5 text-center mb-2" style={{ cursor: 'pointer',borderBlockColor:'white', color: 'white',backgroundColor:'#f6831f',textTransform: "uppercase",alignContent:'center' }} >
                                     <i class="fas fa-bars" style={{ cursor: 'pointer', color: 'white', marginRight: '3px' }}></i>
                                  DANH MỤC
-                                </button>
+                                </Link>
 
                                 <ul
                                     class={`dropdown-menu ${isDropdownOpen ? 'show' : ''}`}

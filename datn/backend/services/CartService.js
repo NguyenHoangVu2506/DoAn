@@ -65,12 +65,12 @@ class CartService {
     //end repo cart
 
     async addToCart({ userId, product = {} }) {
-       console.log(userId, product )
+    //    console.log(userId, product )
         const userCart = await cart.findOne({ cart_userId: userId })
         if (!userCart) {
             return await this.createUserCart({ userId, product })
         }
-console.log(userCart.cart_products.length)
+// console.log(userCart.cart_products.length)
         if (userCart.cart_products.length == 0) {
             userCart.cart_products = [product]
             userCart.cart_count_product = userCart.cart_count_product + 1
