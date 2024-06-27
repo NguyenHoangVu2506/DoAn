@@ -13,23 +13,27 @@ const discountSchema = new Schema({
     discount_end_date: { type: Date, required: true }, // ngyay ket thuc
     discount_max_uses: { type: Number, required: true }, // so luong discount duoc ap dung 
     discount_uses_count: { type: Number, required: true }, // so discount da su dung
-    discount_users_used: { type: Array, default: [] }, // ai da sung
-    discount_max_uses_per_user: { type: Number, required: true }, // ng dung duoc su dung toi da 
+    discount_users_used: [
+        {
+            userId: String,
+            uses: { type: Number, default: 0 }
+        }
+    ],    discount_max_uses_per_user: { type: Number, required: true }, // ng dung duoc su dung toi da 
     discount_min_order_value: { type: Number, required: true },
     discount_is_active: { type: Boolean, default: true },
     discount_applies_to: { type: String, required: true, enum: ['all', 'specific'] },
     discount_product_ids: { type: Array, default: [] }, // so san pham duoc ap dung
-    isDeleted:  { type: Boolean, default: false, index: true, select: false },
+    isDeleted:  { type: Boolean, default: false, index: true, select: false }, 
 
 },
     {
         collection: COLLECTION_NAME,
-        timestamps: true
+        timestamps: true 
     })
 
 
-module.exports = {
+module.exports = { 
     discount: model(DOCUMENT_NAME, discountSchema)
 
 }
-
+ 

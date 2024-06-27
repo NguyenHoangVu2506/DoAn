@@ -151,6 +151,42 @@ export default function Cart() {
         const applicableProductIds = discount.discount_product_ids || [];
         return cart?.cart_products.some(product => applicableProductIds.includes(product.productId));
     };
+    const renderDiscountUsage = (discount) => {
+        const { discount_users_used } = discount;
+
+        if (discount_users_used && discount_users_used.length > 0) {
+            const userDiscountData = discount_users_used.find(data => data.userId === userInfo._id);
+            if (userDiscountData) {
+                const { uses, discount_max_uses_per_user } = userDiscountData;
+                const remainingUses = discount.discount_max_uses_per_user - uses;
+                return (
+                    <p className="mb-0 text-success">{`Còn ${remainingUses} lần sử dụng`}</p>
+                );
+            } else {
+                return (
+                    <p className="mb-0 text-success">{`Còn ${discount.discount_max_uses_per_user} lần sử dụng`}</p>
+                );
+            }
+        }
+        return null;
+    };
+
+    const calculateRemainingUses = (discount) => {
+        const { discount_users_used } = discount;
+
+        if (discount_users_used && discount_users_used.length > 0) {
+            const userDiscountData = discount_users_used.find(data => data.userId === userInfo._id);
+            if (userDiscountData) {
+                const { uses, discount_max_uses_per_user } = userDiscountData;
+                return discount.discount_max_uses_per_user - uses;
+            } else {
+                return discount.discount_max_uses_per_user; // Display full uses if user has not used the discount
+            }
+        }
+        return 0; // Default to 0 if discount information is missing
+    };
+
+
     return (
         <>
             <div className="bg-primary">
@@ -208,40 +244,57 @@ export default function Cart() {
                                 <div className="border-top pt-4 mx-4 mb-4">
                                     <div className="row">
                                         <h5>Khuyến mãi dành cho bạn</h5>
-                                        {discounts?.length > 0 && discounts.map((item, index) => (
-                                            <div className="col-lg-3" key={index}>
-                                                <div className="card shadow-0 border">
-                                                    <div className="card-body">
-                                                        <div className="d-flex justify-content-between">
-                                                            <p className="mb-0 fw-bold">{item.discount_name}</p>
-                                                        </div>
-                                                        <hr />
-                                                        <div className="d-flex justify-content-between">
-                                                            <p className="mb-2">Mã: {item.discount_code}</p>
-                                                        </div>
-                                                        <div className="d-flex justify-content-between">
-
-                                                            <p className="mb-2">HSD: {item.discount_end_date ? new Date(item.discount_end_date).toLocaleDateString() : ''}</p>
-                                                            <div className="tooltip1">!
-                                                                <span className="tooltiptext" >
-                                                                    {`Giảm tối đa ${item.discount_max_value}đ cho đơn hàng từ ${item.discount_min_order_value}đ và áp dụng cho ${item.discount_applies_to === 'all' ? 'tất cả sản phẩm' : `các sản phẩm với ID: ${item.discount_product_ids.join(', ')}`}`}
-                                                                </span>
+                                        {discounts?.length > 0 ? (
+                                            discounts.some(item => calculateRemainingUses(item) > 0) ? (
+                                                discounts.map((item, index) => {
+                                                    const remainingUses = calculateRemainingUses(item); // Assume calculateRemainingUses is a function to get remaining uses
+                                                    if (remainingUses > 0) {
+                                                        return (
+                                                            <div className="col-lg-3" key={index}>
+                                                                <div className="card shadow-0 border">
+                                                                    <div className="card-body">
+                                                                        <div className="d-flex justify-content-between">
+                                                                            <p className="mb-0 fw-bold">{item.discount_name}</p>
+                                                                        </div>
+                                                                        <div className="d-flex justify-content-between">
+                                                                            {renderDiscountUsage(item)}
+                                                                        </div>
+                                                                        <hr />
+                                                                        <div className="d-flex justify-content-between">
+                                                                            <p className="mb-2">Mã: {item.discount_code}</p>
+                                                                        </div>
+                                                                        <div className="d-flex justify-content-between">
+                                                                            <p className="mb-2">HSD: {item.discount_end_date ? new Date(item.discount_end_date).toLocaleDateString() : ''}</p>
+                                                                            <div className="tooltip1">!
+                                                                                <span className="tooltiptext">
+                                                                                    {`Giảm tối đa ${item.discount_max_value}đ cho đơn hàng từ ${item.discount_min_order_value}đ và áp dụng cho ${item.discount_applies_to === 'all' ? 'tất cả sản phẩm' : `các sản phẩm với ID: ${item.discount_product_ids.join(', ')}`}`}
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="d-flex justify-content-between">
+                                                                            <button
+                                                                                className="btn btn-light border"
+                                                                                style={{ backgroundColor: '#f6831f', color: 'white' }}
+                                                                                onClick={() => onSelectedDiscount(item)}
+                                                                                disabled={!isDiscountApplicable(item) || appliedDiscountCode?.discount_code === item?.discount_code}
+                                                                            >
+                                                                                Áp dụng
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div className="d-flex justify-content-between">
-                                                            <button
-                                                                className="btn btn-light border"
-                                                                style={{ backgroundColor: '#f6831f', color: 'white' }}
-                                                                onClick={() => onSelectedDiscount(item)}
-                                                                disabled={!isDiscountApplicable(item) || appliedDiscountCode?.discount_code === item?.discount_code}
-                                                            >
-                                                                Áp dụng
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))}
+                                                        );
+                                                    }
+                                                    return null;
+                                                })
+                                            ) : (
+                                                <p>Không có mã giảm giá nào khả dụng11111111.</p>
+                                            )
+                                        ) : (
+                                            <p>Không có mã giảm giá nào khả dụng.</p>
+                                        )}
+
                                         <div className="col-lg-9"></div>
                                     </div>
                                 </div>

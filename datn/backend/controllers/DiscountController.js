@@ -10,7 +10,7 @@ class DiscountController{
             metaData: await DiscountService.createDiscountCode({...req.body})
         }).send(res)
 
-    }
+    } 
     getAllDiscountCode = async(req, res, next)=>{
         new SuccessResponse({
             message: 'success',
@@ -33,7 +33,7 @@ class DiscountController{
             metaData: await DiscountService.getAllDiscountCodeWithProduct({...req.query})
         }).send(res)
 
-    }
+    } 
 
 }
 module.exports = new DiscountController;
