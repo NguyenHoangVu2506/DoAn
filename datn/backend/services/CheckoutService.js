@@ -199,7 +199,7 @@ class CheckoutService {
         .lean()
         return Order
     }
-    static async findAllOrder() {
+    async findAllOrder() {
         const Order = await order.find()
         return Order
     }
