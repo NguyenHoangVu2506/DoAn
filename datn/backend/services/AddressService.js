@@ -2,7 +2,7 @@
 const AddressModel = require('../models/AddressModel');
 
 class AddressService {
-
+  
     // constructor() {
     //     this.repository = new addressRepository();
     // }

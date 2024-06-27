@@ -329,7 +329,6 @@ function Checkout() {
                             <div className="h-100 border rounded-3">
                               <div className="p-3 w-100 "  style={{width:'90%'}}>
                                 <PayPalButton
-                               
                                   amount={price_total_checkout}
                                   onSuccess={onSuccessPaypal}
                                   onError={() => {

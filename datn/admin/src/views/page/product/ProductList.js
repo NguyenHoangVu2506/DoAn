@@ -96,9 +96,9 @@ function ProductList() {
                                                 <td className='text-left'>{item.product_quantity}</td>
                                                 <td>
                                                     <div className="function_style">
-                                                        <Link to={`/product/updateproduct/${item.id}`} className="btn btn-sm">
+                                                        {/* <Link to={`/product/updateproduct/${item.id}`} className="btn btn-sm">
                                                             <i className="fa fa-edit me-1"></i>Chỉnh sửa
-                                                        </Link> |
+                                                        </Link> | */}
                                                         <Link to={`/product/${item.product_slug}-${item._id}`} className="btn btn-sm">
                                                             <i className="fa fa-eye me-1"></i>Chi tiết
                                                         </Link> |

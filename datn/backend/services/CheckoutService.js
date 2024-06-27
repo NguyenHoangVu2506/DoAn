@@ -197,9 +197,8 @@ class CheckoutService {
         }).sort(sortBy)
         return Order
     }
-    static async findAllOrder({sort}) {
-        const sortBy = sort === 'ctime' ? { _id: -1 } : { _id: 1 }
-        const Order = await order.find().sort(sortBy)
+    static async findAllOrder() {
+        const Order = await order.find()
         return Order
     }
     static async updateOrderStatusByOrder({ order_id, order_status }) {
@@ -222,4 +221,4 @@ class CheckoutService {
 
     // }
 }
-module.exports = CheckoutService
+module.exports =  CheckoutService 
