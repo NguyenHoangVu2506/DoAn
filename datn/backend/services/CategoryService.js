@@ -45,7 +45,7 @@ class CategoryService {
       return null
     }
   }
-  static async findAllCategory({ sort,isPublished = true }) {
+  static async findAllCategory({ sort= 'ctime',isPublished = true }) {
     try {
       const sortBy = sort === 'ctime' ? { _id: -1 } : { _id: 1 }
       const categories = await category.find({

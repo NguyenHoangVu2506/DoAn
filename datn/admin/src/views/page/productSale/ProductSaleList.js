@@ -67,11 +67,11 @@ function ProductSaleList() {
                                                 <td className='text-left'>{new Date(special.special_offer_start_date).toLocaleDateString()}</td>
                                                 <td className='text-left'>{new Date(special.special_offer_end_date).toLocaleDateString()}</td>
                                                 <td>
-                                                    <div className="function_style">
+                                                    {/* <div className="function_style">
                                                         <Link to={`/productsale/updateproductsale/${special._id}`} className="btn btn-sm"><i className="fa fa-edit me-1" ></i>Chỉnh sửa</Link> |
                                                         <Link to={`/productsale/detailproductsale/${special._id}`} className="btn btn-sm"><i className="fa fa-eye me-1"></i>Chi tiết</Link> |
                                                         <button onClick={() => trashProductSale(special._id)} className="btn btn-sm"><i className="fa fa-trash me-1"></i>Xoá</button>
-                                                    </div>
+                                                    </div> */}
                                                 </td>
                                             </tr>
                                         )}

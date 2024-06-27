@@ -223,5 +223,5 @@ class CheckoutService {
 
     // }
 }
-module.exports =  CheckoutService 
-// module.exports = new CheckoutService
+// module.exports =  CheckoutService 
+module.exports = new CheckoutService
