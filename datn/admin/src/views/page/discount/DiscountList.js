@@ -53,7 +53,7 @@ function DiscountList() {
                                             Thêm mã giảm giá
                                         </CButton>
                                     </Link>
-                                    <Link to='/menu/createmenu'>
+                                    <Link to='/discount/discountlist'>
                                         <CButton color="danger" variant="outline" className="me-md-2">
                                             <CIcon icon={cilTrash} title="Store menu" /> Thùng rác
                                         </CButton>

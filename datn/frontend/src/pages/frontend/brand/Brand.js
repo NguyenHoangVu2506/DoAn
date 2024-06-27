@@ -60,7 +60,7 @@ function Brand() {
                     <nav className="d-flex" >
                         <h6 className="mb-0">
                             <Link to="/" style={{ color: '#f6831f' }}>Trang chủ</Link>
-                            <span className=" mx-2"style={{ color: '#f6831f' }}>/ </span>
+                            <span className=" mx-2" style={{ color: '#f6831f' }}>/ </span>
                             <Link to="/thuong-hieu" style={{ color: '#f6831f' }}>Thương Hiệu</Link>
 
                         </h6>
@@ -73,7 +73,7 @@ function Brand() {
             <main role="main" class="container">
                 <div class="row">
                     <div class="col-md-12 blog-main">
-                        <header class="mb-2 pt-4 pb-3">
+                        <header class="mb-2 pt-2 pb-3">
                             {/* <h3 className="text-center text-uppercase text-dark pb-3">THƯƠNG HIỆU MỸ PHẨM</h3> */}
                             <h3 className="text-center text-uppercase text-dark pb-3">THƯƠNG HIỆU</h3>
 
@@ -81,7 +81,7 @@ function Brand() {
                         {all_brand && all_brand.map((brand, index) => {
                             return (
                                 <>
-                                    {/* <img src={brand.brand_image} class="rounded-circle" style={{ height: '150px', width: '150px' }} /> */}
+                                    <img src={brand.brand_image} class="rounded-circle" style={{ height: '150px', width: '150px' }} />
                                     <button onClick={() => onChangeBrand(brand._id)} key={index} type="button" class="btn btn-rounded me-2 pb-1 fw-bold mb-1 " style={{ backgroundColor: 'white', color: '#f6831f' }} data-mdb-ripple-init >
                                         {brand.brand_name}
                                     </button>
@@ -90,6 +90,10 @@ function Brand() {
 
 
                         <div class=" row pt-4" >
+                            <div className="card-body pt-3 text-center">
+                                <h4 className="fw-bold" style={{ color: '#f6831f' , textTransform:'uppercase'}}>Sản phẩm theo thương hiệu
+                                </h4>
+                            </div>
                             {productBrand?.length > 0 ? productBrand.map((product, index) => {
                                 return <ProductItem product={product} key={index} />
                             }) :
@@ -101,7 +105,7 @@ function Brand() {
                             <div className="pagination-container" style={{ display: 'flex', justifyContent: 'center' }}>
                                 <ul className="pagination">
                                     <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                                        <button className="page-link" onClick={handlePrevious}>Previous</button>
+                                        <button className="page-link" onClick={handlePrevious}>Trước</button>
                                     </li>
                                     {Array.from({ length: totalPages }, (_, index) => (
                                         <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
@@ -109,7 +113,7 @@ function Brand() {
                                         </li>
                                     ))}
                                     <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                                        <button className="page-link" onClick={handleNext}>Next</button>
+                                        <button className="page-link" onClick={handleNext}>Sau</button>
                                     </li>
                                 </ul>
                             </div>

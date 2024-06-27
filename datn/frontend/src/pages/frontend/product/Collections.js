@@ -16,16 +16,14 @@ function Collections() {
   const [isList, setIsList] = useState(false)
   //
   const [isOption, setOption] = useState(false)
-  // const [currentPage, setCurrentPage] = useState(1);
-  // const itemsPerPage = 8;
-  const limit = 10;
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 8;
 
   const { allProducts } = useSelector((state) => state.productReducer);
   const { all_brand } = useSelector((state) => state.brandReducer);
   const { all_category } = useSelector((state) => state.categoryReducer);
   const { all_attribute } = useSelector((state) => state.attributeReducer);
 
-  const [page, setPage] = useState(1);
 
   const [categoriesParentNull, setCategoriesParentNull] = useState([])
   const [productByFilter, setProductByFilter] = useState([])
@@ -43,10 +41,10 @@ function Collections() {
   const [priceCollapsed, setPriceCollapsed] = useState(false);
   const [ratingCollapsed, setRatingCollapsed] = useState(false);
 
-  console.log(pagedProducts, selectedAttribute, selectedBrand, productByFilter, products, allProducts)
+  console.log(category1, category2, category3, pagedProducts, selectedAttribute, selectedBrand, productByFilter, products, allProducts)
 
 
-  const listSale =allProducts&& allProducts[0]?.special_offer?.special_offer_spu_list;
+  const listSale = allProducts && allProducts[0]?.special_offer?.special_offer_spu_list;
   const saleProducts = allProducts?.slice()?.filter((item) => item._id ===
     listSale
       ?.slice()
@@ -71,157 +69,129 @@ function Collections() {
 
 
   useEffect(() => {
-    if (
-      category1 !== undefined &&
-      category2 === undefined &&
-      category3 === undefined &&
-      all_category
-        ?.slice()
-        .findIndex((item) => item.category_slug === category1) === -1
-    ) {
-      navigate('/404');
-    }
-    if (
-      category1 !== undefined &&
-      category2 !== undefined &&
-      category3 === undefined &&
-      all_category
-        ?.slice()
-        .findIndex(
-          (item) =>
-            item.parent_id ===
-            all_category
-              ?.slice()
-              .find(
-                (item) => item.category_slug === category1
-              )?._id && item.category_slug === category2
-        ) === -1
-    ) {
-      navigate('/404');
-    }
-    if (
-      category1 !== undefined &&
-      category2 !== undefined &&
-      category3 !== undefined &&
-      all_category
-        ?.slice()
-        .findIndex(
-          (item) =>
-            item.parent_id ===
-            all_category
-              ?.slice()
-              .find(
-                (subitem) =>
-                  subitem.parent_id ===
-                  all_category
-                    ?.slice()
-                    .find(
-                      (subsubitem) =>
-                        subsubitem.category_slug ===
-                        category1
-                    )?._id &&
-                  subitem.category_slug === category2
-              )?._id && item.category_slug === category3
-        ) === -1
-    ) {
-      navigate('/404');
-    }
-    setSelectedBrand([]);
-    setSelectedAttribute([]);
-    setPage(1);
-    if (
-      category1 === undefined &&
-      category2 === undefined &&
-      category3 === undefined
-    ) {
-      setProducts(allProducts);
-    }
-    if (
-      category1 !== undefined &&
-      category2 === undefined &&
-      category3 === undefined
-    ) {
-      setProducts(
-        allProducts
-          ?.slice()
-          .filter((item) =>
-            item.product_category.includes(
-              all_category?.find(
-                (item) => item.category_slug === category1
-              )?._id
-            )
-          )
-      );
-    }
-
-    if (
-      category1 !== undefined &&
-      category2 !== undefined &&
-      category3 === undefined
-    ) {
-      setProducts(
-        allProducts
-          ?.slice()
-          .filter((item) =>
-            item.product_category.includes(
-              all_category?.find(
-                (item) =>
-                  item.parent_id ===
-                  all_category?.find(
-                    (subitem) =>
-                      subitem.category_slug ===
-                      category1
-                  )?._id &&
-                  item.category_slug === category2
-              )?._id
-            )
-          )
-      );
-    }
-    if (
-      category1 !== undefined &&
-      category2 !== undefined &&
-      category3 !== undefined
-    ) {
-      setProducts(
-        allProducts
-          ?.slice()
-          .filter((item) =>
-            item.product_category.includes(
-              all_category
-                ?.slice()
-                .find(
-                  (item) =>
-                    item.parent_id ===
-                    all_category
-                      ?.slice()
-                      .find(
-                        (subitem) =>
-                          subitem.parent_id ===
-                          all_category
-                            ?.slice()
-                            .find(
-                              (
-                                subsubitem
-                              ) =>
-                                subsubitem.category_slug ===
-                                category1
-                            )?._id &&
-                          subitem.category_slug ===
-                          category2
-                      )?._id &&
-                    item.category_slug === category3
+    if (allProducts) {
+      // if (
+      //   category1 !== undefined &&
+      //   category2 === undefined &&
+      //   category3 === undefined &&
+      //   all_category
+      //     ?.slice()
+      //     .findIndex((item) => item.category_slug === category1) === -1
+      // ) {
+      //   navigate('/404');
+      // }
+      // if (
+      //   category1 !== undefined &&
+      //   category2 !== undefined &&
+      //   category3 === undefined &&
+      //   all_category
+      //     ?.slice()
+      //     .findIndex(
+      //       (item) =>
+      //         item.parent_id ===
+      //         all_category
+      //           ?.slice()
+      //           .find(
+      //             (item) => item.category_slug === category1
+      //           )?._id && item.category_slug === category2
+      //     ) === -1
+      // ) {
+      //   navigate('/404');
+      // }
+      // if (
+      //   category1 !== undefined &&
+      //   category2 !== undefined &&
+      //   category3 !== undefined &&
+      //   all_category
+      //     ?.slice()
+      //     .findIndex(
+      //       (item) =>
+      //         item.parent_id ===
+      //         all_category
+      //           ?.slice()
+      //           .find(
+      //             (subitem) =>
+      //               subitem.parent_id ===
+      //               all_category
+      //                 ?.slice()
+      //                 .find(
+      //                   (subsubitem) =>
+      //                     subsubitem.category_slug ===
+      //                     category1
+      //                 )?._id &&
+      //               subitem.category_slug === category2
+      //           )?._id && item.category_slug === category3
+      //     ) === -1
+      // ) {
+      //   navigate('/404');
+      // }
+      // setSelectedBrand([]);
+      // setSelectedAttribute([]);
+      if (
+        category1 === undefined &&
+        category2 === undefined &&
+        category3 === undefined
+      ) {
+        setProducts(allProducts);
+      }
+      if (
+        category1 !== undefined &&
+        category2 === undefined &&
+        category3 === undefined
+      ) {
+        setProducts(
+          allProducts
+            ?.slice()
+            .filter((item) =>
+              item.product_category.includes(
+                all_category?.find(
+                  (item) => item.category_slug.toString() === category1.toString()
                 )?._id
+              )
             )
-          )
-      );
+        );
+      }
+
+      if (
+        category1 !== undefined &&
+        category2 !== undefined &&
+        category3 === undefined
+      ) {
+        setProducts(
+          allProducts
+            ?.slice()
+            .filter((item) =>
+              item.product_category.includes(
+                all_category?.find(
+                  (item) => item.category_slug.toString() === category2.toString()
+                )?._id
+              )
+            )
+        );
+      }
+      if (
+        category1 !== undefined &&
+        category2 !== undefined &&
+        category3 !== undefined
+      ) {
+        setProducts(
+          allProducts
+            ?.slice()
+            .filter((item) =>
+              item.product_category.includes(
+                all_category?.find(
+                  (item) => item.category_slug.toString() === category3.toString()
+                )?._id
+              )
+            )
+        );
+      }
     }
   }, [allProducts, category1, category2, category3]);
 
   useEffect(() => {
-    setPage(1);
     if (selectedBrand?.length > 0 && selectedAttribute?.length > 0) {
-      setProducts(
+      setProductByFilter(
         products
           ?.slice()
           .filter(
@@ -230,14 +200,15 @@ function Collections() {
               selectedAttribute?.some((UUID) =>
                 item.product_attributes.some((attribute) =>
                   attribute.attribute_value.some(
-                    (subitem) => subitem.value === UUID
+                    (subitem) => subitem.value == UUID
                   )
                 )
               )
           )
       );
-    } else {
-      setProducts(
+    }
+    if (selectedBrand?.length > 0) {
+      setProductByFilter(
         products
           ?.slice()
           .filter((item) =>
@@ -245,57 +216,68 @@ function Collections() {
           )
       );
     }
+    if (selectedBrand.length === 0) {
+      setProductByFilter(
+        products
+      );
+    }
 
   }, [selectedBrand]);
 
   useEffect(() => {
-    setPage(1);
     if (selectedAttribute?.length > 0 && selectedBrand?.length > 0) {
-      setProducts(
+      setProductByFilter(
         products
           ?.slice()
           .filter(
             (item) =>
-              selectedAttribute.some((UUID) =>
+              selectedAttribute.includes((UUID) =>
                 item.product_attributes.some((attribute) =>
                   attribute.attribute_value.some(
-                    (subitem) => subitem.value === UUID
+                    (subitem) => subitem.value.toString() === UUID.toString()
                   )
                 )
               ) && selectedBrand.includes(item.product_brand)
           ))
-    } else {
-      setProducts(
+    }
+    if (selectedAttribute?.length > 0) {
+      setProductByFilter(
         products
           ?.slice()
           .filter((item) =>
-            selectedAttribute.some((UUID) =>
+            selectedAttribute.includes((UUID) =>
               item.product_attributes.some((attribute) =>
                 attribute.attribute_value.some(
-                  (subitem) => subitem.value === UUID
+                  (subitem) => subitem.value == UUID
                 )
               )
             )
           ))
+    }
+    if (selectedAttribute.length === 0) {
+      setProductByFilter(
+        products
+      );
     }
 
   }, [selectedAttribute]);
   useEffect(() => {
     setProductByFilter(products);
   }, [products]);
+
   useEffect(() => {
-    const startIndex = (page - 1) * limit;
+    const startIndex = (currentPage - 1) * limit;
     const endIndex = startIndex + limit;
     setPagedProducts(productByFilter?.slice(startIndex, endIndex));
-  }, [productByFilter, page]);
+  }, [productByFilter, currentPage]);
 
 
-  useEffect(()=>{
+  useEffect(() => {
     if (saleProducts?.length > 0) {
       setOption(true)
 
     } else {
-     setOption(false)
+      setOption(false)
     }
 
   })
@@ -343,20 +325,19 @@ function Collections() {
   };
 
 
-  // const totalPages = Math.ceil(allProducts?.length / itemsPerPage);
-  // const newproduct = allProducts?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const totalPages = Math.ceil(allProducts?.length / limit);
 
-  // const handlePrevious = () => {
-  //   if (currentPage > 1) {
-  //     setCurrentPage(currentPage - 1);
-  //   }
-  // };
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
 
-  // const handleNext = () => {
-  //   if (currentPage < totalPages) {
-  //     setCurrentPage(currentPage + 1);
-  //   }
-  // };
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
 
   return (
     <>
@@ -613,7 +594,7 @@ function Collections() {
               <header class="d-sm-flex align-items-center border-bottom mb-4 pb-3">
                 <div class="ms-auto">
                   <select class="form-select d-inline-block w-auto border pt-1">
-                    <option onClick={()=>setOption(false)} value="0">Tất Cả</option>
+                    <option onClick={() => setOption(false)} value="0">Tất Cả</option>
                     <option onClick={() => setOption(true)} value="1">Khuyến Mãi</option>
                     {/* <option value="2">High rated</option>
                     <option value="3">Randomly</option> */}
@@ -631,11 +612,8 @@ function Collections() {
               </header>
 
               <div class="row justify-content-start mb-3">
-                
 
-
-
-                 {allProducts && allProducts.length > 0 ? allProducts.map((product, index) => {
+                {pagedProducts.length > 0 ? pagedProducts.map((product, index) => {
                   return (
                     isList === true ? (
                       <ProductListItem product={product} key={index} />
@@ -661,8 +639,8 @@ function Collections() {
               <hr />
 
 
-              {/*<!-- Pagination -->*/}
-              {/* <div className="pagination-container" style={{ display: 'flex', justifyContent: 'center' }}>
+              {/* <!-- Pagination -->*/}
+              <div className="pagination-container" style={{ display: 'flex', justifyContent: 'center' }}>
                 <ul className="pagination">
                   <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
                     <button className="page-link" onClick={handlePrevious}>Trước</button>
@@ -676,8 +654,8 @@ function Collections() {
                     <button className="page-link" onClick={handleNext} >Next</button>
                   </li>
                 </ul>
-              </div> */}
-              {/*<!-- Pagination -->*/}
+              </div>
+              {/*<!-- Pagination --> */}
             </div>
           </div>
         </div>
