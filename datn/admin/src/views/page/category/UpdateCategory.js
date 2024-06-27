@@ -46,7 +46,7 @@ const UpdateCategory = () => {
             setName(listCateById.category_name || '');
             setParent_Id(listCateById.parent_id || '');
             setDescription(listCateById.category_description || 'slider-main');
-            setImage(listCateById.category_icon || '');
+            setImage(listCateById.category_image || '');
         }
     }, [dispatch, listCateById]);
 
@@ -64,7 +64,7 @@ const UpdateCategory = () => {
             }
             formFile.append('folderName', 'website/category')
             const image = await dispatch(uploadSingleImage(formFile))
-            image && dispatch(CategoryUpdate({ category_id: id, category_name: name, category_description: description, category_icon: image?.payload?.metaData?.thumb_url, parent_id: parent_id, isPublished: true }))
+            image && dispatch(CategoryUpdate({ category_id: id, category_name: name, category_description: description, category_image: image?.payload?.metaData?.thumb_url, parent_id: parent_id, isPublished: true }))
             toast.success("Cập nhật danh mục thành công!");
 
             navigate('/category/categorylist')

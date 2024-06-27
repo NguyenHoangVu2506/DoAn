@@ -231,7 +231,7 @@ function Collections() {
           ?.slice()
           .filter(
             (item) =>
-              selectedAttribute.includes((UUID) =>
+              selectedAttribute.some((UUID) =>
                 item.product_attributes.some((attribute) =>
                   attribute.attribute_value.some(
                     (subitem) => subitem.value.toString() === UUID.toString()
@@ -245,10 +245,10 @@ function Collections() {
         products
           ?.slice()
           .filter((item) =>
-            selectedAttribute.includes((UUID) =>
+            selectedAttribute.some((UUID) =>
               item.product_attributes.some((attribute) =>
                 attribute.attribute_value.some(
-                  (subitem) => subitem.value == UUID
+                  (subitem) => subitem.value === UUID
                 )
               )
             )
@@ -282,6 +282,9 @@ function Collections() {
 
   })
   const changeSelectedCategory = async (category) => {
+
+    navigate(`/collections/${categoryCollapsed.category_slug}/${category.category_slug}`)
+
   }
   const handleChangeBrand = async (checked, brand_id) => {
     if (checked === true) {
@@ -297,7 +300,7 @@ function Collections() {
       setSelectedAttribute([...selectedAttribute, attribute_value_id])
     }
     if (checked === false) {
-      setSelectedAttribute(selectedAttribute?.filter((attribute) => attribute != attribute_value_id))
+      setSelectedAttribute(selectedAttribute?.filter((attribute) => attribute !== attribute_value_id))
     }
   }
 
@@ -311,8 +314,10 @@ function Collections() {
 
   };
 
-  const toggleCategoryCollapse = (id) => {
-    setCategoryCollapsed(id);
+  const toggleCategoryCollapse = (cat) => {
+    navigate(`/collections/${cat.category_slug}`)
+
+    setCategoryCollapsed(cat);
     setCategoryCollapsedStatus(!categoryCollapsedStatus)
   };
 
@@ -369,13 +374,13 @@ function Collections() {
                           <button
                             className="accordion-button text-dark bg-light"
                             type="button"
-                            onClick={() => toggleCategoryCollapse(categoryParentnull._id)}
+                            onClick={() => toggleCategoryCollapse(categoryParentnull)}
                           >{categoryParentnull.category_name}</button>
 
                         </h2>
                         <div
                           id={index}
-                          className={`collapse ${categoryCollapsed == categoryParentnull._id && categoryCollapsedStatus == true ? "show" : ""}`}
+                          className={`collapse ${categoryCollapsed._id == categoryParentnull._id && categoryCollapsedStatus == true ? "show" : ""}`}
                           aria-labelledby={categoryParentnull._id}
                         >
                           <div class="accordion-body">
@@ -383,9 +388,9 @@ function Collections() {
                               {all_category && all_category?.map((category) => {
                                 if (category.parent_id == categoryParentnull._id) {
                                   return (
-                                    <div onClick={() => changeSelectedCategory(category._id)} className="d-flex flex-column justify-content-start " >
+                                    <button onClick={() => changeSelectedCategory(category)} className="d-flex flex-column justify-content-start" >
                                       {category.category_name}
-                                    </div>
+                                    </button>
                                   )
                                 }
                               })}
@@ -647,11 +652,11 @@ function Collections() {
                   </li>
                   {Array.from({ length: totalPages }, (_, index) => (
                     <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
-                      <button style={{ backgroundColor: '#f6831f', color: 'white' }} className="page-link" onClick={() => setCurrentPage(index + 1)}>{index + 1}</button>
+                      <button style={{ backgroundColor: '', color: '#f6831f' }} className="page-link" onClick={() => setCurrentPage(index + 1)}>{index + 1}</button>
                     </li>
                   ))}
                   <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                    <button className="page-link" onClick={handleNext} >Next</button>
+                    <button className="page-link" onClick={handleNext} >Sau</button>
                   </li>
                 </ul>
               </div>
