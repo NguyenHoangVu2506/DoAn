@@ -42,7 +42,7 @@ function App() {
           <Route path='/signup' element={<Register />} />
           <Route path='/product/:product_slug_id' element={<ProductDetail />} />
           <Route path='/test' element={<ProductModel/>} />
-          <Route path='/collections?/:category0_slug?/:category1_slug?/:category2_slug' element={<Collections />} />
+          <Route path='/collections?/:category1?/:category2?/:category3?' element={<Collections />} />
 
           <Route path='/gio-hang' element={<Cart />} />
           <Route path='/template' element={<Template />} />

@@ -9,9 +9,10 @@ const { checkProductByServer } = require('./SpuService')
 const { findSpecialOfferBetweenStartDateAndEndByDate } = require('./SpecialOfferService')
 const { sendEmailLinkVerify } = require('./EmailService');
 const { v4: uuidv4 } = require('uuid')
+const { getSelectData } = require('../utils')
 
 class CheckoutService {
-    static async checkoutReview({ cartId, userId, order_ids }) {
+     async checkoutReview({ cartId, userId, order_ids }) {
 
         const checkout_order = {
             totalPrice: 0,
@@ -110,7 +111,7 @@ class CheckoutService {
         }
     }
 
-    // static async orderByUser({
+    //  async orderByUser({
     //     order_ids,
     //     cartId,
     //     userId,
@@ -134,7 +135,7 @@ class CheckoutService {
 
     //     return newOrder
     // }
-    static async orderByUser({ order_ids, cartId, userId, user_address = {}, user_payment = {} }) {
+     async orderByUser({ order_ids, cartId, userId, user_address = {}, user_payment = {} }) {
         try {
             console.log('Starting orderByUser method');
             const { order_ids_new, checkout_order } = await this.checkoutReview({
@@ -165,7 +166,7 @@ class CheckoutService {
         }
     }
 
-    static async sendEmailOrder({ user_email, user_order }) {
+     async sendEmailOrder({ user_email, user_order }) {
         try {
             // Assuming you have an email template stored in a variable or file
             const emailContent = `
@@ -190,18 +191,19 @@ class CheckoutService {
         }
     }
 
-    static async findOrderByUser({ sort, user_id }) {
+     async findOrderByUser({ sort, user_id, select }) {
         const sortBy = sort === 'ctime' ? { _id: -1 } : { _id: 1 }
         const Order = await order.find({
             order_userId: user_id
-        }).sort(sortBy)
+        }).sort(sortBy).select(getSelectData(select))
+        .lean()
         return Order
     }
     static async findAllOrder() {
         const Order = await order.find()
         return Order
     }
-    static async updateOrderStatusByOrder({ order_id, order_status }) {
+     async updateOrderStatusByOrder({ order_id, order_status }) {
         try {
             const query = { _id: order_id },
                 updates = {
@@ -217,8 +219,9 @@ class CheckoutService {
 
         }
     }
-    // static async updateOrderStatusbyShop() {
+    //  async updateOrderStatusbyShop() {
 
     // }
 }
 module.exports =  CheckoutService 
+// module.exports = new CheckoutService
