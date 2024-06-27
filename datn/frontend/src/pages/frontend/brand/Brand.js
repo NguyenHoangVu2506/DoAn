@@ -24,6 +24,10 @@ function Brand() {
         fetchDataBrand()
     }, []);
 
+    useEffect(() => {
+        document.title = "Thương Hiệu";
+      }, []);
+
     const onChangeBrand = async (brand_id) => {
         console.log("brand_id", brand_id)
         setBrand_ID(brand_id)

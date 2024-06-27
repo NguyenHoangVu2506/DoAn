@@ -44,6 +44,12 @@ export default function Cart() {
             fetchDataCart()
         }
     }, []);
+
+    useEffect(() => {
+        document.title = "Giỏ Hàng";
+      }, []);
+    
+    
     const loadPrice = async () => {
         const applyDiscount = await dispatch(checkoutReview({
             // cartId: cart?._id,

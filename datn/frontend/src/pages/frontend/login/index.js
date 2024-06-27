@@ -35,6 +35,9 @@ function Login() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
+  useEffect(() => {
+    document.title = 'Đăng Nhập';
+  }, []);
 
   const handleEmailChange = (e) => {
     const { value } = e.target;

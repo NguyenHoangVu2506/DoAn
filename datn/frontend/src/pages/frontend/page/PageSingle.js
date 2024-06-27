@@ -25,6 +25,10 @@ export default function PageSingle() {
     setRatingCollapsed(!ratingCollapsed);
   };
 
+  useEffect(() => {
+    document.title = 'Chính Sách Cửa Hàng';
+  }, []);
+
   return (
     <div className="container">
       <div className="row">

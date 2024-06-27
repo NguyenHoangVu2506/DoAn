@@ -25,6 +25,10 @@ export default function Wishlist() {
     };
 
     useEffect(() => {
+        document.title = 'Sản Phẩm Yêu Thích';
+      }, []);
+
+    useEffect(() => {
         if (userInfo) {
             if (!wish_list) {
                 dispatch(getWishList({ userId: userInfo._id }));

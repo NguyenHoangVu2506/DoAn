@@ -57,6 +57,10 @@ export default function UserAccount() {
     }
   }, []);
 
+  useEffect(() => {
+    document.title = 'Trang Cá Nhân';
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {

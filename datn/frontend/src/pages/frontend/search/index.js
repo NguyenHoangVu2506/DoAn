@@ -21,6 +21,10 @@ function Search() {
         allProducts && setProductSearch(allProducts?.filter((prod) => prod.product_name.toLowerCase().search(new RegExp(meta_key?.toLowerCase())) !== -1))
     }, [meta_key])
 
+    useEffect(() => {
+        document.title = 'Tìm Kiếm Sản Phẩm';
+      }, []);
+
 
     return (
         <body>

@@ -51,6 +51,10 @@ function ProductDetail() {
     // const [special_offer, setSpecial_offer] = useState(null);
     const [quantity, setQuantity] = useState(1);
 
+    useEffect(() => {
+        document.title = 'Chi Tiết Sản Phẩm';
+      }, []);
+
     const decreaseQuantity = () => {
         if (quantity > 1) {
             setQuantity(quantity - 1);

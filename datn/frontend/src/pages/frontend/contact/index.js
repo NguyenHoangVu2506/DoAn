@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { newContact } from "../../../store/actions";
@@ -15,6 +15,10 @@ export default function Contact() {
     const [contact_user_email, setContactEmail] = useState('');
     const [contact_user_tilte, setContactTitle] = useState('');
     const [contact_user_detail, setContactDetail] = useState('');
+
+    useEffect(() => {
+        document.title = "Liên Hệ";
+      }, []);
 
 
     const handleInsert = async () => {

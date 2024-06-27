@@ -22,6 +22,10 @@ export default function Home() {
     React.useEffect(() => {
         dispatch(getProductByCatId({ filter: { isPublished: true, category_id: null } }))
     }, [all_category]);
+
+    React.useEffect(() => {
+        document.title = 'Hoàng Vũ Beauty';
+      }, []);
     return (
         <>
             <Slider />

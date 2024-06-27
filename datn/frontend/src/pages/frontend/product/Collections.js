@@ -64,6 +64,10 @@ function Collections() {
   }, [])
 
   useEffect(() => {
+    document.title = "Sản Phẩm";
+  }, []);
+
+  useEffect(() => {
     all_category && setCategoriesParentNull(all_category?.filter((cat) => cat.parent_id == null))
   }, [all_category])
 

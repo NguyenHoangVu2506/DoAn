@@ -42,7 +42,9 @@ function Blog() {
   const toggleRatingCollapse = () => {
     setRatingCollapsed(!ratingCollapsed);
   };
-
+  useEffect(() => {
+    document.title = "Tin Tức";
+  }, []);
   return (
     <body>
       <div className="" style={{ backgroundColor: 'white' }} >

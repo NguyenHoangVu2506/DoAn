@@ -20,6 +20,10 @@ function Register() {
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
   const [nameError, setNameError] = useState('');
 
+  useEffect(() => {
+    document.title = 'Đăng Kí Thành Viên';
+  }, []);
+
   const onFinish = (values) => {
     console.log('Success:', values);
   };
