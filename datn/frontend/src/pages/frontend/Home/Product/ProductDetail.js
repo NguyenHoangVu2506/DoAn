@@ -9,8 +9,11 @@ import { addFavoriteToLocalStorage, getFavoritesFromLocalStorage, removeFavorite
 import { getComment } from "../../../../store/actions/comment_rating-actions";
 import { formatDistanceToNow } from 'date-fns';
 import { vi } from 'date-fns/locale';
+<<<<<<< HEAD
 import { Helmet } from 'react-helmet';
 
+=======
+>>>>>>> origin/main
 function ProductDetail() {
 
     const { product_slug_id } = useParams()
@@ -53,6 +56,13 @@ function ProductDetail() {
     // const [special_offer, setSpecial_offer] = useState(null);
     const [quantity, setQuantity] = useState(1);
 
+<<<<<<< HEAD
+=======
+    useEffect(() => {
+        document.title = 'Chi Tiết Sản Phẩm';
+      }, []);
+
+>>>>>>> origin/main
     const decreaseQuantity = () => {
         if (quantity > 1) {
             setQuantity(quantity - 1);
@@ -248,9 +258,13 @@ function ProductDetail() {
     // const review= productDetail.product_comment;
     console.log(productReview)
     return (
+<<<<<<< HEAD
         <><Helmet>
         <title>{name} - HoangVu</title>
     </Helmet>
+=======
+        <>
+>>>>>>> origin/main
             <div className="bg-" style={{ backgroundColor: 'white' }} >
                 <div className="container py-4 " >
                     {/*<!-- Breadcrumb --> */}

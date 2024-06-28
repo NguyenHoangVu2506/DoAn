@@ -6,7 +6,10 @@ import CategoryList from './CategoryList';
 import PostHome from './PostHome';
 import { getCategoryByParentId, getProductByCatId, AllCategory } from '../../../store/actions';
 import { useDispatch, useSelector } from 'react-redux';
+<<<<<<< HEAD
 import { Helmet } from 'react-helmet';
+=======
+>>>>>>> origin/main
 
 export default function Home() {
 
@@ -23,11 +26,20 @@ export default function Home() {
     React.useEffect(() => {
         dispatch(getProductByCatId({ filter: { isPublished: true, category_id: null } }))
     }, [all_category]);
+<<<<<<< HEAD
     return (
         <>
             <Helmet>
                 <title>Trang chủ - HoangVu</title>
             </Helmet>
+=======
+
+    React.useEffect(() => {
+        document.title = 'Hoàng Vũ Beauty';
+      }, []);
+    return (
+        <>
+>>>>>>> origin/main
             <Slider />
             {current_category && (
                 all_category && (

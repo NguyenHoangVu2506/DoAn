@@ -18,9 +18,13 @@ router.post('/new', asyncHandler(spuController.createSpu))
 // router.patch('/:productId', spuController.updateProduct)
 
 router.post('/publish/:id', asyncHandler(spuController.publishProduct))
+<<<<<<< HEAD
 router.post('/unpublish', asyncHandler(spuController.unPublishProduct))
 router.post('/delete', asyncHandler(spuController.deleteProduct))
 
+=======
+router.post('/unpublish/:id', asyncHandler(spuController.unPublishProduct))
+>>>>>>> origin/main
 //query
 // router.get('/drafts/all', spuController.getAllDrafts)
 // router.get('/published/all', spuController.getAllPublish)

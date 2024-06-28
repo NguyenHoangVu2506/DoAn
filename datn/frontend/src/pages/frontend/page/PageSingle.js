@@ -2,7 +2,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { getListPage, getPageById } from "../../../store/actions/page-actions";
 import { useEffect, useState } from "react";
+<<<<<<< HEAD
 import { Helmet } from 'react-helmet';
+=======
+>>>>>>> origin/main
 
 export default function PageSingle() {
   const [ratingCollapsed, setRatingCollapsed] = useState(false);
@@ -25,6 +28,7 @@ export default function PageSingle() {
   const toggleRatingCollapse = () => {
     setRatingCollapsed(!ratingCollapsed);
   };
+<<<<<<< HEAD
   if (!listPageById || !listPageById.page_name) {
     return <div>Loading...</div>;
   }
@@ -33,6 +37,15 @@ export default function PageSingle() {
       <Helmet>
                         <title>{listPageById.page_name} - HoangVu</title>
                     </Helmet>
+=======
+
+  useEffect(() => {
+    document.title = 'Chính Sách Cửa Hàng';
+  }, []);
+
+  return (
+    <div className="container">
+>>>>>>> origin/main
       <div className="row">
         <div className="col-lg-9">
           {listPageById && (

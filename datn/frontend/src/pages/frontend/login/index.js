@@ -14,7 +14,10 @@ import {
   MDBCheckbox
 } from 'mdb-react-ui-kit';
 import { onLogin } from '../../../store/actions';
+<<<<<<< HEAD
 import { Helmet } from 'react-helmet';
+=======
+>>>>>>> origin/main
 
 function Login() {
   const dispatch = useDispatch();
@@ -26,7 +29,11 @@ function Login() {
     navigate('/forgotpassword');
   };
   const { userInfo } = useSelector((state) => state.userReducer);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> origin/main
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
@@ -36,6 +43,12 @@ function Login() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
+<<<<<<< HEAD
+=======
+  useEffect(() => {
+    document.title = 'Đăng Nhập';
+  }, []);
+>>>>>>> origin/main
 
   const handleEmailChange = (e) => {
     const { value } = e.target;
@@ -51,6 +64,7 @@ function Login() {
 
   const LoginWithFacabook = async () => {
     try {
+<<<<<<< HEAD
       // const res = await dispatch(onLoginWithFacebook())
       window.open(`http://localhost:3001/api/auth/facebook`, '_self')
       // toast.success("Đăng nhập bằng facebook thành công")
@@ -66,6 +80,23 @@ function Login() {
       toast.error(err?.data?.message || err);
     }
   };
+=======
+        // const res = await dispatch(onLoginWithFacebook())
+        window.open(`http://localhost:3001/api/auth/facebook`, '_self') 
+        // toast.success("Đăng nhập bằng facebook thành công")
+    } catch (err) {
+        toast.error(err?.data?.message || err);
+    }
+};
+const LoginWithGoogle = async () => {
+    try {
+        window.open(`http://localhost:3001/api/auth/google`, '_self')
+        // toast.success("Đăng nhập bằng google thành công")
+    } catch (err) {
+        toast.error(err?.data?.message || err);
+    }
+};
+>>>>>>> origin/main
 
   //
   useEffect(() => {
@@ -85,7 +116,11 @@ function Login() {
     if (!password) {
       setPasswordError('Vui lòng nhập mật khẩu!');
     }
+<<<<<<< HEAD
     if (password.length < 8 || password.length > 32) {
+=======
+    if (password.length<8||password.length>32) {
+>>>>>>> origin/main
       setPasswordError('Mật khẩu từ 6 đến 32 ký tự!');
     }
 
@@ -99,9 +134,12 @@ function Login() {
 
   return (
     <MDBContainer fluid>
+<<<<<<< HEAD
       <Helmet>
         <title>Đăng nhập - HoangVu</title>
       </Helmet>
+=======
+>>>>>>> origin/main
       <MDBRow className='d-flex justify-content-center align-items-center h-100'>
         <MDBCol col='12'>
           <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px' }}>
@@ -142,7 +180,11 @@ function Login() {
                 </a>
               </p>
               <div className="text-center">
+<<<<<<< HEAD
                 <a className="fw-bold text-body" >
+=======
+                <a  className="fw-bold text-body" >
+>>>>>>> origin/main
                   <u onClick={handleForgotPassword} style={{ cursor: 'pointer', textAlign: 'right' }}> Quên mật khẩu</u>
                 </a>
               </div>
@@ -152,12 +194,21 @@ function Login() {
 
               <MDBBtn className="mb-2 w-100" size="lg" style={{ backgroundColor: '#dd4b39' }} onClick={() => LoginWithGoogle()}>
                 <MDBIcon fab icon="google" className="mx-2" />
+<<<<<<< HEAD
                 Đăng Nhập Bằng Google
               </MDBBtn>
 
               <MDBBtn className="mb-4w-100" size="lg" style={{ backgroundColor: '#3b5998' }} onClick={() => LoginWithFacabook()}>
                 <MDBIcon fab icon="facebook-f" className="mx-2" />
                 Đăng Nhập Bằng FaceBook
+=======
+               Đăng Nhập Bằng Google
+              </MDBBtn>
+
+              <MDBBtn className="mb-4w-100" size="lg" style={{ backgroundColor: '#3b5998' }}onClick={() => LoginWithFacabook()}>
+                <MDBIcon fab icon="facebook-f" className="mx-2" />
+               Đăng Nhập Bằng FaceBook
+>>>>>>> origin/main
               </MDBBtn>
             </MDBCardBody>
           </MDBCard>

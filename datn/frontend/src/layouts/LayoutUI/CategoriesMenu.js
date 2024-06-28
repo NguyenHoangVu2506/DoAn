@@ -82,18 +82,33 @@ const Categories = () => {
                                             {categoryParentNull && categoryParentNull.map((category, index) => {
                                                 return (
                                                     <div class="list-group list-group-light" id="list-tab" role="tablist" key={index}>
+<<<<<<< HEAD
                                                         <a
                                                             className={`list-group-item list-group-item-action px-3 border-0 ${activeTab == category._id ? 'active' : ''}`}
                                                             id="list-home-list"
                                                             data-mdb-list-init
+=======
+                                                        <button 
+                                                            className={`list-group-item list-group-item-action px-3 fw-bold border-0 ${activeTab == category._id ? 'active' : ''}`}
+                                                            id="list-home-list"
+                                                            data-mdb-list-init
+                                                           
+>>>>>>> origin/main
 
                                                             role="tab"
                                                             aria-controls={activeTab}
                                                             onMouseEnter={() => handleTabMouseEnter(category._id)}
+<<<<<<< HEAD
                                                         >
                                                             {
                                                                 category.category_name
                                                             } </a>
+=======
+                                                        ><a href={`/collections/${category.category_slug}`}  style={{color:'#f6831f'}}>  {
+                                                            category.category_name
+                                                        }</a>
+                                                            </button>
+>>>>>>> origin/main
 
                                                     </div>
 

@@ -165,6 +165,7 @@ class SpuController {
             metaData: await SpuService.findProductDetail(req.body)
         }).send(res)
     }
+<<<<<<< HEAD
     deleteProduct = async (req, res, next) => {
         new SuccessResponse({
             message: 'success',
@@ -173,6 +174,9 @@ class SpuController {
             })
         }).send(res)
     }
+=======
+
+>>>>>>> origin/main
 
 }
 

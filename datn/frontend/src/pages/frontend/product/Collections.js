@@ -15,7 +15,11 @@ function Collections() {
 
   const [isList, setIsList] = useState(false)
   //
+<<<<<<< HEAD
   const [isOption, setOption] = useState(false)
+=======
+  const [option, setOption] = useState(null)
+>>>>>>> origin/main
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 8;
 
@@ -44,12 +48,21 @@ function Collections() {
   console.log(category1, category2, category3, pagedProducts, selectedAttribute, selectedBrand, productByFilter, products, allProducts)
 
 
+<<<<<<< HEAD
   const listSale = allProducts && allProducts[0]?.special_offer?.special_offer_spu_list;
   const saleProducts = allProducts?.slice()?.filter((item) => item._id ===
     listSale
       ?.slice()
       ?.find((subitem) => subitem?.product_id === item._id)?.product_id
   );
+=======
+  // const listSale = allProducts && allProducts[0]?.special_offer?.special_offer_spu_list;
+  // const saleProducts = allProducts?.slice()?.filter((item) => item._id ===
+  //   listSale
+  //     ?.slice()
+  //     ?.find((subitem) => subitem?.product_id === item._id)?.product_id
+  // );
+>>>>>>> origin/main
 
   useEffect(() => {
     if (!allProducts) {
@@ -64,6 +77,13 @@ function Collections() {
   }, [])
 
   useEffect(() => {
+<<<<<<< HEAD
+=======
+    document.title = "Danh Mục Sản Phẩm";
+  }, []);
+
+  useEffect(() => {
+>>>>>>> origin/main
     all_category && setCategoriesParentNull(all_category?.filter((cat) => cat.parent_id == null))
   }, [all_category])
 
@@ -273,6 +293,7 @@ function Collections() {
 
 
   useEffect(() => {
+<<<<<<< HEAD
     if (saleProducts?.length > 0) {
       setOption(true)
 
@@ -281,6 +302,27 @@ function Collections() {
     }
 
   })
+=======
+    if (option === "all") {
+      setProductByFilter(products)
+
+    }
+    if (option === "sale") {
+      setProductByFilter(products.filter((product) => product.special_offer !== null))
+    }
+    if (option === "price_max") {
+      setProductByFilter(products)
+
+    }else{
+      
+    }
+    if (option === "rating") {
+      setProductByFilter(products)
+
+    }
+
+  }, [option])
+>>>>>>> origin/main
   const changeSelectedCategory = async (category) => {
 
     navigate(`/collections/${categoryCollapsed.category_slug}/${category.category_slug}`)
@@ -352,7 +394,11 @@ function Collections() {
             {/*<!-- sidebar -->*/}
             <div class="col-lg-3">
               {/*<!-- Toggle button -->*/}
+<<<<<<< HEAD
               <button
+=======
+              {/* <button
+>>>>>>> origin/main
                 class="btn btn-outline-secondary mb-3 w-100 d-lg-none"
                 type="button"
                 data-mdb-toggle="collapse"
@@ -362,9 +408,15 @@ function Collections() {
                 aria-label="Toggle navigation"
               >
                 <span>Show filter</span>
+<<<<<<< HEAD
               </button>
               {/*<!-- Collapsible wrapper -->*/}
               <div class="collapse card d-lg-block mb-5" id="navbarSupportedContent">
+=======
+              </button> */}
+              {/*<!-- Collapsible wrapper -->*/}
+              <div class="collapse card d-lg-block mb-5 pt-4" id="navbarSupportedContent">
+>>>>>>> origin/main
                 <div class="accordion" id="accordionPanelsStayOpenExample">
 
                   {categoriesParentNull && categoriesParentNull?.map((categoryParentnull, index) => {
@@ -388,7 +440,11 @@ function Collections() {
                               {all_category && all_category?.map((category) => {
                                 if (category.parent_id == categoryParentnull._id) {
                                   return (
+<<<<<<< HEAD
                                     <button onClick={() => changeSelectedCategory(category)} className="d-flex flex-column justify-content-start" >
+=======
+                                    <button onClick={() => changeSelectedCategory(category)} className="btn d-flex flex-column justify-content-start" style={{ color: '' }}>
+>>>>>>> origin/main
                                       {category.category_name}
                                     </button>
                                   )
@@ -436,7 +492,11 @@ function Collections() {
                     </div>
                   </div>
 
+<<<<<<< HEAD
                   <div class="accordion-item">
+=======
+                  {/* <div class="accordion-item">
+>>>>>>> origin/main
                     <h2 class="accordion-header" id="headingThree">
                       <button
                         className="accordion-button text-dark bg-light"
@@ -454,18 +514,26 @@ function Collections() {
                       <div class="accordion-body">
                         <div class="row mb-3">
                           <div class="col-6">
+<<<<<<< HEAD
                             {/* <p class="mb-0">
                               Min
                             </p> */}
+=======
+                         
+>>>>>>> origin/main
                             <div class="form-outline">
                               <input type="number" id="typeNumber" class="form-control border-secondary" />
                               <label class="form-label border-secondary" for="typeNumber">0</label>
                             </div>
                           </div>
                           <div class="col-6">
+<<<<<<< HEAD
                             {/* <p class="mb-0">
                               Max
                             </p> */}
+=======
+                           
+>>>>>>> origin/main
                             <div class="form-outline">
                               <input type="number" id="typeNumber" class="form-control border-secondary" />
                               <label class="form-label border-secondary" for="typeNumber">1,0000</label>
@@ -475,7 +543,11 @@ function Collections() {
                         <button type="button" class="btn btn-white w-100 border border-secondary">apply</button>
                       </div>
                     </div>
+<<<<<<< HEAD
                   </div>
+=======
+                  </div> */}
+>>>>>>> origin/main
 
                   {/* <div class="accordion-item">
                     <h2 class="accordion-header" id="headingThree">
@@ -537,7 +609,11 @@ function Collections() {
                   })}
 
 
+<<<<<<< HEAD
                   <div class="accordion-item">
+=======
+                  {/* <div class="accordion-item">
+>>>>>>> origin/main
                     <h2 class="accordion-header" id="headingThree">
                       <button
                         className="accordion-button text-dark bg-light"
@@ -553,7 +629,10 @@ function Collections() {
                       aria-labelledby="headingFour"
                     >
                       <div class="accordion-body">
+<<<<<<< HEAD
                         {/*<!-- Default checkbox -->*/}
+=======
+>>>>>>> origin/main
                         <div class="form-check">
                           <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked />
                           <label class="form-check-label" for="flexCheckDefault">
@@ -561,7 +640,10 @@ function Collections() {
                             <i class="fas fa-star text-warning"></i>
                           </label>
                         </div>
+<<<<<<< HEAD
                         {/*<!-- Default checkbox -->*/}
+=======
+>>>>>>> origin/main
                         <div class="form-check">
                           <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked />
                           <label class="form-check-label" for="flexCheckDefault">
@@ -569,7 +651,10 @@ function Collections() {
                             <i class="fas fa-star text-secondary"></i>
                           </label>
                         </div>
+<<<<<<< HEAD
                         {/*<!-- Default checkbox -->*/}
+=======
+>>>>>>> origin/main
                         <div class="form-check">
                           <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked />
                           <label class="form-check-label" for="flexCheckDefault">
@@ -577,7 +662,10 @@ function Collections() {
                             <i class="fas fa-star text-secondary"></i>
                           </label>
                         </div>
+<<<<<<< HEAD
                         {/*<!-- Default checkbox -->*/}
+=======
+>>>>>>> origin/main
                         <div class="form-check">
                           <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked />
                           <label class="form-check-label" for="flexCheckDefault">
@@ -587,7 +675,11 @@ function Collections() {
                         </div>
                       </div>
                     </div>
+<<<<<<< HEAD
                   </div>
+=======
+                  </div> */}
+>>>>>>> origin/main
                 </div>
               </div>
             </div>
@@ -596,11 +688,22 @@ function Collections() {
             {/*<!-- content -->*/}
             <div class="col-lg-9">
 
+<<<<<<< HEAD
               <header class="d-sm-flex align-items-center border-bottom mb-4 pb-3">
                 <div class="ms-auto">
                   <select class="form-select d-inline-block w-auto border pt-1">
                     <option onClick={() => setOption(false)} value="0">Tất Cả</option>
                     <option onClick={() => setOption(true)} value="1">Khuyến Mãi</option>
+=======
+              <header class="d-sm-flex align-items-center border-bottom mb-4 pb-3 pt-4">
+                <div class="ms-auto">
+                  <select class="form-select d-inline-block w-auto border pt-1" onChange={(e) => setOption(e.target.value)}>
+                    <option value="all">Tất Cả</option>
+                    <option value="sale">Khuyến Mãi</option>
+                    <option value="price_max">Giá Cao - Thấp</option>
+                    <option value="price_min">Giá Thấp - Cao</option>
+                    <option value="rating">Đánh Giá</option>
+>>>>>>> origin/main
                     {/* <option value="2">High rated</option>
                     <option value="3">Randomly</option> */}
                   </select>

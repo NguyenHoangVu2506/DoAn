@@ -9,7 +9,10 @@ import accounting from "accounting";
 import { Tooltip, initMDB } from "mdb-ui-kit";
 import { addOrderFromCart } from "../../../utils";
 import './tooltip.css';
+<<<<<<< HEAD
 import { Helmet } from 'react-helmet';
+=======
+>>>>>>> origin/main
 
 initMDB({ Tooltip });
 export default function Cart() {
@@ -45,6 +48,15 @@ export default function Cart() {
             fetchDataCart()
         }
     }, []);
+<<<<<<< HEAD
+=======
+
+    useEffect(() => {
+        document.title = "Giỏ Hàng";
+      }, []);
+    
+    
+>>>>>>> origin/main
     const loadPrice = async () => {
         const applyDiscount = await dispatch(checkoutReview({
             // cartId: cart?._id,
@@ -193,9 +205,12 @@ export default function Cart() {
             <div className="bg-primary">
                 <div className="bg-2" style={{ backgroundColor: 'white' }}>
                     <div className="container py-4">
+<<<<<<< HEAD
                     <Helmet>
                         <title>Giỏ hàng - HoangVu</title>
                     </Helmet>
+=======
+>>>>>>> origin/main
                         {/* Breadcrumb */}
                         <nav className="d-flex">
                             <h6 className="mb-0">

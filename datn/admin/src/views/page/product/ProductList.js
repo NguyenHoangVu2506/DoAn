@@ -56,11 +56,19 @@ function ProductList() {
                                             Thêm sản phẩm
                                         </CButton>
                                     </Link>
+<<<<<<< HEAD
                                     {/* <Link to='/menu/createmenu'>
                                         <CButton color="danger" variant="outline" className="me-md-2">
                                             <CIcon icon={cilTrash} title="Thùng rác" /> Thùng rác
                                         </CButton>
                                     </Link> */}
+=======
+                                    <Link to='/menu/createmenu'>
+                                        <CButton color="danger" variant="outline" className="me-md-2">
+                                            <CIcon icon={cilTrash} title="Thùng rác" /> Thùng rác
+                                        </CButton>
+                                    </Link>
+>>>>>>> origin/main
                                 </div>
                                 <hr />
                                 <table className="table">
@@ -102,9 +110,15 @@ function ProductList() {
                                                         <Link to={`/product/${item.product_slug}-${item._id}`} className="btn btn-sm">
                                                             <i className="fa fa-eye me-1"></i>Chi tiết
                                                         </Link> |
+<<<<<<< HEAD
                                                         {/* <button onClick={() => trashProduct(item.id)} className="btn btn-sm">
                                                             <i className="fa fa-trash me-1"></i>Xoá
                                                         </button> */}
+=======
+                                                        <button onClick={() => trashProduct(item.id)} className="btn btn-sm">
+                                                            <i className="fa fa-trash me-1"></i>Xoá
+                                                        </button>
+>>>>>>> origin/main
                                                     </div>
                                                 </td>
                                             </tr>
