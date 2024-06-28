@@ -22,7 +22,7 @@ export default function CategoryItem({ catParentNull, all_category }) {
                         <div className="d-flex flex-column align-items-start" key={index}>
                             <Link to={`/collections/${catParentNull.category_slug}/${category.category_slug}`} className=" category-name fw-bold d-flex flex-column text-dark " 
                             style={{ color: "dark", hover: "white", textTransform: "uppercase" }} key={index}>
-                                <p> {category.category_name}</p>
+                                <p > {category.category_name}</p>
                             </Link>
                             {/* <div className="category-name fw-bold" style={{ textTransform: "uppercase" }}>{category.category_name}</div> */}
                             <CategoryChildItem catParentNull={catParentNull} child_category={category} all_category={all_category} />

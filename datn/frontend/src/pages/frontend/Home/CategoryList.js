@@ -15,30 +15,29 @@ export default function CategoryList({ category_parent, all_product_category, al
     setSelectedCategory(category)
   }
   useEffect(() => {
-    !category_childrent && setCattagoryChildrent(all_category.filter((cat, index) => cat.parent_id == category_parent._id))
-  }, []);
-  
+    !category_childrent && setCattagoryChildrent(all_category.filter((cat) => cat.parent_id == category_parent._id))
+  }, [category_parent]);
   useEffect(() => {
-    category_childrent && setSelectedCategory(category_childrent[0])
-  }, [category_childrent]);
+    setProductByCategory(all_product_category?.filter((product) => product.product_category.includes(category_parent._id)))
+  }, [category_parent]);
 
   useEffect(() => {
     selectedCategory && setProductByCategory(all_product_category?.filter((product) => product.product_category.includes(selectedCategory._id)))
   }, [selectedCategory]);
-  
+
   const totalPages = Math.ceil(productByCategory.length / itemsPerPage);
   const productcate = productByCategory.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const handlePrevious = () => {
-      if (currentPage > 1) {
-          setCurrentPage(currentPage - 1);
-      }
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
   };
 
   const handleNext = () => {
-      if (currentPage < totalPages) {
-          setCurrentPage(currentPage + 1);
-      }
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
   };
 
 
@@ -47,7 +46,7 @@ export default function CategoryList({ category_parent, all_product_category, al
       <div className="container pt-2 " style={{ background: '#ffd6b2 linear-gradient(180deg, #fff3ea 0%, #ffd6b2 100%)' }}>
         <header className="mb-2 d-flex justify-content-between align-items-center " >
           <h3 >{category_parent.category_name}</h3>
-          <a href="/collections" className="d-block ">
+          <a href={`/collections/${category_parent.category_slug}`} className="d-block ">
             <button type="button" class="btn btn-rounded" style={{ backgroundColor: '#f6831f', color: 'white' }} data-mdb-ripple-init >Xem tất cả</button>
           </a>
         </header>
@@ -67,17 +66,17 @@ export default function CategoryList({ category_parent, all_product_category, al
 
       </div>
 
-      <div class=" row " >
+      <div class=" row flex px-2 " >
         {productcate.length > 0 ? productcate.map((product, index) => {
           return <ProductItem product={product} key={index} />
-        }) 
-        :
+        })
+          :
           <div>
             <div className="card-body pt-3 text-center">
               <p style={{ color: '#545453' }}>Không có sản phẩm</p>
             </div>
           </div>}
-          {/* <div className="pagination-container" style={{ display: 'flex', justifyContent: 'center' }}>
+        {/* <div className="pagination-container" style={{ display: 'flex', justifyContent: 'center' }}>
                         <ul className="pagination">
                             <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
                                 <button className="page-link" onClick={handlePrevious}>Previous</button>
