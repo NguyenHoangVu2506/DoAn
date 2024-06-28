@@ -1,0 +1,252 @@
+/* Đảm bảo chiều cao đầy đủ trên màn hình lớn */
+@media (min-width: 1025px) {
+  .h-custom {
+    height: 100vh !important;
+  }
+}
+
+/* Đường viền trên của timeline */
+.horizontal-timeline1 .items {
+  border-top: 2px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+/* Căn chỉnh các mục trong timeline */
+.horizontal-timeline1 .items .items-list {
+  position: relative;
+  margin-right: 0;
+  padding-top: 15px;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  text-align: center;
+}
+
+/* Vị trí trước các mục trong timeline */
+.horizontal-timeline1 .items .items-list:before {
+  content: "";
+  position: absolute;
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+  background-color: #ddd;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+/* Chỉnh sửa padding của các mục trong timeline */
+.horizontal-timeline1 .items .items-list {
+  position: relative;
+  margin-right: 0;
+  padding-top: 15px;
+  display: flex;
+  /* Thêm thuộc tính này để sử dụng flexbox */
+  align-items: center;
+  flex: 1;
+  text-align: center;
+}
+
+/* CSS cho hình tròn trạng thái đơn hàng */
+.dot {
+  height: 10px;
+  width: 10px;
+  background-color: #bbb;
+  /* Màu xám mặc định */
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 5px;
+}
+
+/* Card stepper */
+.card-stepper {
+  z-index: 0;
+}
+
+/* Progress bar */
+/* UserOrder.css */
+/* Progress bar container */
+/* Progress bar container */
+#progressbar-1 {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  list-style-type: none;
+  counter-reset: step;
+  position: relative;
+  width: 100%;
+  text-align: center;
+}
+
+/* Progress bar items */
+#progressbar-1 li {
+  text-align: center;
+  position: relative;
+  flex: 1;
+  padding: 10px;
+}
+
+/* Step circle */
+#progressbar-1 li::before {
+  content: counter(step);
+  counter-increment: step;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  border: 2px solid #ddd !important;
+  display: block;
+  text-align: center;
+  margin: 0 auto 10px auto;
+  border-radius: 50%;
+  background-color: white !important;
+}
+
+/* Connecting lines between steps */
+#progressbar-1 li::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background-color: #ddd !important;
+  top: 15px;
+  left: -50%;
+  z-index: -1;
+}
+
+#progressbar-1 li:first-child::after {
+  content: none !important;
+}
+
+/* Step description */
+#progressbar-1 li span {
+  display: block;
+  margin-top: 10px;
+}
+
+/* Progress bar active step */
+#progressbar-1 li.active::before {
+  border-color: #4caf50 !important;
+}
+
+/* Progress bar step completed */
+#progressbar-1 li.active span {
+  color: #4caf50 !important;
+}
+
+/* Active line between steps */
+#progressbar-1 li.active::after {
+  background-color: #4caf50 !important;
+}
+
+/* Cải thiện modal và các phần tử khác */
+.modal-body .fw-bold,
+.modal-body .text-muted,
+.modal-body h4 {
+  color: inherit;
+  /* Sử dụng màu chữ mặc định */
+}
+
+.card .list-unstyled li .img-sm {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+}
+
+.card .list-unstyled li .d-flex {
+  flex-direction: row;
+  align-items: center;
+}
+
+.card .list-unstyled li .d-flex .me-2 img {
+  width: 72px;
+  height: 72px;
+}
+
+.nav-pills .nav-link {
+  padding: 0.5rem 1rem;
+}
+
+.nav-pills .nav-link p {
+  margin: 0;
+}
+
+/* Toastr Container */
+.toast {
+  border-radius: 4px;
+  padding: 15px;
+  margin: 10px;
+  font-size: 14px;
+  color: #ea7508 !important;
+  /* Màu văn bản */
+  opacity: 3;
+  /* Độ trong suốt */
+
+}
+
+/* Toastr Position */
+.toast-top-right {
+  top: 10px;
+  right: 10px;
+}
+
+/* Toastr Animation */
+.toast.show {
+  animation: fadeIn ease 0.3s;
+  -webkit-animation: fadeIn ease 0.3s;
+  -moz-animation: fadeIn ease 0.3s;
+  -o-animation: fadeIn ease 0.3s;
+  -ms-animation: fadeIn ease 0.3s;
+}
+
+.toast.hide {
+  animation: fadeOut ease 0.3s;
+  -webkit-animation: fadeOut ease 0.3s;
+  -moz-animation: fadeOut ease 0.3s;
+  -o-animation: fadeOut ease 0.3s;
+  -ms-animation: fadeOut ease 0.3s;
+}
+
+.star-rating {
+  font-size: 24px;
+  /* Kích thước biểu tượng đánh giá */
+  color: #ffc107;
+  /* Màu sắc cho các sao không được chọn */
+  display: flex;
+  align-items: center;
+}
+
+.star-rating .react-star-rating__star {
+  cursor: pointer;
+  /* Con trỏ chuột là pointer khi rê chuột qua các sao */
+}
+
+.star-rating .react-star-rating__star--full {
+  color: #f6831f;
+  /* Màu sắc cho các sao đã chọn */
+}
+
+/* Toastr Show and Hide Effects */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}

@@ -1,0 +1,133 @@
+body {
+    background-color: #fbfbfb;
+}
+
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 240px;
+    z-index: 600;
+    /* box-shadow: 0 2px 5px 0 rgb(0 0 0 / 5%), 0 2px 10px 0 rgb(0 0 0 / 5%); */
+}
+
+.sidebar-sticky {
+    position: relative;
+    top: 0;
+    height: calc(100vh - 48px);
+    padding-top: 0.5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+@media (max-width: 991.98px) {
+    .sidebar {
+        width: 100%;
+        position: relative;
+        box-shadow: none;
+    }
+}
+
+body {
+    background-color: #fbfbfb;
+}
+
+
+a.color-hover:hover,
+a.color-hover:active {
+    color: #ff6800;
+    font-size: 100%;
+}
+
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 600;
+    /* box-shadow: 0 2px 5px 0 rgb(0 0 0 / 5%), 0 2px 10px 0 rgb(0 0 0 / 5%); */
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-sticky {
+    position: relative;
+    top: 0;
+    height: calc(100vh - 48px);
+    padding-top: 0.5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+
+@media (min-width: 991.98px) {
+    .sidebar {
+        width: 240px;
+        flex-direction: row;
+    }
+}
+
+.form-outline1 {
+    min-height: auto;
+    padding-top: .32rem;
+    padding-bottom: .32rem;
+    padding-left: .75rem;
+    padding-right: .75rem;
+    border: 1px;
+    background: transparent;
+    transition: all .2s linear;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.5rem;
+    /* Adjust padding to control the height */
+    font-size: 1rem;
+    border: 2px solid #f6831f;
+    /* Add border with desired color */
+    border-radius: 4px;
+    /* Add border radius for rounded corners if desired */
+    color: #333;
+    height: 2.5rem;
+    /* Adjust height */
+    box-sizing: border-box;
+    /* Ensure padding and border are included in the element's total width and height */
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #f6831f;
+}
+
+.form-label {
+    position: absolute;
+    top: 50%;
+    left: 0.5rem;
+    transform: translateY(-50%);
+    background-color: white;
+    color: #f6831f;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    /* Prevent label from being clickable */
+}
+
+.form-control:focus+.form-label,
+.form-control:not(:placeholder-shown)+.form-label {
+    top: -0.75rem;
+    left: 0.5rem;
+    font-size: 0.75rem;
+    color: #f6831f;
+    background-color: white;
+    /* Adjust based on your design */
+    padding: 0 0.25rem;
+    /* Padding around the label */
+}
+
+.form-control:focus::placeholder {
+    color: transparent;
+    /* Hide the placeholder when input is focused */
+}
