@@ -165,7 +165,14 @@ class SpuController {
             metaData: await SpuService.findProductDetail(req.body)
         }).send(res)
     }
-
+    deleteProduct = async (req, res, next) => {
+        new SuccessResponse({
+            message: 'success',
+            metaData: await SpuService.deleteProductById({
+                spu_id: req.params.id
+            })
+        }).send(res)
+    }
 
 }
 

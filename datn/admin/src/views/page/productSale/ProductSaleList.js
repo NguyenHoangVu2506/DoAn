@@ -27,12 +27,12 @@ function ProductSaleList() {
                         <div className="row">
                             <div className="col-md-12">
                                 <div className="d-grid gap-2 d-md-flex justify-content-md-start">
-                                    {/* <Link to='/category/createcategory'>
+                                    <Link to='/productsale/createproductsale'>
                                         <CButton color="primary" variant="outline" className="me-md-2">
                                             <CIcon icon={cilPlus} title="Thêm sản phẩm" />
                                             Thêm Chương trình giảm giá
                                         </CButton>
-                                    </Link> */}
+                                    </Link>
                                     <Link to='/menu/createmenu'>
                                         <CButton color="danger" variant="outline" className="me-md-2">
                                             <CIcon icon={cilTrash} title="Thùng rác" /> Thùng rác
