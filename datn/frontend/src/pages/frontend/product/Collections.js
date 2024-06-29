@@ -279,21 +279,21 @@ function Collections() {
   useEffect(() => {
     if (option === "all") {
       setProductByFilter(products)
-
     }
     if (option === "sale") {
       setProductByFilter(products.filter((product) => product.special_offer !== null))
     }
-    if (option === "price_max") {
-      setProductByFilter(products)
-
-    }else{
-      
+    if (option === "min_to_max") {
+      setProductByFilter(products.sort((a, b) =>
+        a.product_price - b.product_price
+      ))
     }
-    if (option === "rating") {
-      setProductByFilter(products)
-
-    }
+    // if (option === "max_to_min") {
+    //   setProductByFilter(products)
+    // }
+    // if (option === "rating") {
+    //   setProductByFilter(products)
+    // }
 
   }, [option])
   const changeSelectedCategory = async (category) => {
@@ -379,7 +379,7 @@ function Collections() {
                 <span>Show filter</span>
               </button> */}
               {/*<!-- Collapsible wrapper -->*/}
-              <div class="collapse card d-lg-block mb-5 pt-4" id="navbarSupportedContent">
+              <div class="collapse  d-lg-block mb-5 pt-4" id="navbarSupportedContent">
                 <div class="accordion" id="accordionPanelsStayOpenExample">
 
                   {categoriesParentNull && categoriesParentNull?.map((categoryParentnull, index) => {
@@ -387,7 +387,7 @@ function Collections() {
                       <div class="accordion-item" key={index}>
                         <h2 class="accordion-header" id={categoryParentnull._id}>
                           <button
-                            className="accordion-button text-dark bg-light"
+                            className="accordion-button fw-bold text-muted bg-light"
                             type="button"
                             onClick={() => toggleCategoryCollapse(categoryParentnull)}
                           >{categoryParentnull.category_name}</button>
@@ -398,13 +398,13 @@ function Collections() {
                           className={`collapse ${categoryCollapsed._id == categoryParentnull._id && categoryCollapsedStatus == true ? "show" : ""}`}
                           aria-labelledby={categoryParentnull._id}
                         >
-                          <div class="accordion-body">
-                            <div className="d-flex flex-column justify-content-start ">
+                          <div class="">
+                            <div className="d-flex flex-column ">
                               {all_category && all_category?.map((category) => {
                                 if (category.parent_id == categoryParentnull._id) {
                                   return (
-                                    <button onClick={() => changeSelectedCategory(category)} className="btn d-flex flex-column justify-content-start" style={{ color: '' }}>
-                                      {category.category_name}
+                                    <button onClick={() => changeSelectedCategory(category)} className="btn btn-light  " style={{}}>
+                                      <p style={{ color: '#f6831f', textAlign: 'center', marginBottom: '1px' }}>{category.category_name}</p>
                                     </button>
                                   )
                                 }
@@ -419,7 +419,7 @@ function Collections() {
                   <div class="accordion-item">
                     <h2 class="accordion-header" id="headingTwo">
                       <button
-                        className="accordion-button text-dark bg-light"
+                        className="accordion-button fw-bold text-muted bg-light"
                         type="button"
                         onClick={toggleBrandCollapse}
                       >
@@ -437,7 +437,7 @@ function Collections() {
                             {all_brand && all_brand.map((brand, index) => {
                               return (
                                 <div key={index}>
-                                  <input class="form-check-input" type="checkbox" value={brand._id} id={index} onChange={(e) => handleChangeBrand(e.target.checked, brand._id)} />
+                                  <input class="form-check-input" type="checkbox" value={brand._id} id={index} onChange={(e) => handleChangeBrand(e.target.checked, brand._id)} style={{ color: '#f6831f' }} />
                                   <label class="form-check-label" for={index}>{brand.brand_name}</label>
                                 </div>
 
@@ -519,7 +519,7 @@ function Collections() {
                       <div class="accordion-item" key={index}>
                         <h2 class="accordion-header" id={attribute._id}>
                           <button
-                            className="accordion-button text-dark bg-light"
+                            className="accordion-button fw-bold text-muted bg-light"
                             type="button"
                             onClick={() => toggleAttributeCollapse(attribute._id)}
                           >
@@ -603,14 +603,14 @@ function Collections() {
             {/*<!-- content -->*/}
             <div class="col-lg-9">
 
-              <header class="d-sm-flex align-items-center border-bottom mb-4 pb-3 pt-4">
+              <header class="d-sm-flex align-items-center border-bottom mb-4 pb-3 pt-4 " style={{ color: '#f6831f' }}>
                 <div class="ms-auto">
-                  <select class="form-select d-inline-block w-auto border pt-1" onChange={(e) => setOption(e.target.value)}>
-                    <option value="all">Tất Cả</option>
-                    <option value="sale">Khuyến Mãi</option>
-                    <option value="price_max">Giá Cao - Thấp</option>
-                    <option value="price_min">Giá Thấp - Cao</option>
-                    <option value="rating">Đánh Giá</option>
+                  <select class="form-select d-inline-block w-auto border-white pt-1 bg-light" style={{ color: '#f6831f', borderColor: 'black' }} onChange={(e) => setOption(e.target.value)}>
+                    <option style={{ color: '#f6831f' }} value="all">Tất Cả</option>
+                    <option style={{ color: '#f6831f' }} value="sale">Khuyến Mãi</option>
+                    <option style={{ color: '#f6831f' }} value="max_to_min">Giá Cao - Thấp</option>
+                    <option style={{ color: '#f6831f' }} value="min_to_max">Giá Thấp - Cao</option>
+                    <option style={{ color: '#f6831f' }} value="rating">Đánh Giá Giảm Dần</option>
                     {/* <option value="2">High rated</option>
                     <option value="3">Randomly</option> */}
                   </select>

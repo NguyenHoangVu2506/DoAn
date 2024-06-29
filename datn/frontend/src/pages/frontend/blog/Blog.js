@@ -61,11 +61,11 @@ function Blog() {
       <main role="main" className="container">
         <div className="card-body">
           <div className="row">
-            <div className="col-md-9 blog-main py-4">
-              <header className="mb-1 pt-1 pb-1">
-                <h3 className="text-center text-uppercase text-dark pb-3" style={{ fontSize: '24px' }}>TẤT CẢ BÀI VIẾT</h3>
+            <div className="col-md-9 blog-main">
+              <header className="mb-1 pb-1">
+                <h3 className="text-center text-uppercase text-dark" style={{ fontSize: '24px' }}>TẤT CẢ BÀI VIẾT</h3>
               </header>
-              <div className="row">
+              <div className="row pt-0">
                 {topic_id !== ""
                   ? onBlogByTopicId && onBlogByTopicId
                     .filter(post => post.isPublished)
