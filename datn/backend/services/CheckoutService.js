@@ -2,7 +2,7 @@
 const { ForbiddenRequestError, NotFoundRequestError, ConflictRequestError, BadRequestError } = require('../core/error.response')
 const { findCartById } = require("../models/repositories/checkout.repo")
 
-const { getDiscountAmount ,getDiscountAmountOrder} = require('./DiscountService')
+const { getDiscountAmount, getDiscountAmountOrder } = require('./DiscountService')
 // const { acquireLock, releaseLock } = require('./RedisService')
 const { order } = require('../models/OrderModel')
 const { checkProductByServer } = require('./SpuService')
@@ -12,7 +12,7 @@ const { v4: uuidv4 } = require('uuid')
 const { getSelectData } = require('../utils')
 
 class CheckoutService {
-     async checkoutReview({ cartId, userId, order_ids }) {
+    async checkoutReview({ cartId, userId, order_ids }) {
 
         const checkout_order = {
             totalPrice: 0,
@@ -233,7 +233,7 @@ class CheckoutService {
 
     //     return newOrder
     // }
-     async orderByUser({ order_ids, cartId, userId, user_address = {}, user_payment = {} }) {  
+    async orderByUser({ order_ids, cartId, userId, user_email, user_address = {}, user_payment = {} }) {
         try {
             console.log('Starting orderByUser method');
             const { order_ids_new, checkout_order } = await this.checkoutReviewOrder({
@@ -241,12 +241,14 @@ class CheckoutService {
                 userId,
                 order_ids,
             });
+            
             // const user = await this.checkoutReviewOrder({
             //     user_id:userId
             // });
             const newOrder = await order.create({
                 order_userId: userId,
                 order_checkout: checkout_order,
+                order_email: user_email,
                 order_shipping: user_address,
                 order_product: order_ids_new,
                 order_payment: user_payment,
@@ -254,10 +256,10 @@ class CheckoutService {
 
             // Send email notification after successful order creation
             await this.sendEmailOrder({
-                user_email: user_address, // Assuming user_address contains the email address
+                user_email: user_email, // Assuming user_address contains the email address
                 user_order: newOrder, // Passing the newly created order details
             });
-            console.log(user_address)
+            console.log(user_email)
             console.log('Order placed successfully');
             return newOrder;
         } catch (error) {
@@ -266,7 +268,7 @@ class CheckoutService {
         }
     }
 
-     async sendEmailOrder({ user_email, user_order }) {
+    async sendEmailOrder({ user_email, user_order }) {
         try {
             // Assuming you have an email template stored in a variable or file
             const emailContent = `
@@ -291,15 +293,15 @@ class CheckoutService {
         }
     }
 
-     async findOrderByUser({ sort, user_id, select }) {
+    async findOrderByUser({ sort= 'ctime', user_id, select }) {
         const sortBy = sort === 'ctime' ? { _id: -1 } : { _id: 1 }
         const Order = await order.find({
             order_userId: user_id
         }).sort(sortBy).select(getSelectData(select))
-        .lean()
+            .lean()
         return Order
     }
-    async findOrderById({  order_id, select }) {
+    async findOrderById({ order_id, select }) {
         const Order = await order.findOne({
             _id: order_id
         })
@@ -309,7 +311,7 @@ class CheckoutService {
         const Order = await order.find()
         return Order
     }
-     async updateOrderStatusByOrder({ order_id, order_status }) {
+    async updateOrderStatusByOrder({ order_id, order_status }) {
         try {
             const query = { _id: order_id },
                 updates = {

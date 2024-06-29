@@ -31,7 +31,7 @@ export default function UserOrder() {
     setShowReviewForm(true);
     setSelectedProduct(product);
   };
-  
+
   const fetchProductDetails = async (productId) => {
     const respon = await dispatch(productById({ spu_id: productId }));
     if (respon) {
@@ -106,7 +106,7 @@ export default function UserOrder() {
     // Ví dụ:
     try {
       // Gửi dữ liệu đánh giá lên server
-      const response = await dispatch(addCommnetByProduct({ productId: selectedProductId,userId:userInfo._id,rating:rating,content:reviewContent }));
+      const response = await dispatch(addCommnetByProduct({ productId: selectedProductId, userId: userInfo._id, rating: rating, content: reviewContent }));
       // Xử lý response nếu cần
       setShowReviewForm(false);
       toast.success('Đánh giá sản phẩm thành công!');
@@ -122,9 +122,9 @@ export default function UserOrder() {
   return (
     <>
       <div className="bg-primary">
-      <Helmet>
-        <title>Đơn hàng của bạn - HoangVu</title>
-      </Helmet>
+        <Helmet>
+          <title>Đơn hàng của bạn - HoangVu</title>
+        </Helmet>
         <div className="bg-2" style={{ backgroundColor: 'white' }}>
           <div className="container py-4">
             <nav className="d-flex" >
@@ -190,7 +190,7 @@ export default function UserOrder() {
                                     {product.item_products.map((item, itemIndex) => {
                                       getProductDetails(item); // Call function to fetch product details
                                       const productDetail = productDetails[item.productId] || {};
-                                      const product_Id=item.productId;
+                                      const product_Id = item.productId;
                                       return (
                                         <div key={`${idx}-${itemIndex}`}>
                                           <button className="btn btn-sm btn-outline-primary" onClick={() => handleReview(item)}>Đánh giá</button>
@@ -208,11 +208,11 @@ export default function UserOrder() {
                                                         <p className="small text-muted mb-1">Tên sản phẩm</p>
                                                         <p> {productDetail.product_name}</p>
                                                       </div>
-                                                      <div className="mb-3" style={{fontSize:"24px"}}>
+                                                      <div className="mb-3" style={{ fontSize: "24px" }}>
                                                         <label htmlFor="rating" className="form-label">Đánh giá</label>
                                                         <StarRatingComponent
                                                           name="rating"
-                                                          
+
                                                           starCount={5}
                                                           value={rating}
                                                           onStarClick={onStarClick}
@@ -344,10 +344,17 @@ export default function UserOrder() {
                           <div className="col-lg-4 border-start">
                             <p className="mb-0 text-dark fw-bold">Địa chỉ giao hàng</p>
                             <p className="m-0">
-                              United States <br />
-                              3601 Old Capitol Trail, Unit A-7, Suite 170777, Wilmington, DE 19808
+                              {order.order_shipping ? (
+                                <>
+                                  {order.order_shipping.postal_code},{order.order_shipping.street}, {order.order_shipping.city}, {order.order_shipping.country}
+                                </>
+                              ) : (
+                                "Địa chỉ giao hàng không có sẵn"
+                              )}
                             </p>
                           </div>
+
+
                           <div className="col-lg-4 border-start">
                             <p className="mb-0 text-dark fw-bold">Phương thức thanh toán</p>
                             <p>{order.order_payment}</p>

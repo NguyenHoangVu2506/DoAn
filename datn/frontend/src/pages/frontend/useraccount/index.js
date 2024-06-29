@@ -132,7 +132,6 @@ export default function UserAccount() {
     }
   }, [userInfo, list_address])
 
-
   return (
     <>
       <div class="bg-primary">

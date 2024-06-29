@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import accounting from 'accounting';
 import { toast } from 'react-toastify';
 import { PayPalButton } from 'react-paypal-button-v2';
-import { newOrder, deleteCartIdUserId } from '../../../store/actions';
+import { newOrder, deleteCartIdUserId, onGetAddress } from '../../../store/actions';
 import { getOrderFromCart, getCartFromLocalStorage, deleteOrderFromCart } from '../../../utils';
 // <<<<<<< HEAD
 import { Helmet } from 'react-helmet';
@@ -37,7 +37,8 @@ function Checkout() {
   const [paymentMethod, setPaymentMethod] = useState('cod'); // State to track payment method
   const [cart_products] = useState(getCartFromLocalStorage());
   const [sdkReady, setSdkReady] = useState(false);
-
+  const [list_address, setListAddress] = useState(null)
+  const [selectedAddress, setSelectedAddress] = useState(null);
   const handleShippingChange = (event) => {
     const selectedShippingMethod = event.target.value;
     setShippingMethod(selectedShippingMethod);
@@ -52,13 +53,16 @@ function Checkout() {
   const handlePaymentMethodChange = (event) => {
     setPaymentMethod(event.target.value);
   };
-
+  const handleAddressChange = (addr) => {
+    setSelectedAddress(addr);
+  };
   const handleOrder = async () => {
     const discounts = discountsApply.map((discount) => { return { discountId: discount._id, codeId: discount.discount_code } });
 
     const new_order = await dispatch(newOrder({
       userId: userInfo._id,
-      user_address:userInfo.user_email,
+      user_address: selectedAddress,
+      user_email: userInfo.user_email,
       user_payment: {},
       order_ids: {
         shop_discounts: discounts,
@@ -98,12 +102,31 @@ function Checkout() {
       setSdkReady(true);
     }
   }, []);
+  ///address
+  const getAddress = async () => {
+    const call_address = await dispatch(onGetAddress({
+      user_id: userInfo._id,
+    }))
+    setListAddress(call_address.payload.metaData)
+
+  }
+
+  useEffect(() => {
+    if (!list_address) {
+      getAddress()
+
+    }
+  }, [userInfo, list_address])
+  console.log(list_address)
+
+  /////////
   const onSuccessPaypal = async (details, data) => {
     const discounts = discountsApply.map((discount) => { return { discountId: discount._id, codeId: discount.discount_code } });
 
     const new_order = await dispatch(newOrder({
       userId: userInfo._id,
-      user_address:userInfo.user_email,
+      user_address: selectedAddress,
+      user_email: userInfo.user_email,
       user_payment: 'paypal',
       order_ids: {
         shop_discounts: discounts,
@@ -125,20 +148,20 @@ function Checkout() {
       <div className="bg-primary">
         <div className="bg-2" style={{ backgroundColor: 'white' }}>
           <div className="container py-4">
-{/* <<<<<<< HEAD */}
-          <Helmet>
-                        <title>Thanh toán - HoangVu</title>
-                    </Helmet>
-{/* // =======
+            {/* <<<<<<< HEAD */}
+            <Helmet>
+              <title>Thanh toán - HoangVu</title>
+            </Helmet>
+            {/* // =======
 // >>>>>>> origin/main */}
             {/* Breadcrumb */}
             <nav className="d-flex">
               <h6 className="mb-0">
-                <Link to={'/'} className=" " style={{ color: '#f6831f'}}>Trang Chủ</Link>
-                <span className=" mx-2" style={{ color: '#f6831f'}}> - </span>
-                <Link to={'/gio-hang'} style={{ color: '#f6831f'}}>Giỏ hàng</Link>
-                <span className="mx-2" style={{ color: '#f6831f'}}> - </span>
-                <Link to={'/checkout'} style={{ color: '#f6831f'}}><u>Thanh toán</u></Link>
+                <Link to={'/'} className=" " style={{ color: '#f6831f' }}>Trang Chủ</Link>
+                <span className=" mx-2" style={{ color: '#f6831f' }}> - </span>
+                <Link to={'/gio-hang'} style={{ color: '#f6831f' }}>Giỏ hàng</Link>
+                <span className="mx-2" style={{ color: '#f6831f' }}> - </span>
+                <Link to={'/checkout'} style={{ color: '#f6831f' }}><u>Thanh toán</u></Link>
               </h6>
             </nav>
             {/* Breadcrumb */}
@@ -178,7 +201,30 @@ function Checkout() {
                         />
                       </div>
                     </div>
-                    <div className="col-12 mb-3">
+                    <h5 className="card-title mb-3">Vui lòng chọn địa chỉ</h5>
+                    <div className="row mb-3">
+                      {list_address && list_address.map((addr, index) => (
+                        <div className="col-lg-6 mb-3" key={index}>
+                          <div className="form-check h-100 border rounded-3">
+                            <div className="p-3">
+                              <input
+                                className="form-check-input"
+                                type="radio"
+                                name="flexRadioDefault"
+                                id={`flexRadioDefault${index + 2}`}
+                                checked={selectedAddress === addr}
+                                onChange={() => handleAddressChange(addr)}
+                              />
+                              <b className="mx-2 text-muted"><i className="fa fa-map-marker-alt"></i></b>
+                              {addr.postal_code} {addr.street} {addr.city} {addr.country}
+                              <b className="mx-2 text-muted"><i className="fa fa-phone"></i></b>
+                              {addr.phone_number}
+                            </div>
+                          </div>
+                        </div>
+                      ))}                    </div>
+
+                    {/* <div className="col-12 mb-3">
                       <p className="mb-0">Địa chỉ</p>
                       <div className="form-outline">
                         <textarea
@@ -188,7 +234,7 @@ function Checkout() {
                           style={addressInputStyle}
                         />
                       </div>
-                    </div>
+                    </div> */}
                     <div className="col-12 mb-3">
                       <p className="mb-0">Ghi chú</p>
                       <div className="form-outline">
@@ -202,48 +248,6 @@ function Checkout() {
                     </div>
                   </div>
                   <hr className="my-4" />
-                  <h5 className="card-title mb-3">Phương thức vận chuyển</h5>
-                  <div className="row mb-3">
-                    <div className="col-lg-4 mb-3">
-                      <div className="form-check h-100 border rounded-3">
-                        <div className="p-3">
-                          <input
-                            className="form-check-input"
-                            type="radio"
-                            name="shippingMethod"
-                            id="flexRadioDefault2"
-                            value="normal"
-                            checked={shippingMethod === 'normal'}
-                            onChange={handleShippingChange}
-                          />
-                          <label className="form-check-label" htmlFor="flexRadioDefault2">
-                            Vận chuyển nhanh <br />
-                            <small className="text-muted">Thời gian từ 4-5 ngày</small>
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="col-lg-4 mb-3">
-                      <div className="form-check h-100 border rounded-3">
-                        <div className="p-3">
-                          <input
-                            className="form-check-input"
-                            type="radio"
-                            name="shippingMethod"
-                            id="flexRadioDefault1"
-                            value="express"
-                            checked={shippingMethod === 'express'}
-                            onChange={handleShippingChange}
-                          />
-                          <label className="form-check-label" htmlFor="flexRadioDefault1">
-                            Vận chuyển hỏa tốc <br />
-                            <small className="text-muted">Thời gian từ 1-2 ngày</small>
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                   <hr className="my-4" />
                   <h5 className="card-title mb-3">Hình thức thanh toán</h5>
                   <div className="row mb-3">
@@ -283,7 +287,7 @@ function Checkout() {
                         </div>
                       </div>
                     </div>
-                    <div className="col-lg-4 mb-3">
+                    {/* <div className="col-lg-4 mb-3">
                       <div className="form-check h-100 border rounded-3">
                         <div className="p-3">
                           <input
@@ -300,7 +304,7 @@ function Checkout() {
                           </label>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                   {/* Render PayPal button only if payment method is PayPal */}
                 </div>
@@ -328,7 +332,7 @@ function Checkout() {
                   </div> */}
                   <div className="d-flex justify-content-between">
                     <p className="mb-2">Tổng thanh toán:</p>
-                    <p className="mb-2 fw-bold h6">{accounting.formatNumber(price_total_checkout , 0, ".", ",")} <span className="text-muted">đ</span></p>
+                    <p className="mb-2 fw-bold h6">{accounting.formatNumber(price_total_checkout, 0, ".", ",")} <span className="text-muted">đ</span></p>
                   </div>
 
                   <div className="mt-1">
@@ -337,14 +341,14 @@ function Checkout() {
                         <div className="row mb-2">
                           <div className="col-lg-12">
                             <div className="h-100 border rounded-3">
-                              <div className="p-3 w-100 "  style={{width:'90%'}}>
+                              <div className="p-3 w-100 " style={{ width: '90%' }}>
                                 <PayPalButton
                                   amount={price_total_checkout}
                                   onSuccess={onSuccessPaypal}
                                   onError={() => {
                                     toast.error("Thanh toan không thành công");
                                   }}
-                                 
+
                                 />
                               </div>
                             </div>

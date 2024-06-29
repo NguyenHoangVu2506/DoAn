@@ -6,6 +6,7 @@ const orderSchema = new Schema({
     order_userId:{type:String, requied: true},
     order_checkout:{type:Object, default:{}},
     order_shipping:{type:Object, default:{}},
+    order_email: { type: String, default: '' },
     order_payment:{type:Object, default:{}},
     order_product:{type:Array, requied: true},
     order_trackingNumber:{type:String, default: '#0001'},
