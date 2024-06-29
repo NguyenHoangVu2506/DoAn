@@ -6,10 +6,10 @@ import { toast } from 'react-toastify';
 import { PayPalButton } from 'react-paypal-button-v2';
 import { newOrder, deleteCartIdUserId } from '../../../store/actions';
 import { getOrderFromCart, getCartFromLocalStorage, deleteOrderFromCart } from '../../../utils';
-<<<<<<< HEAD
+// <<<<<<< HEAD
 import { Helmet } from 'react-helmet';
-=======
->>>>>>> origin/main
+// =======
+// >>>>>>> origin/main
 
 function Checkout() {
   const dispatch = useDispatch();
@@ -125,12 +125,12 @@ function Checkout() {
       <div className="bg-primary">
         <div className="bg-2" style={{ backgroundColor: 'white' }}>
           <div className="container py-4">
-<<<<<<< HEAD
+{/* <<<<<<< HEAD */}
           <Helmet>
                         <title>Thanh toán - HoangVu</title>
                     </Helmet>
-=======
->>>>>>> origin/main
+{/* // =======
+// >>>>>>> origin/main */}
             {/* Breadcrumb */}
             <nav className="d-flex">
               <h6 className="mb-0">

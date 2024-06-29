@@ -18,10 +18,24 @@ class SpecialOfferController{
         }).send(res)
 
     }
+    findSpecialOfferById=async(req, res, next)=>{
+        new SuccessResponse({
+            message: 'findSpecialOfferById success',
+            metaData: await SpecialOfferService.findSpecialOfferById(req.body)
+        }).send(res)
+
+    }
     findSpecialOfferBetweenStartDateAndEndByDate=async(req, res, next)=>{
         new SuccessResponse({
             message: 'findSpecialOfferBetweenStartDateAndEndByDate success',
             metaData: await SpecialOfferService.findSpecialOfferBetweenStartDateAndEndByDate(req.body)
+        }).send(res)
+
+    }
+    findAllSpecialOffer=async(req, res, next)=>{
+        new SuccessResponse({
+            message: 'get all success',
+            metaData: await SpecialOfferService.findAllSpecialOffer(req.body)
         }).send(res)
 
     }

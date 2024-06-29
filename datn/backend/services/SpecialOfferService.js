@@ -61,6 +61,42 @@ class SpecialOfferService {
             return null
         }
     }
+    async findAllSpecialOffer({special_offer_is_active = true
+    }) {
+        try {
+            let now = new Date();
+            const special = await specialOffer.find({
+                special_offer_is_active,
+                special_offer_start_date: { $lte: now },
+                special_offer_end_date: { $gte: now },
+                'special_offer_spu_list.product_id': {
+                    $all: [spu_id]
+                }
+            })
+            console.log(special)
+            return special
+        } catch (error) {
+            console.log(error)
+            return null
+        }
+    }
+    async findAllSpecialOffer({special_offer_is_active = true
+    }) {
+        try {
+            let now = new Date();
+            const special = await specialOffer.find({
+                special_offer_is_active,
+                special_offer_start_date: { $lte: now },
+                special_offer_end_date: { $gte: now },
+                
+            })
+            console.log(special)
+            return special
+        } catch (error) {
+            console.log(error)
+            return null
+        }
+    }
 
     async updateStatusById({ special_offer_is_active, special_offer_id }) {
         const foundSpecialOffer = await specialOffer.findOne({

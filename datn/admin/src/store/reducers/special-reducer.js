@@ -2,7 +2,7 @@ import { Action } from '../actions'
 
 const initialState = {
     special: null,
-    updateInfo:null
+    getspecialbyid: null
 }
 
 
@@ -14,7 +14,12 @@ const SpecialReducer = (state = initialState, action) => {
                 ...state,
                 special: action.payload.metaData
             }
-        case Action.UPDATE_INFO:
+        case Action.GET_SPECIAL_BY_ID:
+            return {
+                ...state,
+                getspecialbyid: action.payload.metaData
+            }
+        case Action.ADD_SPECIAL:
             return {
                 ...state,
                 updateInfo: action.payload.metaData

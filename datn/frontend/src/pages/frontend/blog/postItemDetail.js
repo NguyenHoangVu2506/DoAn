@@ -1,16 +1,8 @@
-<<<<<<< HEAD
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { getBlogDetails } from "../../../store/actions";
 import { Helmet } from 'react-helmet';
-=======
-import { useDispatch, useSelector } from "react-redux"
-import { Link, useParams } from "react-router-dom"
-import { useEffect } from "react";
-import { getBlogDetails } from "../../../store/actions";
->>>>>>> origin/main
-
 export default function PostDetailItem() {
   const { slug_id } = useParams();
   const dispatch = useDispatch();
@@ -23,7 +15,6 @@ export default function PostDetailItem() {
     console.log(blogDetails);
   }, [slug_id, dispatch]);
 
-<<<<<<< HEAD
   if (!blogDetails || !blogDetails.post) {
     return <div>Loading...</div>;
   }
@@ -33,15 +24,10 @@ export default function PostDetailItem() {
       <Helmet>
         <title>{blogDetails.post.blog_name} - HoangVu</title>
       </Helmet>
-=======
-  return (
-    <body>
->>>>>>> origin/main
       <main role="main" className="px-4 py-2 ">
         <div className="row">
           <div className="col-lg-8">
             <div className="blog-post">
-<<<<<<< HEAD
               <img
                 style={{ height: '100%', width: '100%' }}
                 src={blogDetails.post.blog_image}
@@ -50,20 +36,6 @@ export default function PostDetailItem() {
               <h3 className="blog-post-title">{blogDetails.post.blog_name}</h3>
               <div dangerouslySetInnerHTML={{ __html: blogDetails.post.blog_detail }} />
             </div>
-=======
-              {blogDetails && (
-                <div className="blog-post">
-                  <img style={{height:'500px'}} src={blogDetails.post.blog_image} alt="Blog" />
-                  {/* <blockquote></blockquote> */}
-                  <h3 className="blog-post-title">{blogDetails.post.blog_name}</h3>
-                  <div dangerouslySetInnerHTML={{ __html: blogDetails.post.blog_detail }} />
-                </div>
-              )}
-            
-            
-            </div>
-
->>>>>>> origin/main
           </div>
 
           <div className="col-lg-4">
@@ -73,7 +45,6 @@ export default function PostDetailItem() {
                   <div className="card">
                     <div className="card-body">
                       <h5 className="card-title">Bài Viết Liên Quan</h5>
-<<<<<<< HEAD
                       {blogDetails.related_posts
                         .filter(item => !item.isDeleted)
                         .map((item, index) => (
@@ -94,25 +65,6 @@ export default function PostDetailItem() {
                             </div>
                           </div>
                         ))}
-=======
-                      <>
-                        {blogDetails && blogDetails.related_posts
-                          .filter(item => !item.isDeleted)
-                          .map((item, index) => (
-                            <div className="d-flex mb-3" key={index}>
-                              <Link to={`/blog/${item.blog_slug}-${item._id}`} className="me-3">
-                                <img src={item.blog_image} style={{ width: '90px', height: '90px' }} className="img-md img-thumbnail" alt="Related Post" />
-                              </Link>
-                              <div className="info">
-                                <a href="#" className="nav-link mb-1">
-                                  {item.blog_name}
-                                  <br />
-                                </a>
-                              </div>
-                            </div>
-                          ))}
-                      </>
->>>>>>> origin/main
                     </div>
                   </div>
                 </div>
@@ -121,10 +73,6 @@ export default function PostDetailItem() {
           </div>
         </div>
       </main>
-<<<<<<< HEAD
     </div>
-=======
-    </body>
->>>>>>> origin/main
   );
 }

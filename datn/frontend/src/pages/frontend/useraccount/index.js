@@ -4,10 +4,10 @@ import { onGetAddress, onInsertAddress, onLogout, updateUser } from '../../../st
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import "./UserOrder.css";
-<<<<<<< HEAD
+// <<<<<<< HEAD
 import { Helmet } from 'react-helmet';
-=======
->>>>>>> origin/main
+// =======
+// >>>>>>> origin/main
 
 import {
   MDBValidation,
@@ -61,13 +61,6 @@ export default function UserAccount() {
     }
   }, []);
 
-<<<<<<< HEAD
-=======
-  useEffect(() => {
-    document.title = 'Trang Cá Nhân';
-  }, []);
-
->>>>>>> origin/main
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
@@ -145,12 +138,12 @@ export default function UserAccount() {
       <div class="bg-primary">
         <div className="bg-" style={{ backgroundColor: 'white' }} >
           <div className="container py-4 " >
-<<<<<<< HEAD
+{/* <<<<<<< HEAD */}
             <Helmet>
               <title>Quản lý tài khoản - HoangVu</title>
             </Helmet>
-=======
->>>>>>> origin/main
+{/* =======
+>>>>>>> origin/main */}
             {/*<!-- Breadcrumb --> */}
             <nav className="d-flex" >
               <h6 className="mb-0">
@@ -203,11 +196,11 @@ export default function UserAccount() {
                       <p>Giới Tính: {userInfo.user_sex}</p>
                       <p>Tuổi: {userInfo.user_age}</p>
 
-<<<<<<< HEAD
+{/* <<<<<<< HEAD
                       <MDBBtn style={{ backgroundColor: '#f6831f', color: 'white', boxShadow: '6px' }} onClick={openUser}><i class="fa fa-pen"></i></MDBBtn>
-=======
+======= */}
                       <MDBBtn style={{ backgroundColor: '#f6831f', color: 'white', boxShadow:'6px' }} onClick={openUser}><i class="fa fa-pen"></i></MDBBtn>
->>>>>>> origin/main
+{/* >>>>>>> origin/main */}
                       <MDBModal open={scrollableModal} onClose={() => setScrollableModal(false)} tabIndex='-1'>
                         <MDBModalDialog scrollable>
                           <MDBModalContent>

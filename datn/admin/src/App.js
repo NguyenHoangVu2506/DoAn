@@ -1,4 +1,3 @@
-
 import React, { Suspense, useEffect, useState } from 'react';
 import { HashRouter, Route, Routes, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -10,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 // Containers
 const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'));
+
 // Pages
 const Login = React.lazy(() => import('./views/pages/login/Login'));
 
@@ -28,7 +28,14 @@ const App = () => {
       return;
     }
     setColorMode(storedTheme);
+
+    // Kiểm tra trạng thái đăng nhập từ localStorage hoặc global state
+    const currentUser = localStorage.getItem('currentUser');
+    if (currentUser) {
+      setIsLoggedIn(true);
+    }
   }, []); 
+
   // Hàm xử lý đăng nhập thành công
   const handleLoginSuccess = () => {
     setIsLoggedIn(true);
@@ -45,9 +52,12 @@ const App = () => {
       >
         <ToastContainer />
         <Routes>
-         <Route exact path="/login" name="Login Page" element={<Login onLoginSuccess={handleLoginSuccess} />} />
-        <Route path="*" element={<DefaultLayout />} />
-          <Route path="*" element={<Navigate to="/login" />} />
+          {/* Route chỉ cho phép truy cập vào trang Login khi chưa đăng nhập */}
+          {!isLoggedIn && <Route exact path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />}
+          {/* Route chỉ cho phép truy cập vào các trang DefaultLayout khi đã đăng nhập */}
+          {isLoggedIn && <Route path="*" element={<DefaultLayout />} />}
+          {/* Route mặc định chuyển hướng đến trang Login nếu chưa đăng nhập */}
+          {!isLoggedIn && <Route path="*" element={<Navigate to="/login" />} />}
         </Routes>
       </Suspense>
     </HashRouter>

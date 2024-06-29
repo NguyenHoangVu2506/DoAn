@@ -33,7 +33,7 @@ class UserService {
 
         const tokens = await createToken({ userId: foundUser._id, user_email }, publicKey, privateKey)
         await keyTokenService.createKeyToken({ userId: foundUser._id, refreshToken: tokens.refreshToken, publicKey, privateKey })
-        const user = await getInfoData({ fileds: ['_id', 'user_name', 'user_email', 'user_phone', 'user_sex', 'user_avatar', 'user_date_of_birth', 'user_provider'], object: foundUser })
+        const user = await getInfoData({ fileds: ['_id', 'user_name', 'user_email', 'user_phone', 'user_sex','user_role', 'user_avatar', 'user_date_of_birth', 'user_provider'], object: foundUser })
         return {
             user,
             tokens

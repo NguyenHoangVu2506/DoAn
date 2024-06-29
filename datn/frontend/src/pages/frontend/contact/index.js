@@ -1,17 +1,17 @@
-<<<<<<< HEAD
-import { useState } from "react";
-=======
+// <<<<<<< HEAD
+// import { useState } from "react";
+// =======
 import { useEffect, useState } from "react";
->>>>>>> origin/main
+// >>>>>>> origin/main
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { newContact } from "../../../store/actions";
 import { toast } from 'react-toastify';
 import { MDBBtn, MDBCardText, MDBCol, MDBInput, MDBRow, MDBTextArea, MDBValidationItem } from "mdb-react-ui-kit";
-<<<<<<< HEAD
+// <<<<<<< HEAD
 import { Helmet } from 'react-helmet';
-=======
->>>>>>> origin/main
+// =======
+// >>>>>>> origin/main
 
 
 export default function Contact() {
@@ -24,13 +24,13 @@ export default function Contact() {
     const [contact_user_tilte, setContactTitle] = useState('');
     const [contact_user_detail, setContactDetail] = useState('');
 
-<<<<<<< HEAD
-=======
+// <<<<<<< HEAD
+// =======
     useEffect(() => {
         document.title = "Liên Hệ";
       }, []);
 
->>>>>>> origin/main
+// >>>>>>> origin/main
 
     const handleInsert = async () => {
 
@@ -58,12 +58,12 @@ export default function Contact() {
         <section class="Contact">
             <div className="bg-" style={{ backgroundColor: 'white' }} >
                 <div className="container py-4 " >
-<<<<<<< HEAD
+{/* <<<<<<< HEAD
                 <Helmet>
                         <title>Liên hệ - HoangVu</title>
                     </Helmet>
 =======
->>>>>>> origin/main
+>>>>>>> origin/main */}
                     {/*<!-- Breadcrumb --> */}
                     <nav className="d-flex" >
                         <h6 className="mb-0">

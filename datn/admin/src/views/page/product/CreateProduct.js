@@ -17,10 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createSpu, getCategory, getListBrand, uploadSingleImage } from '../../../store/actions';
 import { getAttribute } from '../../../store/actions/attributes-actions';
 import { toast } from "react-toastify";
-<<<<<<< HEAD
 import { useNavigate } from 'react-router-dom';
-=======
->>>>>>> origin/main
 
 const CreateProduct = () => {
     const [showClassificationForm, setShowClassificationForm] = useState(false);
@@ -53,10 +50,7 @@ const CreateProduct = () => {
     const { listCategory } = useSelector((state) => state.categoryReducer);
     const { allBrand } = useSelector((state) => state.brandReducer);
     const { attribute } = useSelector((state) => state.attributeReducer);
-<<<<<<< HEAD
     const navigate = useNavigate(); // chuyen trang
-=======
->>>>>>> origin/main
 
     useEffect(() => {
         if (!listCategory) {

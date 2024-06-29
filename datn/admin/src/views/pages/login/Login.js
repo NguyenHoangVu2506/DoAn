@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   CButton,
@@ -15,40 +15,13 @@ import {
 } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 import { cilLockLocked, cilUser } from '@coreui/icons';
-
-const mockLoginUser = async ({ email, password }) => {
-  // Mocked response data
-  if (email === 'admin@gmail.com' && password === '12345') {
-    return {
-      data: {
-        roles: ['admin'],
-        email: 'admin@example.com',
-        name: 'Admin User',
-      },
-    };
-  } else if (email === 'user@example.com' && password === 'password') {
-    return {
-      data: {
-        roles: ['user'],
-        email: 'user@example.com',
-        name: 'Regular User',
-      },
-    };
-  } else {
-    return { data: null };
-  }
-};
+import { useDispatch } from 'react-redux';
+import { onLogin } from '../../../store/actions'; // Điều chỉnh đường dẫn dựa vào cấu trúc của dự án
+import { toast } from 'react-toastify';
 
 const Login = ({ onLoginSuccess }) => {
   const navigate = useNavigate();
-
-  const handleSignUp = () => {
-    navigate('/dang-ki');
-  };
-
-  const handleForgotPassword = () => {
-    navigate('/forgotpassword');
-  };
+  const dispatch = useDispatch();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -83,38 +56,32 @@ const Login = ({ onLoginSuccess }) => {
       return;
     }
 
-    const res = await mockLoginUser({ email, password });
-
-    if (res.data != null) {
-      if (res.data.roles.includes('admin')) {
-        alert("Đăng nhập thành công!");
-        onLoginSuccess();
-        localStorage.setItem('currentUser', JSON.stringify(res.data));
-        setEmail('');
-        setPassword('');
-        console.log(res.data);
-        navigate('/');
+    try {
+      // Gọi hàm dispatch để thực hiện đăng nhập
+      const res = await dispatch(onLogin({ user_email: email, user_password: password }));
+  const role=(res.payload.metaData.user)
+      // Xử lý kết quả trả về từ API
+      if (role && role) {
+        if (role.user_role.includes('admin')) {
+          toast.success('Đăng nhập thành công!');
+          onLoginSuccess(); // Gọi hàm callback khi đăng nhập thành công
+          localStorage.setItem('currentUser', JSON.stringify(res.data));
+          navigate('/'); // Chuyển hướng đến trang chính
+        } else {
+          toast.error('Bạn không có quyền truy cập!');
+        }
       } else {
-        alert("Bạn không có quyền truy cập!");
+        toast.error('Đăng nhập thất bại!');
       }
-    } else {
-      alert("Đăng nhập thất bại!");
+    } catch (error) {
+      console.error('Đăng nhập thất bại:', error);
+      toast.error('Đăng nhập thất bại!');
     }
   };
 
-  useEffect(() => {
-    const currentUser = localStorage.getItem('currentUser');
-    if (currentUser) {
-      const user = JSON.parse(currentUser);
-      if (user.roles.includes('admin')) {
-        // navigate('/');
-      } else {
-        alert("Bạn không có quyền truy cập!");
-        localStorage.removeItem('currentUser');
-      }
-    }
-    console.log(currentUser)
-  }, [navigate]);
+  const handleForgotPassword = () => {
+    navigate('/forgotpassword');
+  };
 
   return (
     <div className="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center">
@@ -170,8 +137,11 @@ const Login = ({ onLoginSuccess }) => {
                 </CCardBody>
               </CCard>
               <CCard className="text-white bg-primary py-5" style={{ width: '44%' }}>
-                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg"
-                  className="img-fluid" alt="Phone image" />
+                <img
+                  src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg"
+                  className="img-fluid"
+                  alt="Phone image"
+                />
               </CCard>
             </CCardGroup>
           </CCol>

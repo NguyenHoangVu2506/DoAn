@@ -4,10 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { getBlogByTopicId, getListBlog, getTopic } from "../../../store/actions";
 import PostItem from "../../../Components/blog/postItem";
-<<<<<<< HEAD
 import { Helmet } from 'react-helmet';
-=======
->>>>>>> origin/main
 
 function Blog() {
   const dispatch = useDispatch();
@@ -46,24 +43,18 @@ function Blog() {
   const toggleRatingCollapse = () => {
     setRatingCollapsed(!ratingCollapsed);
   };
-<<<<<<< HEAD
 
-=======
   useEffect(() => {
     document.title = "Tin Tức";
   }, []);
->>>>>>> origin/main
   return (
     <body>
       <div className="" style={{ backgroundColor: 'white' }} >
         <div className="container py-4">
           <nav className="d-flex">
-<<<<<<< HEAD
             <Helmet>
               <title>Tin tức - HoangVu</title>
             </Helmet>
-=======
->>>>>>> origin/main
             <h6 className="mb-0">
               <Link to="/" style={{ color: '#f6831f' }}>Trang chủ</Link>
               <span className=" mx-2" style={{ color: '#f6831f' }}> / </span>
@@ -126,19 +117,11 @@ function Blog() {
                       </div>
                     </div>
                     <img
-<<<<<<< HEAD
                       className="rounded w-100"
                       src="https://nuty.vn/Data/Sites/1/Banner/banner-01.jpg"
                       style={{ objectFit: 'cover', height: "160px" }}
                       alt="Banner"
                     />
-=======
-            className="rounded w-100"
-            src="https://nuty.vn/Data/Sites/1/Banner/banner-01.jpg"
-            style={{ objectFit: 'cover', height: "160px" }}
-            alt="Banner"
-          />
->>>>>>> origin/main
 
                   </div>
                 </div>

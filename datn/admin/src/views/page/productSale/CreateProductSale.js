@@ -1,762 +1,4 @@
-// components
-import Spring from "@components/Spring";
-import { toast } from "react-toastify";
-import img4 from "@assets/products/services/1.webp";
-
-// hooks
-import { Controller, useForm } from "react-hook-form";
-
-// utils
-import classNames from "classnames";
-import RangeDatePicker from "@ui/RangeDatePicker";
-import MultipleSelect from "@ui/MultipleSelect";
-import DropFiles from "@components/DropFiles";
-import MediaDropPlaceholder from "@ui/MediaDropPlaceholder";
-import { useEffect, useState } from "react";
-// import skus_manangement from "@db/skus_manangement";
-// import products_management from "@db/products_management";
-import { Switch } from "antd";
-import { capitalize } from "@mui/material";
-import { onCreateSpecialOffer, upLoadImageSingle, onAllProductsOption } from "../../../store/actions";
-import { useDispatch } from "react-redux";
-const CreateProductSale = () => {
-  const dispatch = useDispatch()
-  // const [products, setProducts] = useState([]);
-  // useEffect(() => {
-  //   const firstLoadProducts = products_management.map((item) => ({
-  //     value: item._id,
-  //     label: item.product_name,
-  //   }));
-  //   setProducts(firstLoadProducts);
-  // }, []);
-
-  const defaultValues = {
-    special_offer_name: "",
-    special_offer_description: "",
-    special_offer_image: "",
-    special_offer_start_date: "",
-    special_offer_end_date: "",
-    special_offer_is_active: false,
-    special_offer_spu_list: [],
-    selected_products: [],
-  };
-
-  const {
-    register,
-    control,
-    handleSubmit,
-    watch,
-    formState: { errors },
-    setValue,
-  } = useForm({
-    defaultValues: defaultValues,
-  });
-
-  /////product Options
-  useEffect(() => {
-    fetchProductOptions()
-  }, []);
-
-  const [productOptions, setProductOptions] = useState([])
-  const [products_management, setProducts_management] = useState([])
-
-  const fetchProductOptions = async () => {
-    const reposProd = await dispatch(onAllProductsOption({ isPublished: true }))
-    reposProd && setProductOptions(reposProd?.payload?.metaData?.map((prod) => { return { label: prod.product_name, value: prod._id } }))
-    reposProd && setProducts_management(reposProd?.payload?.metaData)
-  }
-  /////product Options????
-
-  const startDate = watch("special_offer_start_date");
-  const endDate = watch("special_offer_end_date");
-  //watch if product_ids has some changes
-  const selected_products = watch("selected_products");
-  const product_ids = watch("special_offer_spu_list");
-  useEffect(() => {
-    const fetchSKU = selected_products.map((item) => {
-      const productInfo = products_management.find(
-        (product) => product._id === item.value
-      );
-
-      const updatedSKU = productInfo?.sku_list
-        ?.filter((sku) => sku.product_id === item.value)
-        ?.map((foundSKU) => {
-
-          let optionsString = ""
-          productInfo.product_variations?.forEach((variation, index) => {
-            if (productInfo.product_variations?.length === index + 1) {
-              optionsString += `${variation?.options[foundSKU.sku_tier_idx[index]]}`
-              return
-            }
-            optionsString += `${variation?.options[foundSKU.sku_tier_idx[index]]}, `
-            return
-          })
-          // const option1 =
-          //   productInfo.product_variations[0]?.options[foundSKU.sku_tier_idx[0]];
-          // const option2 =
-          //   productInfo.product_variations[1]?.options[foundSKU.sku_tier_idx[1]];
-
-          return {
-            sku_id: foundSKU._id,
-            sku_name: capitalize(optionsString),
-            sku_tier_idx: foundSKU.sku_tier_idx,
-            original_price: foundSKU.sku_price,
-            sku_stock: foundSKU.sku_stock,
-            price_sale: foundSKU.sku_price,
-            percentage: 0,
-            quantity: 0,
-            quantity_sold: 0,
-            is_active: false,
-          };
-        });
-      return {
-        product_id: productInfo._id,
-        product_name: productInfo.product_name,
-        product_thumb: productInfo.product_thumb,
-        product_stock: productInfo.product_quantity,
-        original_price: productInfo.product_price,
-        is_Apply_To_ALl: false,
-        price_sale: productInfo.product_price,
-        percentage: 0,
-        quantity: 0,
-        quantity_sold: 0,
-        is_active: false,
-        sku_list: updatedSKU,
-      };
-    });
-
-    setValue("special_offer_spu_list", fetchSKU);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selected_products]);
-
-
-  const [isDisablePriceApplyToAll, setIsDisablePriceApplyToAll] = useState(true)
-
-  const handleChangeSpuData = (e, productID, SKU_ID, name) => {
-    e.preventDefault();
-
-    const productIndex = product_ids?.findIndex(
-      (item) => item.product_id === productID
-    );
-    const updatedProducts = product_ids?.slice();
-
-    if (SKU_ID) {
-      const skuIndex = product_ids[productIndex]?.sku_list?.findIndex(
-        (item) => item.sku_id === SKU_ID
-      );
-
-      if (name === "price_sale") {
-        updatedProducts[productIndex].sku_list[skuIndex].price_sale = parseInt(
-          e.target.value
-        )
-          ? parseInt(e.target.value)
-          : "";
-        updatedProducts[productIndex].sku_list[skuIndex].percentage = parseInt(
-          e.target.value
-        )
-          ? ((updatedProducts[productIndex].sku_list[skuIndex].original_price -
-            parseInt(e.target.value)) /
-            updatedProducts[productIndex].sku_list[skuIndex].original_price) *
-          100
-          : "";
-      }
-
-      if (name === "percentage") {
-        updatedProducts[productIndex].sku_list[skuIndex].percentage = parseInt(
-          e.target.value
-        )
-          ? parseInt(e.target.value)
-          : "";
-        updatedProducts[productIndex].sku_list[skuIndex].price_sale = parseInt(
-          e.target.value
-        )
-          ? updatedProducts[productIndex].sku_list[skuIndex].original_price -
-          updatedProducts[productIndex].sku_list[skuIndex].original_price *
-          (parseInt(e.target.value) / 100)
-          : "";
-      }
-      if (name === "quantity") {
-        updatedProducts[productIndex].sku_list[skuIndex].quantity = parseInt(
-          e.target.value
-        )
-          ? parseInt(e.target.value)
-          : "";
-        if (
-          updatedProducts[productIndex].sku_list[skuIndex].quantity >
-          updatedProducts[productIndex].sku_list[skuIndex].sku_stock
-        ) {
-          updatedProducts[productIndex].sku_list[skuIndex].quantity =
-            updatedProducts[productIndex].sku_list[skuIndex].sku_stock;
-        }
-      }
-    }
-    if (!SKU_ID) {
-      if (name === "price_sale") {
-
-        const priceToAll = parseInt(
-          e.target.value
-        )
-          ? parseInt(e.target.value)
-          : ""
-        const percentageToAll = parseInt(
-          e.target.value
-        )
-          ? ((updatedProducts[productIndex].original_price -
-            parseInt(e.target.value)) /
-            updatedProducts[productIndex].original_price) *
-          100
-          : ""
-        updatedProducts[productIndex].price_sale = priceToAll
-        updatedProducts[productIndex].percentage = percentageToAll
-        const sku_list = updatedProducts[productIndex]?.sku_list
-        if (sku_list.length > 0) {
-          for (let i = 0; i < sku_list?.length; i++) {
-            updatedProducts[productIndex].sku_list[i].price_sale = priceToAll
-            updatedProducts[productIndex].sku_list[i].percentage = percentageToAll
-          }
-        }
-      }
-
-      if (name === "percentage") {
-        const priceToAll = parseInt(
-          e.target.value
-        )
-          ? updatedProducts[productIndex].original_price -
-          updatedProducts[productIndex].original_price *
-          (parseInt(e.target.value) / 100)
-          : ""
-        const percentageToAll = parseInt(
-          e.target.value
-        )
-          ? parseInt(e.target.value)
-          : ""
-
-        updatedProducts[productIndex].price_sale = priceToAll
-        updatedProducts[productIndex].percentage = percentageToAll
-        const sku_list = updatedProducts[productIndex]?.sku_list
-        if (sku_list.length > 0) {
-          for (let i = 0; i < sku_list?.length; i++) {
-            updatedProducts[productIndex].sku_list[i].price_sale = priceToAll
-            updatedProducts[productIndex].sku_list[i].percentage = percentageToAll
-          }
-        }
-      }
-      if (name === "quantity") {
-        const quantityApplyToAll = parseInt(
-          e.target.value
-        )
-          ? parseInt(e.target.value)
-          : "";
-
-        updatedProducts[productIndex].quantity = quantityApplyToAll
-        if (
-          updatedProducts[productIndex].quantity >
-          updatedProducts[productIndex].product_stock
-        ) {
-          updatedProducts[productIndex].quantity =
-            updatedProducts[productIndex].product_stock;
-
-          const sku_list = updatedProducts[productIndex]?.sku_list
-          if (sku_list.length > 0) {
-            for (let i = 0; i < sku_list?.length; i++) {
-              updatedProducts[productIndex].sku_list[i].quantity = updatedProducts[productIndex].product_stock
-            }
-          }
-        } else {
-          const sku_list = updatedProducts[productIndex]?.sku_list
-          if (sku_list.length > 0) {
-            for (let i = 0; i < sku_list?.length; i++) {
-              updatedProducts[productIndex].sku_list[i].quantity = quantityApplyToAll
-            }
-          }
-        }
-      }
-    }
-    setValue("special_offer_spu_list", updatedProducts);
-  };
-
-  const handleToggleActive = (change, checked_value, productID, SKU_ID) => {
-    const productIndex = product_ids?.findIndex(
-      (item) => item.product_id === productID
-    );
-    const updatedProducts = product_ids?.slice();
-    if (change === "all") {
-      const sku_list = product_ids[productIndex]?.sku_list
-      updatedProducts[productIndex].is_active = checked_value
-      for (let i = 0; i < sku_list?.length; i++) {
-        updatedProducts[productIndex].sku_list[i].is_active = checked_value
-      }
-    }
-    if (change === "one") {
-      const skuIndex = product_ids[productIndex]?.sku_list?.findIndex(
-        (item) => item.sku_id === SKU_ID
-      );
-      updatedProducts[productIndex].sku_list[skuIndex].is_active = checked_value
-    }
-    if (change === "priceToAll") {
-      updatedProducts[productIndex].is_Apply_To_ALl = checked_value
-      setIsDisablePriceApplyToAll(!checked_value)
-    }
-    setValue("special_offer_spu_list", updatedProducts);
-  };
-
-  useEffect(() => {
-    console.log(product_ids);
-  }, [product_ids]);
-
-  const removeProductFromList = async (e, index) => {
-    e.preventDefault();
-    const removeProductByIndex = await selected_products.filter((selectedProd, indexSelected) => indexSelected !== index)
-    setValue("selected_products", removeProductByIndex);
-  };
-  // do something with the data
-  const handlePublish = async (data) => {
-    // console.log(data)
-    const id = toast.loading("Vui lòng đợi...");
-    const promotionInputData = {
-      special_offer_name: data.special_offer_name,
-      special_offer_description: data.special_offer_description,
-      special_offer_image: "",
-      special_offer_start_date: `${data.special_offer_start_date.$y}-${data.special_offer_start_date.$M + 1}-${data.special_offer_start_date.$D} 00:00:01`,
-      special_offer_end_date: `${data.special_offer_end_date.$y}-${data.special_offer_end_date.$M + 1}-${data.special_offer_end_date.$D} 00:00:01`,
-      special_offer_is_active: false,
-      special_offer_spu_list: data.special_offer_spu_list,
-    }
-    console.log(promotionInputData)
-
-    try {
-      if (data.special_offer_image[0]) {
-        const image = new FormData()
-        image.append("file", data.special_offer_image[0])
-        image.append("folderName", "outrunner/images/promotion")
-
-        const uploadImageSingle = await dispatch(upLoadImageSingle(image))
-        promotionInputData.special_offer_image = uploadImageSingle && uploadImageSingle?.payload?.metaData?.thumb_url
-
-      }
-      const createPromotion = await dispatch(onCreateSpecialOffer({
-        special_offer_name: promotionInputData.special_offer_name,
-        special_offer_description: promotionInputData.special_offer_description,
-        special_offer_image: promotionInputData.special_offer_image,
-        special_offer_start_date: promotionInputData.special_offer_start_date,
-        special_offer_end_date: promotionInputData.special_offer_end_date,
-        special_offer_is_active: promotionInputData.special_offer_is_active,
-        special_offer_spu_list: promotionInputData.special_offer_spu_list,
-      }))
-
-      if (createPromotion.payload.status === (200 || 201)) {
-        toast.update(id, {
-          render: "Thêm chương trình giảm giá thành công",
-          type: "success",
-          isLoading: false,
-          closeOnClick: true,
-          autoClose: 3000,
-        });
-
-      } else {
-        toast.update(id, {
-          render: "Thêm chương trình giảm giá không thành công",
-          type: "error",
-          isLoading: false,
-          closeOnClick: true,
-          autoClose: 3000,
-        });
-      }
-    } catch (error) {
-      toast.update(id, {
-        render: "Thêm chương trình giảm giá không thành công",
-        type: "error",
-        isLoading: false,
-        closeOnClick: true,
-        autoClose: 3000,
-      });
-      console.log(error)
-    }
-  };
-
-  return (
-    <Spring className="card flex-1 xl:py-10">
-      <form className="grid grid-cols-1 items-start gap-5 xl:gap-10">
-        <div className="grid grid-cols-1 gap-y-4 gap-x-2">
-          <div>
-            <div>
-              <span className="block field-label mb-2.5">Chương trình giảm giá</span>
-              <div className="grid grid-cols-1 gap-5">
-                <Controller
-                  name="special_offer_image"
-                  control={control}
-                  defaultValue={defaultValues.special_offer_image}
-                  render={({ field }) => (
-                    <DropFiles
-                      wrapperClass="media-dropzone 2xl:col-span-2 aspect-w-3 aspect-h-1"
-                      onChange={(files) => field.onChange(files)}
-                      defaultValue={defaultValues.special_offer_image}
-                    >
-                      <MediaDropPlaceholder />
-                    </DropFiles>
-                  )}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 gap-y-4 gap-x-2 md:grid-cols-2">
-            <div className="field-wrapper">
-              <label className="field-label" htmlFor="special_offer_name">
-                Tên chương trình
-              </label>
-              <input
-                className={classNames("field-input", {
-                  "field-input--error": errors.special_offer_name,
-                })}
-                id="special_offer_name"
-                defaultValue={defaultValues.special_offer_name}
-                placeholder="VD: ct1, ct2, tenct,..."
-                {...register("special_offer_name", { required: true })}
-              />
-            </div>
-
-            <div className="field-wrapper">
-              <label className="field-label" htmlFor="special_offer_start_date">
-                Ngày bắt đầu - Ngày kết thúc
-              </label>
-              <Controller
-                name="special_offer_start_date"
-                control={control}
-                rules={{ required: true }}
-                defaultValue={[
-                  defaultValues.special_offer_start_date,
-                  defaultValues.special_offer_end_date,
-                ]}
-                render={({ field }) => (
-                  <RangeDatePicker
-                    id="special_offer_start_date"
-                    innerRef={field.ref}
-                    disableFuture={false}
-                    placeholder={["Ngày bắt đầu", "Ngày kết thúc"]}
-                    value={[startDate, endDate]}
-                    onChange={(value) => {
-                      setValue("special_offer_start_date", value[0]);
-                      setValue("special_offer_end_date", value[1]);
-                    }}
-                  />
-                )}
-              />
-            </div>
-          </div>
-          <div className="field-wrapper">
-            <label className="field-label" htmlFor="special_offer_description">
-              Mô tả mã giảm giá
-            </label>
-            <input
-              className={classNames("field-input", {
-                "field-input--error": errors.special_offer_description,
-              })}
-              id="special_offer_description"
-              defaultValue={defaultValues.special_offer_description}
-              placeholder="VD: Giảm 30%, Giảm 10K cho đơn hàng từ XXK,..."
-              {...register("special_offer_description", { required: true })}
-            />
-          </div>
-          <div className="field-wrapper">
-            <label className="field-label" htmlFor="selected_products">
-              Sản phẩm áp dụng
-            </label>
-            <Controller
-              name="selected_products"
-              control={control}
-              defaultValue={defaultValues.selected_products}
-              render={({ field }) => (
-                <MultipleSelect
-                  isInvalid={errors.selected_products}
-                  isSearchable={true}
-                  value={field.value}
-                  options={productOptions}
-                  onChange={(value) => field.onChange(value)}
-                />
-              )}
-            />
-          </div>
-          {product_ids.map((item, index) => (
-            <Spring key={index} className="card flex-1 xl:py-10">
-              <div className="grid grid-cols-1 gap-y-4 gap-x-2">
-                <div className="flex max-sm:flex-col relative overflow-hidden max-sm:justify-center sm:items-center sm:space-x-5">
-                  <div className="img-wrapper w-12 h-12 overflow-hidden max-md:hidden">
-                    <img
-                      src={item.product_thumb ? item.product_thumb : img4}
-                      alt="test"
-                      className="object-center object-contain w-full h-full"
-                    />
-                  </div>
-                  <h6 className="sm:truncate text-ellipsis max-sm:!text-xs max-sm:text-center">
-                    {item.product_name}
-                  </h6>
-                  <div className="grid grid-cols-1 gap-y-4 gap-x-2 md:grid-cols-5">
-
-                    {/* <div className="max-sm:!text-xs inline-block h6">
-                        Giá gốc: {item.original_price}đ
-                      </div>
-        
-                      <div className="max-sm:!text-xs inline-block h6">
-                        Kho hàng: {item.product_stock}
-                      </div> */}
-                    <div className="field-wrapper">
-                      <label
-                        className="field-label"
-                        htmlFor={`quantity-${item.quantity}`}
-                      >
-                        Sô lượng khuyến mãi
-                      </label>
-                      <input
-                        disabled={isDisablePriceApplyToAll}
-                        className={"field-input"}
-                        id={`quantity-${item.quantity}`}
-                        value={item.quantity}
-                        onChange={(e) => {
-                          handleChangeSpuData(
-                            e,
-                            item.product_id,
-                            null,
-                            "quantity"
-                          )
-                        }}
-                        placeholder="VD: 0 = không giới hạn, 5, 10, 20 , 30,..."
-                      />
-                    </div>
-
-                    <div className="field-wrapper">
-                      <label
-                        className="field-label"
-                        htmlFor={`percentage-${item.product_id}`}
-                      >
-                        phần trăm giảm (%)
-                      </label>
-                      <input
-                        disabled={isDisablePriceApplyToAll}
-                        className={"field-input"}
-                        id={`percentage-${item.product_id}`}
-                        value={item.percentage}
-                        onChange={(e) =>
-                          handleChangeSpuData(
-                            e,
-                            item.product_id,
-                            null,
-                            "percentage"
-                          )
-                        }
-                        placeholder="VD: 5%, 10%, 15%,..."
-                      />
-                    </div>
-                    <div className="field-wrapper">
-                      <label
-                        className="field-label"
-                        htmlFor={`price-sale-${item.product_id}`}
-                      >
-                        Giá sau giảm (đ)
-                      </label>
-                      <input
-                        disabled={isDisablePriceApplyToAll}
-                        className={"field-input"}
-                        id={`price-sale-${item.product_id}`}
-                        value={item.price_sale}
-                        onChange={(e) => {
-                          handleChangeSpuData(
-                            e,
-                            item.product_id,
-                            null,
-                            "price_sale"
-                          )
-                        }}
-                        placeholder="VD: 100000, 200000, 300000,..."
-                      />
-                    </div>
-                  </div>
-                  <div className="flex justify-end items-center">
-                    <label
-                      className="field-label"
-                      htmlFor={`is-active-${item.product_id}1`}
-                    >
-                      Áp dụng chung
-                    </label>
-                    <Switch
-                      checkedChildren={"ON"}
-                      unCheckedChildren={"OFF"}
-                      id={`is-active-${item.product_id}1`}
-                      onChange={(e) =>
-                        handleToggleActive("priceToAll", e, item.product_id, null)
-                      }
-                      loading={false}
-                      value={item.is_Apply_To_ALl}
-                    />
-                  </div>
-
-                  <div className="flex justify-end items-center">
-                    <label
-                      className="field-label"
-                      htmlFor={`is-active-${item.product_id}`}
-                    >
-                      Bật/Tắt
-                    </label>
-                    <Switch
-                      checkedChildren={"ON"}
-                      unCheckedChildren={"OFF"}
-                      id={`is-active-${item.product_id}`}
-                      onChange={(e) =>
-                        handleToggleActive("all", e, item.product_id, null)
-                      }
-                      loading={false}
-                      checked={item.is_active}
-                    />
-                  </div>
-
-                </div>
-                {item.sku_list.map((subitem, subindex) => (
-                  <Spring
-                    key={subindex}
-                    className="grid border-b-2 border-blue-600 grid-cols-1 py-4 gap-y-4 gap-x-2"
-                  >
-                    <div className="flex sm:space-x-3 max-sm:flex-col sm:items-center">
-                      <div className="max-sm:!text-xs inline-block h6">
-                        Phân loại: {subitem.sku_name}
-                      </div>
-                      <div className="max-sm:!text-xs inline-block h6 max-sm:hidden">
-                        |
-                      </div>
-                      <div className="max-sm:!text-xs inline-block h6">
-                        Giá gốc: {subitem.original_price}đ
-                      </div>
-                      <div className="max-sm:!text-xs inline-block h6 max-sm:hidden">
-                        |
-                      </div>
-                      <div className="max-sm:!text-xs inline-block h6">
-                        Kho hàng: {subitem.sku_stock}
-                      </div>
-
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-11 gap-y-4 gap-x-2">
-                      <div className="field-wrapper sm:col-span-5">
-                        <label
-                          className="field-label"
-                          htmlFor={`price-sale-${subitem.sku_id}`}
-                        >
-                          Giá sau giảm (đ)
-                        </label>
-                        <input
-                          className={"field-input"}
-                          id={`price-sale-${subitem.sku_id}`}
-                          value={subitem.price_sale}
-                          onChange={(e) =>
-                            handleChangeSpuData(
-                              e,
-                              item.product_id,
-                              subitem.sku_id,
-                              "price_sale"
-                            )
-                          }
-                          placeholder="VD: 100000, 200000, 300000,..."
-                        />
-                      </div>
-                      <div className="sm:col-span-1 flex sm:flex-col justify-center sm:justify-end items-center sm:space-y-2 max-sm:space-x-3">
-                        <i className="icon icon-chevron-down-regular text-[20px] sm:hidden" />
-                        <i className="icon icon-chevron-up-regular text-[20px] sm:hidden" />
-                        <i className="icon icon-chevron-left-regular text-[20px] max-sm:hidden" />
-                        <i className="icon icon-chevron-right-regular text-[20px] max-sm:hidden" />
-                      </div>
-                      <div className="field-wrapper sm:col-span-5">
-                        <label
-                          className="field-label"
-                          htmlFor={`percentage-${subitem.sku_id}`}
-                        >
-                          phần trăm giảm (%)
-                        </label>
-                        <input
-                          className={"field-input"}
-                          id={`percentage-${subitem.sku_id}`}
-                          value={subitem.percentage}
-                          onChange={(e) =>
-                            handleChangeSpuData(
-                              e,
-                              item.product_id,
-                              subitem.sku_id,
-                              "percentage"
-                            )
-                          }
-                          placeholder="VD: 5%, 10%, 15%,..."
-                        />
-                      </div>
-                    </div>
-                    <div className="field-wrapper">
-                      <label
-                        className="field-label"
-                        htmlFor={`quantity-${subitem.sku_id}`}
-                      >
-                        Sô lượng khuyến mãi
-                      </label>
-                      <input
-                        className={"field-input"}
-                        id={`quantity-${subitem.sku_id}`}
-                        value={subitem.quantity}
-                        onChange={(e) =>
-                          handleChangeSpuData(
-                            e,
-                            item.product_id,
-                            subitem.sku_id,
-                            "quantity"
-                          )
-                        }
-                        placeholder="VD: 0 = không giới hạn, 5, 10, 20 , 30,..."
-                      />
-                    </div>
-                    <div className="flex justify-end items-center space-x-3">
-                      <label
-                        className="field-label"
-                        htmlFor={`is-active-${subitem.sku_id}`}
-                      >
-                        Bật/Tắt
-                      </label>
-                      <Switch
-                        checkedChildren={"ON"}
-                        unCheckedChildren={"OFF"}
-                        id={`is-active-${subitem.sku_id}`}
-                        onClick={(e) =>
-                          handleToggleActive("one", e, item.product_id, subitem.sku_id)
-                        }
-                        loading={false}
-                        checked={subitem.is_active}
-                      />
-                    </div>
-                  </Spring>
-                ))
-                }
-                < button
-                  onClick={(e) => removeProductFromList(e, index)}
-                  className="group btn btn--social red"
-                >
-                  <i className="icon icon-trash-regular text-lg" />
-                </button>
-              </div>
-            </Spring>
-          ))
-          }
-        </div >
-
-        <div className="grid gap-2 mt-5 sm:mt-10 md:mt-11">
-          <button
-            className="btn btn--primary"
-            onClick={handleSubmit(handlePublish)}
-          >
-            Tạo chương trình
-          </button>
-        </div>
-      </form >
-    </Spring >
-  );
-};
-
-export default CreateProductSale;
 import React, { useEffect, useState } from 'react';
-import DatePicker from "react-datepicker";
-import 'react-datepicker/dist/react-datepicker.css';
 import {
     CButton,
     CCard,
@@ -767,132 +9,608 @@ import {
     CFormInput,
     CFormLabel,
     CFormSelect,
+    CFormTextarea,
     CRow,
+    CCardFooter,
+    CFormSwitch 
 } from '@coreui/react';
 import { useNavigate } from 'react-router-dom';
-import apiProduct from '../../../service/apiProduct';
-import apiSale from '../../../service/apiSale';
+import { useDispatch, useSelector } from 'react-redux';
+import Select from 'react-select';
+import DatePicker from 'react-datepicker';
+import { DiscountStore } from '../../../store/actions/discount-actions';
+import 'react-datepicker/dist/react-datepicker.css';
+import { onAllProduct, uploadSingleImage } from '../../../store/actions';
+import { toast } from "react-toastify";
+import { useForm } from "react-hook-form";
+import { onCreateSpecialOffer } from '../../../store/actions/special-actions';
+const capitalize = (str) => {
+    if (typeof str !== 'string') {
+        return '';
+    }
+    return str.charAt(0).toUpperCase() + str.slice(1);
+};
 
 const CreateProductSale = () => {
-    const [products, setProducts] = useState([]);
-    const [product_id, setProduct_id] = useState(1);
-    const [qty_sale, setQty_sale] = useState('');
-    const [pricesale, setPriceSale] = useState('');
-    const [status, setStatus] = useState(2);
-    const [date_begin, setDate_begin] = useState(null);
-    const [date_end, setDate_end] = useState(null);
-
     const navigate = useNavigate();
 
+    const dispatch = useDispatch()
 
 
+    const defaultValues = {
+        special_offer_name: "",
+        special_offer_description: "",
+        special_offer_image: "",
+        special_offer_start_date: "",
+        special_offer_end_date: "",
+        special_offer_is_active: true,
+        special_offer_spu_list: [],
+        selected_products: [],
+    };
+
+    const {
+        register,
+        control,
+        handleSubmit,
+        watch,
+        formState: { errors },
+        setValue,
+    } = useForm({
+        defaultValues: defaultValues,
+    });
+
+    /////product Options
     useEffect(() => {
-        apiProduct.getAll(1, 20).then((res) => {
-            try {
-                const data = res.data;
-                const productData = res.data.map((item) => {
-                    return {
-                        id: item.id,
-                        name: item.attributes.product_name,
-                    }
-                });
-                setProducts(productData);
-            } catch (e) {
-                console.log(e);
-            }
-        })
+        fetchProductOptions()
     }, []);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (product_id && qty_sale && pricesale && date_begin && date_end) {
-            const sale = {
-                product_id: product_id,
-                qty_sale: qty_sale,
-                pricesale: pricesale,
-                date_begin: date_begin.getTime(), // Convert Date object to timestamp
-                date_end: date_end.getTime(), // Convert Date object to timestamp
-                status: status,
-            };
-            console.log(sale); // Debugging output
-            console.log(date_end.toISOString()); // Debugging output
+    const [productOptions, setProductOptions] = useState([])
+    const [products_management, setProducts_management] = useState([])
 
-            await apiSale.createSale(sale).then((res) => {
-                if (res.data != null) {
-                    alert("Thêm sản phẩm thành công!");
-                    navigate('/productsale/productsalelist', { replace: true });
-                } else {
-                    alert("Không thành công!");
+    const fetchProductOptions = async () => {
+        const reposProd = await dispatch(onAllProduct({ sort: 'ctime' }))
+        reposProd && setProductOptions(reposProd?.payload?.metaData?.map((prod) => { return { label: prod.product_name, value: prod._id } }))
+        reposProd && setProducts_management(reposProd?.payload?.metaData)
+    }
+    /////product Options????
+
+    const startDate = watch("special_offer_start_date");
+    const endDate = watch("special_offer_end_date");
+    //watch if product_ids has some changes
+    const selected_products = watch("selected_products");
+    const product_ids = watch("special_offer_spu_list");
+    useEffect(() => {
+        const fetchSKU = selected_products.map((item) => {
+            const productInfo = products_management.find(
+                (product) => product._id === item.value
+            );
+
+            const updatedSKU = productInfo?.sku_list
+                ?.filter((sku) => sku.product_id === item.value)
+                ?.map((foundSKU) => {
+
+                    let optionsString = ""
+                    productInfo.product_variations?.forEach((variation, index) => {
+                        if (productInfo.product_variations?.length === index + 1) {
+                            optionsString += `${variation?.options[foundSKU.sku_tier_idx[index]]}`
+                            return
+                        }
+                        optionsString += `${variation?.options[foundSKU.sku_tier_idx[index]]}, `
+                        return
+                    })
+
+                    return {
+                        sku_id: foundSKU._id,
+                        sku_name: capitalize(optionsString),
+                        sku_tier_idx: foundSKU.sku_tier_idx,
+                        original_price: foundSKU.sku_price,
+                        sku_stock: foundSKU.sku_stock,
+                        price_sale: foundSKU.sku_price,
+                        percentage: 0,
+                        quantity: 0,
+                        quantity_sold: 0,
+                        is_active: false,
+                    };
+                });
+            return {
+                product_id: productInfo._id,
+                product_name: productInfo.product_name,
+                product_thumb: productInfo.product_thumb,
+                product_stock: productInfo.product_quantity,
+                original_price: productInfo.product_price,
+                is_Apply_To_ALl: false,
+                price_sale: productInfo.product_price,
+                percentage: 0,
+                quantity: 0,
+                quantity_sold: 0,
+                is_active: false,
+                sku_list: updatedSKU,
+            };
+        });
+
+        setValue("special_offer_spu_list", fetchSKU);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selected_products]);
+
+
+    const [isDisablePriceApplyToAll, setIsDisablePriceApplyToAll] = useState(true)
+
+    const handleChangeSpuData = (e, productID, SKU_ID, name) => {
+        e.preventDefault();
+
+        const productIndex = product_ids?.findIndex(
+            (item) => item.product_id === productID
+        );
+        const updatedProducts = product_ids?.slice();
+
+        if (SKU_ID) {
+            const skuIndex = product_ids[productIndex]?.sku_list?.findIndex(
+                (item) => item.sku_id === SKU_ID
+            );
+
+            if (name === "price_sale") {
+                updatedProducts[productIndex].sku_list[skuIndex].price_sale = parseInt(
+                    e.target.value
+                )
+                    ? parseInt(e.target.value)
+                    : "";
+                updatedProducts[productIndex].sku_list[skuIndex].percentage = parseInt(
+                    e.target.value
+                )
+                    ? ((updatedProducts[productIndex].sku_list[skuIndex].original_price -
+                        parseInt(e.target.value)) /
+                        updatedProducts[productIndex].sku_list[skuIndex].original_price) *
+                    100
+                    : "";
+            }
+
+            if (name === "percentage") {
+                updatedProducts[productIndex].sku_list[skuIndex].percentage = parseInt(
+                    e.target.value
+                )
+                    ? parseInt(e.target.value)
+                    : "";
+                updatedProducts[productIndex].sku_list[skuIndex].price_sale = parseInt(
+                    e.target.value
+                )
+                    ? updatedProducts[productIndex].sku_list[skuIndex].original_price -
+                    updatedProducts[productIndex].sku_list[skuIndex].original_price *
+                    (parseInt(e.target.value) / 100)
+                    : "";
+            }
+            if (name === "quantity") {
+                updatedProducts[productIndex].sku_list[skuIndex].quantity = parseInt(
+                    e.target.value
+                )
+                    ? parseInt(e.target.value)
+                    : "";
+                if (
+                    updatedProducts[productIndex].sku_list[skuIndex].quantity >
+                    updatedProducts[productIndex].sku_list[skuIndex].sku_stock
+                ) {
+                    updatedProducts[productIndex].sku_list[skuIndex].quantity =
+                        updatedProducts[productIndex].sku_list[skuIndex].sku_stock;
                 }
-            });
-        } else {
-            alert('Vui lòng nhập đầy đủ thông tin!');
+            }
         }
+        if (!SKU_ID) {
+            if (name === "price_sale") {
+
+                const priceToAll = parseInt(
+                    e.target.value
+                )
+                    ? parseInt(e.target.value)
+                    : ""
+                const percentageToAll = parseInt(
+                    e.target.value
+                )
+                    ? ((updatedProducts[productIndex].original_price -
+                        parseInt(e.target.value)) /
+                        updatedProducts[productIndex].original_price) *
+                    100
+                    : ""
+                updatedProducts[productIndex].price_sale = priceToAll
+                updatedProducts[productIndex].percentage = percentageToAll
+                const sku_list = updatedProducts[productIndex]?.sku_list
+                if (sku_list.length > 0) {
+                    for (let i = 0; i < sku_list?.length; i++) {
+                        updatedProducts[productIndex].sku_list[i].price_sale = priceToAll
+                        updatedProducts[productIndex].sku_list[i].percentage = percentageToAll
+                    }
+                }
+            }
+
+            if (name === "percentage") {
+                const priceToAll = parseInt(
+                    e.target.value
+                )
+                    ? updatedProducts[productIndex].original_price -
+                    updatedProducts[productIndex].original_price *
+                    (parseInt(e.target.value) / 100)
+                    : ""
+                const percentageToAll = parseInt(
+                    e.target.value
+                )
+                    ? parseInt(e.target.value)
+                    : ""
+
+                updatedProducts[productIndex].price_sale = priceToAll
+                updatedProducts[productIndex].percentage = percentageToAll
+                const sku_list = updatedProducts[productIndex]?.sku_list
+                if (sku_list.length > 0) {
+                    for (let i = 0; i < sku_list?.length; i++) {
+                        updatedProducts[productIndex].sku_list[i].price_sale = priceToAll
+                        updatedProducts[productIndex].sku_list[i].percentage = percentageToAll
+                    }
+                }
+            }
+            if (name === "quantity") {
+                const quantityApplyToAll = parseInt(
+                    e.target.value
+                )
+                    ? parseInt(e.target.value)
+                    : "";
+
+                updatedProducts[productIndex].quantity = quantityApplyToAll
+                if (
+                    updatedProducts[productIndex].quantity >
+                    updatedProducts[productIndex].product_stock
+                ) {
+                    updatedProducts[productIndex].quantity =
+                        updatedProducts[productIndex].product_stock;
+
+                    const sku_list = updatedProducts[productIndex]?.sku_list
+                    if (sku_list.length > 0) {
+                        for (let i = 0; i < sku_list?.length; i++) {
+                            updatedProducts[productIndex].sku_list[i].quantity = updatedProducts[productIndex].product_stock
+                        }
+                    }
+                } else {
+                    const sku_list = updatedProducts[productIndex]?.sku_list
+                    if (sku_list.length > 0) {
+                        for (let i = 0; i < sku_list?.length; i++) {
+                            updatedProducts[productIndex].sku_list[i].quantity = quantityApplyToAll
+                        }
+                    }
+                }
+            }
+        }
+        setValue("special_offer_spu_list", updatedProducts);
+    };
+
+    const handleToggleActive = (change, checked_value, productID, SKU_ID) => {
+        const productIndex = product_ids?.findIndex(
+            (item) => item.product_id === productID
+        );
+        const updatedProducts = product_ids?.slice();
+        if (SKU_ID) {
+            const skuIndex = product_ids[productIndex]?.sku_list?.findIndex(
+                (item) => item.sku_id === SKU_ID
+            );
+
+            updatedProducts[productIndex].sku_list[skuIndex].is_active =
+                checked_value;
+
+            updatedProducts[productIndex].sku_list[skuIndex].quantity =
+                updatedProducts[productIndex].sku_list[skuIndex].sku_stock;
+
+            updatedProducts[productIndex].sku_list[skuIndex].price_sale =
+                updatedProducts[productIndex].sku_list[skuIndex].original_price;
+
+            updatedProducts[productIndex].sku_list[skuIndex].percentage = 0;
+        }
+        if (!SKU_ID) {
+            updatedProducts[productIndex].is_active = checked_value;
+            updatedProducts[productIndex].quantity =
+                updatedProducts[productIndex].product_stock;
+            updatedProducts[productIndex].price_sale =
+                updatedProducts[productIndex].original_price;
+            updatedProducts[productIndex].percentage = 0;
+        }
+        setValue("special_offer_spu_list", updatedProducts);
+    };
+
+    const removeProductFromList = (e, productID) => {
+        e.preventDefault();
+        const productIndex = product_ids?.findIndex(
+            (item) => item.product_id === productID
+        );
+
+        const updatedProducts = product_ids?.slice();
+
+        updatedProducts.splice(productIndex, 1);
+
+        setValue("special_offer_spu_list", updatedProducts);
+        setValue(
+            "selected_products",
+            selected_products?.filter((item) => item.value !== productID)
+        );
+    };
+
+    // const upLoadImageSingle = async (formData) => {
+    //     try {
+    //         const response = await dispatch(uploadSingleImage(formData));
+    //         return response?.payload?.metaData?.thumb_url;
+    //     } catch (error) {
+    //         console.error("Error uploading image:", error);
+    //         return null;
+    //     }
+    // };
+          
+
+    const onSubmit = async (data) => {
+        const { special_offer_image, special_offer_start_date, special_offer_end_date, special_offer_spu_list, special_offer_is_active, special_offer_name, special_offer_description } = data;
+    
+        const formData = {
+            name:special_offer_name,
+            description:special_offer_description,
+            image: special_offer_image ? special_offer_image[0] : null,
+            start_date: special_offer_start_date.getTime(),
+            end_date: special_offer_end_date.getTime(),
+            spu_list:special_offer_spu_list,
+            is_active:special_offer_is_active,
+        };
+    
+        // Validate input fields
+        if (!special_offer_name) {
+            toast.error("Tên ưu đãi đặc biệt là bắt buộc");
+            return;
+        }
+    
+        if (!special_offer_start_date || !special_offer_end_date) {
+            toast.error("Ngày bắt đầu và ngày kết thúc là bắt buộc");
+            return;
+        }
+    
+        if (special_offer_spu_list.length === 0) {
+            toast.error("Danh sách sản phẩm không được để trống");
+            return;
+        }
+    
+        let image_url = null;
+        // if (special_offer_image) {
+        //     image_url = await upLoadImageSingle(special_offer_image, "specialOffer");
+        //     if (!image_url) {
+        //         toast.error("Có lỗi xảy ra khi tải lên hình ảnh");
+        //         return;
+        //     }
+        // }
+    
+        const sendRequest = await dispatch(onCreateSpecialOffer({
+            ...formData,
+            special_offer_image: [],
+        }));
+    
+        if (sendRequest) {
+            toast.success("Tạo ưu đãi đặc biệt thành công");
+            navigate('/productsale/productsalelist');
+        }
+    };
+    
+
+    const handlePublish = async (data) => {
+        onSubmit(data);
+    };
+
+    const handleSaveDraft = async (data) => {
+        onSubmit({ ...data, special_offer_is_active: false });
     };
 
     return (
         <CRow>
             <CCol xs={12}>
-                <CCard className="mb-4">
-                    <CCardHeader>
-                        <strong>Thêm Sản phẩm giảm giá</strong>
-                    </CCardHeader>
-                    <CCardBody>
-                        <CForm className="row g-3" onSubmit={handleSubmit}>
-                            <CCol md={6}>
-                                <CFormLabel htmlFor="inputState">Sản phẩm</CFormLabel>
-                                <CFormSelect id="inputState" onChange={(e) => setProduct_id(e.target.value)} value={product_id}>
-                                    {products.map((item, index) => (
-                                        <option value={item.id} key={index}>{item.name}</option>
+                <CForm onSubmit={handleSubmit(handlePublish)}>
+                    <CCard className="mb-4">
+                        <CCardHeader>
+                            <strong>Tạo ưu đãi đặc biệt</strong>
+                        </CCardHeader>
+                        <CCardBody>
+                            <CRow className="mb-3">
+                                <CFormLabel htmlFor="special_offer_name" className="col-sm-2 col-form-label">
+                                    Tên ưu đãi đặc biệt
+                                </CFormLabel>
+                                <CCol sm={10}>
+                                    <CFormInput
+                                        type="text"
+                                        id="special_offer_name"
+                                        {...register("special_offer_name", { required: "Tên ưu đãi đặc biệt là bắt buộc" })}
+                                    />
+                                    {errors.special_offer_name && (
+                                        <span className="text-danger">{errors.special_offer_name.message}</span>
+                                    )}
+                                </CCol>
+                            </CRow>
+
+                            <CRow className="mb-3">
+                                <CFormLabel htmlFor="special_offer_description" className="col-sm-2 col-form-label">
+                                    Mô tả ưu đãi
+                                </CFormLabel>
+                                <CCol sm={10}>
+                                    <CFormTextarea
+                                        id="special_offer_description"
+                                        rows="3"
+                                        {...register("special_offer_description")}
+                                    ></CFormTextarea>
+                                </CCol>
+                            </CRow>
+
+                            {/* <CRow className="mb-3">
+                                <CFormLabel htmlFor="special_offer_image" className="col-sm-2 col-form-label">
+                                    Hình ảnh ưu đãi
+                                </CFormLabel>
+                                <CCol sm={10}>
+                                    <CFormInput
+                                        type="file"
+                                        id="special_offer_image"
+                                        {...register("special_offer_image", { required: "Hình ảnh ưu đãi là bắt buộc" })}
+                                    />
+                                    {errors.special_offer_image && (
+                                        <span className="text-danger">{errors.special_offer_image.message}</span>
+                                    )}
+                                </CCol>
+                            </CRow> */}
+
+                            <CRow className="mb-3">
+                                <CFormLabel htmlFor="special_offer_start_date" className="col-sm-2 col-form-label">
+                                    Ngày bắt đầu
+                                </CFormLabel>
+                                <CCol sm={4}>
+                                    <DatePicker
+                                        id="special_offer_start_date"
+                                        selected={startDate}
+                                        onChange={(date) => setValue("special_offer_start_date", date)}
+                                        dateFormat="dd/MM/yyyy"
+                                        className="form-control"
+                                    />
+                                </CCol>
+
+                                <CFormLabel htmlFor="special_offer_end_date" className="col-sm-2 col-form-label">
+                                    Ngày kết thúc
+                                </CFormLabel>
+                                <CCol sm={4}>
+                                    <DatePicker
+                                        id="special_offer_end_date"
+                                        selected={endDate}
+                                        onChange={(date) => setValue("special_offer_end_date", date)}
+                                        dateFormat="dd/MM/yyyy"
+                                        className="form-control"
+                                    />
+                                </CCol>
+                            </CRow>
+
+                            <CRow className="mb-3">
+                                <CFormLabel htmlFor="selected_products" className="col-sm-2 col-form-label">
+                                    Chọn sản phẩm
+                                </CFormLabel>
+                                <CCol sm={10}>
+                                    <Select
+                                        id="selected_products"
+                                        isMulti
+                                        options={productOptions}
+                                        value={selected_products}
+                                        onChange={(selectedOptions) => setValue("selected_products", selectedOptions)}
+                                    />
+                                </CCol>
+                            </CRow>
+
+                            {product_ids?.map((product, index) => (
+                                <div key={index} className="border rounded mb-3 p-3">
+                                    <CRow>
+                                        <CCol sm={6}>
+                                            <h5>{product.product_name}</h5>
+                                            <img src={product.product_thumb} alt={product.product_name} width="100" />
+                                        </CCol>
+                                        <CCol sm={6} className="text-end">
+                                            <CButton color="danger" onClick={(e) => removeProductFromList(e, product.product_id)}>
+                                                Xóa
+                                            </CButton>
+                                        </CCol>
+                                    </CRow>
+
+                                    <CRow className="mt-3">
+                                        <CCol sm={6}>
+                                            <CFormLabel htmlFor={`price_sale_${product.product_id}`}>Giá bán</CFormLabel>
+                                            <CFormInput
+                                                type="number"
+                                                id={`price_sale_${product.product_id}`}
+                                                value={product.price_sale}
+                                                onChange={(e) => handleChangeSpuData(e, product.product_id, null, "price_sale")}
+                                            />
+                                        </CCol>
+
+                                        <CCol sm={6}>
+                                            <CFormLabel htmlFor={`percentage_${product.product_id}`}>Phần trăm</CFormLabel>
+                                            <CFormInput
+                                                type="number"
+                                                id={`percentage_${product.product_id}`}
+                                                value={product.percentage}
+                                                onChange={(e) => handleChangeSpuData(e, product.product_id, null, "percentage")}
+                                            />
+                                        </CCol>
+                                    </CRow>
+
+                                    <CRow className="mt-3">
+                                        <CCol sm={6}>
+                                            <CFormLabel htmlFor={`quantity_${product.product_id}`}>Số lượng</CFormLabel>
+                                            <CFormInput
+                                                type="number"
+                                                id={`quantity_${product.product_id}`}
+                                                value={product.quantity}
+                                                onChange={(e) => handleChangeSpuData(e, product.product_id, null, "quantity")}
+                                            />
+                                        </CCol>
+
+                                        {/* <CCol sm={6}>
+                                            <CFormLabel htmlFor={`is_active_${product.product_id}`}>Kích hoạt</CFormLabel>
+                                            <CFormSwitch
+                                                id={`formSwitchCheckDefault-${product.product_id}`}
+                                                checked={product.is_active}
+                                                onChange={() => handleToggleActive(product.product_id, !product.is_active)}
+                                            />
+                                        </CCol> */}
+                                    </CRow>
+
+                                    {product.sku_list?.map((sku, skuIndex) => (
+                                        <div key={skuIndex} className="border rounded mt-3 p-3">
+                                            <CRow>
+                                                <CCol sm={6}>
+                                                    <h6>{sku.sku_name}</h6>
+                                                </CCol>
+                                                <CCol sm={6} className="text-end">
+                                                    <CFormLabel htmlFor={`sku_is_active_${sku.sku_id}`}>Kích hoạt</CFormLabel>
+                                                    <CFormSwitch
+                                                        id={`formSwitchCheckDefault-${product.product_id}`}
+                                                        checked={product.is_active}
+                                                        onChange={() => handleToggleActive(product.product_id, !product.is_active)}
+                                                    />
+                                                </CCol>
+                                            </CRow>
+
+                                            <CRow className="mt-3">
+                                                <CCol sm={4}>
+                                                    <CFormLabel htmlFor={`sku_price_sale_${sku.sku_id}`}>Giá bán</CFormLabel>
+                                                    <CFormInput
+                                                        type="number"
+                                                        id={`sku_price_sale_${sku.sku_id}`}
+                                                        value={sku.price_sale}
+                                                        onChange={(e) => handleChangeSpuData(e, product.product_id, sku.sku_id, "price_sale")}
+                                                    />
+                                                </CCol>
+
+                                                <CCol sm={4}>
+                                                    <CFormLabel htmlFor={`sku_percentage_${sku.sku_id}`}>Phần trăm</CFormLabel>
+                                                    <CFormInput
+                                                        type="number"
+                                                        id={`sku_percentage_${sku.sku_id}`}
+                                                        value={sku.percentage}
+                                                        onChange={(e) => handleChangeSpuData(e, product.product_id, sku.sku_id, "percentage")}
+                                                    />
+                                                </CCol>
+
+                                                <CCol sm={4}>
+                                                    <CFormLabel htmlFor={`sku_quantity_${sku.sku_id}`}>Số lượng</CFormLabel>
+                                                    <CFormInput
+                                                        type="number"
+                                                        id={`sku_quantity_${sku.sku_id}`}
+                                                        value={sku.quantity}
+                                                        onChange={(e) => handleChangeSpuData(e, product.product_id, sku.sku_id, "quantity")}
+                                                    />
+                                                </CCol>
+                                            </CRow>
+                                        </div>
                                     ))}
-                                </CFormSelect>
-                            </CCol>
-                            <CCol md={6}>
-                                <CFormLabel htmlFor="inputName">Giá sale</CFormLabel>
-                                <CFormInput type="text" id="inputNumber" value={pricesale} onChange={(e) => setPriceSale(e.target.value)} />
-                            </CCol>
-                            <CCol xs={6}>
-                                <CFormLabel htmlFor="inputAddress">Số lượng</CFormLabel>
-                                <CFormInput id="inputName" value={qty_sale} onChange={(e) => setQty_sale(e.target.value)} />
-                            </CCol>
-                            <CCol md={6}>
-                                <CFormLabel htmlFor="inputState">Trang thái</CFormLabel>
-                                <CFormSelect id="inputState" value={status} onChange={(e) => setStatus(e.target.value)}>
-                                    <option value="1">Xuất bản</option>
-                                    <option value="2">Chưa xuất bản</option>
-                                </CFormSelect>
-                            </CCol>
-                            <CCol md={6}>
-                                <CFormLabel htmlFor="inputState">Thời gian bắt đầu</CFormLabel>
-                                <DatePicker
-                                    selected={date_begin}
-                                    onChange={(date) => setDate_begin(date)}
-                                    dateFormat="dd/MM/yyyy"
-                                    placeholderText="Chọn ngày"
-                                    className="form-control"
-                                />
-                            </CCol>
-                            <CCol md={6}>
-                                <CFormLabel htmlFor="inputCity">Thời gian kết thúc</CFormLabel>
-                                <DatePicker
-                                    selected={date_end}
-                                    onChange={(date) => setDate_end(date)}
-                                    dateFormat="dd/MM/yyyy"
-                                    placeholderText="Chọn ngày"
-                                    className="form-control"
-                                />
-                            </CCol>
-                            <CCol xs={12}>
-                                <CButton color="primary" type="submit">
-                                    Lưu
-                                </CButton>
-                            </CCol>
-                        </CForm>
-                    </CCardBody>
-                </CCard>
+                                </div>
+                            ))}
+                        </CCardBody>
+                        <CCardFooter>
+                            <CButton type="submit" color="primary">Lưu &amp; Kích hoạt</CButton>
+                            <CButton type="button" color="secondary" className="ml-2" onClick={handleSubmit(handleSaveDraft)}>Lưu nháp</CButton>
+                        </CCardFooter>
+                    </CCard>
+                </CForm>
             </CCol>
         </CRow>
-    )
-}
+    );
+};
 
 export default CreateProductSale;

@@ -33,11 +33,11 @@ function ProductSaleList() {
                                             Thêm Chương trình giảm giá
                                         </CButton>
                                     </Link>
-                                    <Link to='/menu/createmenu'>
+                                    {/* <Link to='/menu/createmenu'>
                                         <CButton color="danger" variant="outline" className="me-md-2">
                                             <CIcon icon={cilTrash} title="Thùng rác" /> Thùng rác
                                         </CButton>
-                                    </Link>
+                                    </Link> */}
                                 </div>
                                 <hr />
                                 <table className="table ">
@@ -51,30 +51,29 @@ function ProductSaleList() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {special && (
-
-                                            <tr className="datarow" >
+                                        {special && special.map((item, index) =>(
+                                             <tr className="datarow" key={index}>
                                                 <td>
                                                     <div className='text-left'>
-                                                        {special.special_offer_name}
+                                                        {item.special_offer_name}
                                                     </div>
                                                 </td>
                                                 <td className='text-left'>
 
-                                                    {special.special_offer_description}
+                                                    {item.special_offer_description}
 
                                                 </td>
-                                                <td className='text-left'>{new Date(special.special_offer_start_date).toLocaleDateString()}</td>
-                                                <td className='text-left'>{new Date(special.special_offer_end_date).toLocaleDateString()}</td>
+                                                <td className='text-left'>{new Date(item.special_offer_start_date).toLocaleDateString()}</td>
+                                                <td className='text-left'>{new Date(item.special_offer_end_date).toLocaleDateString()}</td>
                                                 <td>
-                                                    {/* <div className="function_style">
-                                                        <Link to={`/productsale/updateproductsale/${special._id}`} className="btn btn-sm"><i className="fa fa-edit me-1" ></i>Chỉnh sửa</Link> |
-                                                        <Link to={`/productsale/detailproductsale/${special._id}`} className="btn btn-sm"><i className="fa fa-eye me-1"></i>Chi tiết</Link> |
-                                                        <button onClick={() => trashProductSale(special._id)} className="btn btn-sm"><i className="fa fa-trash me-1"></i>Xoá</button>
-                                                    </div> */}
+                                                    <div className="function_style">
+                                                        {/* <Link to={`/productsale/updateproductsale/${special._id}`} className="btn btn-sm"><i className="fa fa-edit me-1" ></i>Chỉnh sửa</Link> | */}
+                                                        <Link to={`/productsale/detailproductsale/${item.special_offer_name}-${item._id}`} className="btn btn-sm"><i className="fa fa-eye me-1"></i>Chi tiết</Link> |
+                                                        {/* <button onClick={() => trashProductSale(special._id)} className="btn btn-sm"><i className="fa fa-trash me-1"></i>Xoá</button> */}
+                                                    </div>
                                                 </td>
                                             </tr>
-                                        )}
+                                         ))}
                                     </tbody>
                                 </table>
                             </div>

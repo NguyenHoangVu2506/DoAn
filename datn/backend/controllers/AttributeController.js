@@ -7,10 +7,10 @@ class AttributeController{
         new SuccessResponse({
             message:'success',
             metaData: await AttributeService.newAttribute({...req.body})
-        }).send(res)
+        }).send(res) 
     }
 
-    getAttribute =async(req, res, next)=>{
+    getAttribute =async(req, res, next)=>{ 
         new SuccessResponse({
             message:'get attribute  success',
             metaData: await AttributeService.findAttribute(req.body)

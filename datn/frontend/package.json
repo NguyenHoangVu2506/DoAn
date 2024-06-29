@@ -25,10 +25,7 @@
     "rc-slider": "^10.6.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-<<<<<<< HEAD
     "react-helmet": "^6.1.0",
-=======
->>>>>>> origin/main
     "react-number-format": "^5.4.0",
     "react-paypal-button-v2": "^2.6.3",
     "react-query": "^3.39.3",

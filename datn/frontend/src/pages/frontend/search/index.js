@@ -3,10 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { onAllProduct } from "../../../store/actions";
 import ProductItem from "../../../Components/product/productItem";
-<<<<<<< HEAD
 import { Helmet } from 'react-helmet';
-=======
->>>>>>> origin/main
 
 function Search() {
     const dispatch = useDispatch();
@@ -25,14 +22,13 @@ function Search() {
         allProducts && setProductSearch(allProducts?.filter((prod) => prod.product_name.toLowerCase().search(new RegExp(meta_key?.toLowerCase())) !== -1))
     }, [meta_key])
 
-<<<<<<< HEAD
 
     return (
         <body>
             <Helmet>
                 <title>Kết quả tìm kiếm:{meta_key} - HoangVu</title>
             </Helmet>
-=======
+{/* =======
     useEffect(() => {
         document.title = 'Tìm Kiếm Sản Phẩm';
       }, []);
@@ -40,18 +36,18 @@ function Search() {
 
     return (
         <body>
->>>>>>> origin/main
+>>>>>>> origin/main */}
             <div className="bg-" style={{ backgroundColor: 'white' }} >
                 <div className="container py-4">
                     <nav className="d-flex">
                         <h6 className="mb-0">
                             <Link to="/" style={{ color: '#f6831f' }}>Trang chủ</Link>
                             <span className=" mx-2" style={{ color: '#f6831f' }}>/ </span>
-<<<<<<< HEAD
+{/* <<<<<<< HEAD */}
                             <Link to="/blog" style={{ color: '#f6831f' }}><u>{meta_key}</u></Link>
-=======
-                            <Link to="/blog" style={{ color: '#f6831f' }}></Link>
->>>>>>> origin/main
+{/* ======= */}
+                            {/* <Link to="/blog" style={{ color: '#f6831f' }}></Link>
+>>>>>>> origin/main */}
                         </h6>
                     </nav>
                 </div>

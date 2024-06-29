@@ -136,7 +136,6 @@ const isFindProduct = async ({ product_id }) => {
 }
 
 const isfindAllProducts = async ({ limit = 50, sort = 'ctime', page = 1, filter = { isPublished: true } }) => {
-<<<<<<< HEAD
     // Sắp xếp sản phẩm theo ctime (sản phẩm mới nhất)
     const sortBy = sort === 'ctime' ? { _id: -1 } : { _id: 1 };
 
@@ -193,41 +192,41 @@ const isfindAllProducts = async ({ limit = 50, sort = 'ctime', page = 1, filter 
     return allproduct;
 };
 
-=======
+// =======
 
-    let product_list = await SPU_MODEL.spu.find().lean()
-    if (product_list.length == 0) return null
-    let brand_list = []
-    let special_offer = []
-    let sku_list = []
-    //let
-    let product_images = []
-    let category_list = []
-    let review_list = []
+//     let product_list = await SPU_MODEL.spu.find().lean()
+//     if (product_list.length == 0) return null
+//     let brand_list = []
+//     let special_offer = []
+//     let sku_list = []
+//     //let
+//     let product_images = []
+//     let category_list = []
+//     let review_list = []
 
-    //
-    for (let index = 0; index < product_list.length; index++) {
-        const brand = await getBrandById({ brand_id: product_list[index].product_brand })
-        brand_list.push(brand)
-        const category = await getCategoryById({ category_id: product_list[index].product_category })
-        category_list.push(category)
-        const skulist = await allSkuBySpuId({ product_id: product_list[index]._id })
-        sku_list.push(skulist)
-        console.log("id", product_list[index]._id)
-        const specialoffer = await findSpecialOfferBySpuId({ spu_id: product_list[index]._id.toString(), special_offer_is_active: true })
-        special_offer.push(specialoffer)
-        const productImages = await getImageBySpuId({ spu_id: product_list[index]._id })
-        product_images.push(productImages)
-        const productReview = await getCommentsByProductId({ productId: product_list[index]._id })
-        review_list.push(productReview)
-    }
-    const allproduct = await product_list.map((product, index) => {
-        return { ...product, brand: brand_list[index], category: category_list[index], special_offer: special_offer[index], sku_list: sku_list[index], product_images: product_images[index], review_list: review_list[index] }
-    })
+//     //
+//     for (let index = 0; index < product_list.length; index++) {
+//         const brand = await getBrandById({ brand_id: product_list[index].product_brand })
+//         brand_list.push(brand)
+//         const category = await getCategoryById({ category_id: product_list[index].product_category })
+//         category_list.push(category)
+//         const skulist = await allSkuBySpuId({ product_id: product_list[index]._id })
+//         sku_list.push(skulist)
+//         console.log("id", product_list[index]._id)
+//         const specialoffer = await findSpecialOfferBySpuId({ spu_id: product_list[index]._id.toString(), special_offer_is_active: true })
+//         special_offer.push(specialoffer)
+//         const productImages = await getImageBySpuId({ spu_id: product_list[index]._id })
+//         product_images.push(productImages)
+//         const productReview = await getCommentsByProductId({ productId: product_list[index]._id })
+//         review_list.push(productReview)
+//     }
+//     const allproduct = await product_list.map((product, index) => {
+//         return { ...product, brand: brand_list[index], category: category_list[index], special_offer: special_offer[index], sku_list: sku_list[index], product_images: product_images[index], review_list: review_list[index] }
+//     })
 
-    return allproduct
-}
->>>>>>> origin/main
+//     return allproduct
+// }
+// >>>>>>> origin/main
 
 const findProductsByCategory = async ({ limit = 50, sort = 'ctime', page = 1, filter = { isPublished: true, category_id: null } }) => {
 

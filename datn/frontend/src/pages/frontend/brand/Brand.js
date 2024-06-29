@@ -1,19 +1,13 @@
 import React, { useEffect, useState } from "react";
-<<<<<<< HEAD
-=======
 import { Carousel } from 'antd';
->>>>>>> origin/main
 import { useDispatch, useSelector } from "react-redux";
 import { getListBrand, getProductByBrandId, onAllProduct } from "../../../store/actions";
 import ProductItem from "../../../Components/product/productItem";
 import { Link } from "react-router-dom";
-<<<<<<< HEAD
 import { Helmet } from 'react-helmet';
-=======
 
 
 
->>>>>>> origin/main
 function Brand() {
     const dispatch = useDispatch();
     const { all_brand } = useSelector((state) => state.brandReducer);
@@ -35,13 +29,10 @@ function Brand() {
         fetchDataBrand()
     }, []);
 
-<<<<<<< HEAD
-=======
     useEffect(() => {
         document.title = "Thương Hiệu";
     }, []);
 
->>>>>>> origin/main
     const onChangeBrand = async (brand_id) => {
         console.log("brand_id", brand_id)
         setBrand_ID(brand_id)
@@ -74,12 +65,9 @@ function Brand() {
 
             <div className="bg-" style={{ backgroundColor: 'white' }} >
                 <div className="container py-4 " >
-<<<<<<< HEAD
                     <Helmet>
-                        <title>Thương hiệu:{} - HoangVu</title>
+                        <title>Thương hiệu:{ } - HoangVu</title>
                     </Helmet>
-=======
->>>>>>> origin/main
                     {/*<!-- Breadcrumb --> */}
                     <nav className="d-flex" >
                         <h6 className="mb-0">
@@ -96,17 +84,17 @@ function Brand() {
 
             <main role="main" class="container">
                 <div class="row">
-<<<<<<< HEAD
+                    {/* <<<<<<< HEAD */}
                     <div class="col-md-12 blog-main">
-=======
+                        {/* =======
                     <div class="">
->>>>>>> origin/main
+>>>>>>> origin/main */}
                         <header class="mb-2 pt-2 pb-3">
                             {/* <h3 className="text-center text-uppercase text-dark pb-3">THƯƠNG HIỆU MỸ PHẨM</h3> */}
                             <h3 className="text-center text-uppercase text-dark pb-3">THƯƠNG HIỆU</h3>
 
                         </header>
-<<<<<<< HEAD
+                        {/* <<<<<<< HEAD
                         <div className="row">
                             {all_brand && all_brand.map((brand, index) => {
                                 return (
@@ -118,38 +106,38 @@ function Brand() {
                                     </div>)
                             })}
                         </div>
-=======
+======= */}
 
-                        <div  className="multi-carousel" data-mdb-carousel-init data-mdb-interval="3000" data-mdb-items="7">
+                        <div className="multi-carousel" data-mdb-carousel-init data-mdb-interval="3000" data-mdb-items="7">
                             <div class="d-flex justify-content-center m-2 mb-3">
-                                <button data-mdb-button-init class="carousel-control-prev btn btn-floating mx-3"  style={{ backgroundColor: '#f6831f' }} type="button" tabindex="0"  aria-current="true" data-mdb-slide="prev">
+                                <button data-mdb-button-init class="carousel-control-prev btn btn-floating mx-3" style={{ backgroundColor: '#f6831f' }} type="button" tabindex="0" aria-current="true" data-mdb-slide="prev">
                                     <i class="fas fa-angle-left fa-lg " ></i>
                                 </button>
-                                <button data-mdb-button-init class="carousel-control-next btn  btn-floating mx-3"    style={{ backgroundColor: '#f6831f' }} type="button" tabindex="1" data-mdb-slide="next">
+                                <button data-mdb-button-init class="carousel-control-next btn  btn-floating mx-3" style={{ backgroundColor: '#f6831f' }} type="button" tabindex="1" data-mdb-slide="next">
                                     <i class="fas fa-angle-right fa-lg " ></i>
                                 </button>
                             </div>
-                              <div className="multi-carousel-inner">
+                            <div className="multi-carousel-inner">
                                 <div class="d-flex  m-2 mb-3">
                                     {all_brand && all_brand.map((brand, index) => {
                                         return (
                                             <button className="multi-carousel-item border-0" >
-                                                <img onClick={() => onChangeBrand(brand._id)} key={index}  data-mdb-ripple-init src={brand.brand_image}
-                                                 className="rounded-circle" style={{ height: '200px', width: '200px' }} />
+                                                <img onClick={() => onChangeBrand(brand._id)} key={index} data-mdb-ripple-init src={brand.brand_image}
+                                                    className="rounded-circle" style={{ height: '200px', width: '200px' }} />
                                             </button>
                                         )
                                     })}
                                 </div>
 
                             </div>
-                            
+
 
 
                         </div>
-                        
 
 
->>>>>>> origin/main
+
+                        {/* >>>>>>> origin/main */}
 
                         <div class=" row pt-4" >
                             <div className="card-body pt-3 text-center">
@@ -171,11 +159,11 @@ function Brand() {
                                     </li>
                                     {Array.from({ length: totalPages }, (_, index) => (
                                         <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
-<<<<<<< HEAD
+                                            {/* <<<<<<< HEAD
                                             <button className="page-link" onClick={() => setCurrentPage(index + 1)}>{index + 1}</button>
-=======
-                                            <button style={{ color: '#f6831f' }}  className="page-link" onClick={() => setCurrentPage(index + 1)}>{index + 1}</button>
->>>>>>> origin/main
+======= */}
+                                            <button style={{ color: '#f6831f' }} className="page-link" onClick={() => setCurrentPage(index + 1)}>{index + 1}</button>
+                                            {/* >>>>>>> origin/main */}
                                         </li>
                                     ))}
                                     <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
@@ -184,7 +172,7 @@ function Brand() {
                                 </ul>
                             </div>
                         </div>
-<<<<<<< HEAD
+                        {/* <<<<<<< HEAD */}
 
 
 
@@ -195,9 +183,9 @@ function Brand() {
 
 
 
-=======
+                    {/* =======
                     </div>
->>>>>>> origin/main
+>>>>>>> origin/main */}
                 </div>
 
             </main>

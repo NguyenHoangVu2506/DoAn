@@ -1,49 +1,33 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { imageURL } from "../../../config";
-import apiSale from "../../../service/apiSale";
 import accounting from "accounting";
+import { useDispatch, useSelector } from "react-redux";
+import { getSpecialById } from "../../../store/actions/special-actions";
 
 function ProductSaleShow() {
-    const { id } = useParams();
-    const [data, setData] = useState({
-        image: '',
-        name: '',
-        brand_name: '',
-        category_name: '',
-        price: '',
-        pricesale: '',
-        qty_sale: '',
-        detail: '',
-        status: 0,
-        date_begin: '',
-        date_end: ''
-    });
-
-    const [status, setStatus] = useState('Ẩn');
+    const { product_slug_id } = useParams();
+    const [data, setData] = useState({});
+    const dispatch = useDispatch();
+    const { getspecialbyid } = useSelector((state) => state.specialReducer);
 
     useEffect(() => {
-        apiSale.getSaleById(id).then((res) => {
-            try {
-                setData(res.data);
-                if (res.data.status === 1) {
-                    setStatus('Hiển thị');
-                }
-            } catch (e) {
-                console.log(e);
+        if (product_slug_id) {
+            const special_id = product_slug_id.split('-').pop();
+            if (!getspecialbyid) {
+                dispatch(getSpecialById({ _id: special_id }));
+            } else {
+                setData(getspecialbyid); // Set data when getspecialbyid is available
             }
-        });
-    }, [id]);
+        }
+    }, [product_slug_id, getspecialbyid, dispatch]);
+
     const formatDate = (dateString) => {
-        if (!dateString) return '';
+        // Function to format date
+        if (!dateString) return "";
         const date = new Date(dateString);
-        return date.toLocaleDateString('vi-VN', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-        });
+        return date.toLocaleDateString("en-US");
     };
-    const imageArray = data.image ? data.image.split(',') : [];
 
     return (
         <div className="content-wrapper">
@@ -51,7 +35,7 @@ function ProductSaleShow() {
                 <div className="container-fluid">
                     <div className="row mb-2">
                         <div className="col-sm-12">
-                            <h1 className="d-inline">Chi tiết sản phẩm giảm giá</h1>
+                            <h1 className="d-inline">Chi tiết chương trình giảm giá</h1>
                         </div>
                     </div>
                 </div>
@@ -75,66 +59,68 @@ function ProductSaleShow() {
                             </thead>
                             <tbody>
                                 <tr>
-                                    <th>Hình ảnh</th>
-                                    <td>
-                                        {imageArray.map((image, index) => (
-                                            <img
-                                                key={index}
-                                                src={imageURL + '/images/product/' + image.trim()}
-                                                alt={`product_${index}`}
-                                                style={{ width: "70px", marginRight: "5px" }}
-                                            />
-                                        ))}
-                                    </td>
+                                    <th>Tên chương trình giảm giá</th>
+                                    <td>{data.special_offer_name}</td>
                                 </tr>
                                 <tr>
-                                    <th>Tên sản phẩm</th>
-                                    <td>{data.name}</td>
+                                    <th>Mô tả</th>
+                                    <td>{data.special_offer_description}</td>
                                 </tr>
                                 <tr>
-                                    <th>Thương hiệu</th>
-                                    <td>{data.brand_name}</td>
-                                </tr>
-                                <tr>
-                                    <th>Danh mục</th>
-                                    <td>{data.category_name}</td>
-                                </tr>
-                                <tr>
-                                    <th>Giá bán</th>
-                                    <td>{data.price}</td>
-                                </tr>
-                                <tr>
-                                    <th>Giá sale</th>
-                                    <td>{accounting.formatNumber(data.pricesale, 0, ".", ",")} <span className="text-muted">đ</span></td>
-                                </tr>
-                                <tr>
-                                    <th>Số lượng sale</th>
-                                    <td>{data.qty_sale}</td>
-                                </tr>
-
-                                <tr>
-                                    <th>Chi tiết sản phẩm</th>
-                                    <td>{data.detail}</td>
-                                </tr>
-
-                                <tr>
-                                    <th>Trạng thái</th>
-                                    <td>{status}</td>
-                                </tr>
-                                <tr>
-                                    <th>Ngày Bắt đầu</th>
-                                    <td>{formatDate(data.date_begin)}</td>
+                                    <th>Ngày bắt đầu</th>
+                                    <td>{formatDate(data.special_offer_start_date)}</td>
                                 </tr>
                                 <tr>
                                     <th>Ngày kết thúc</th>
-                                    <td>{formatDate(data.date_end)}</td>
+                                    <td>{formatDate(data.special_offer_end_date)}</td>
                                 </tr>
+                                <tr>
+                                    <th>Trạng thái</th>
+                                    <td>{data.special_offer_is_active ? "Active" : "Inactive"}</td>
+                                </tr>
+                                {data.special_offer_spu_list && data.special_offer_spu_list.map((product, index) => (
+                                    <React.Fragment key={index}>
+                                        <tr>
+                                            <th>Product Name</th>
+                                            <td>{product.product_id}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Price Sale</th>
+                                            <td>{accounting.formatNumber(product.price_sale, 0, ".", ",")} <span className="text-muted">đ</span></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Percentage</th>
+                                            <td>{product.percentage}%</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Quantity</th>
+                                            <td>{product.quantity}</td>
+                                        </tr>
+                                        {product.sku_list && product.sku_list.map((sku, skuIndex) => (
+                                            <React.Fragment key={skuIndex}>
+                                                <tr>
+                                                    <th>SKU Name</th>
+                                                    <td>{sku.sku_id}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Price Sale</th>
+                                                    <td>{accounting.formatNumber(sku.price_sale, 0, ".", ",")} <span className="text-muted">đ</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Percentage</th>
+                                                    <td>{sku.percentage}%</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Quantity</th>
+                                                    <td>{sku.quantity}</td>
+                                                </tr>
+                                            </React.Fragment>
+                                        ))}
+                                    </React.Fragment>
+                                ))}
                             </tbody>
                         </table>
                     </div>
-
-                    <br></br>
-                    <br></br>
                 </div>
             </section>
         </div>

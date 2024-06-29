@@ -20,6 +20,15 @@ class CheckoutController {
 
 
     }
+    
+    orderById = async(req, res, next) => {
+        return new SuccessResponse({
+            message: "order success",
+            metaData: await CheckoutService.findOrderById(req.body)
+        }).send(res)
+
+
+    }
     findOrderByUser = async(req, res, next) => {
         return new SuccessResponse({
             message: "findOrderByUser success",

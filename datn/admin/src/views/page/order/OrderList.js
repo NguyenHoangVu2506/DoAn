@@ -16,10 +16,13 @@ const statusMap = {
 
 function OrderList() {
     const { order } = useSelector((state) => state.orderReducer);
+    
     const dispatch = useDispatch();
     const [showForm, setShowForm] = useState(false);
     const [currentOrderId, setCurrentOrderId] = useState(null);
     const [status, setStatus] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 8;  
 
     useEffect(() => {
         if (!order) {
@@ -40,6 +43,11 @@ function OrderList() {
         toast.success("Cập nhật trạng thái đơn hàng thành công!");
         setShowForm(false);
     };
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = order ? order.slice(indexOfFirstItem, indexOfLastItem) : [];
+
+    const totalPages = order ? Math.ceil(order.length / itemsPerPage) : 1;
 
     return (
         <div className="content-wrapper">
@@ -59,7 +67,7 @@ function OrderList() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {order && order.map((item, index) => (
+                                        {order && currentItems.map((item, index) => (
                                             <tr className="datarow" key={index}>
                                                 <td>
                                                     <div>
@@ -129,33 +137,22 @@ function OrderList() {
                                     </div>
                                 </div>
                             )}
-                            {/* <ul className="pagination">
-                                <li className="page-item ">
-                                    {page > 1 ? (
-                                        <Link className="page-link" to={`/admin/orders/${page - 1}/${limit}`}>Previous</Link>
-                                    ) : (
-                                        <span className="page-link disabled">Previous</span>
-                                    )}
-                                </li>
-                                {Array.from(Array(pages).keys()).map((index) => (
-                                    <li
-                                        key={index}
-                                        className={`page-item  ${index + 1 === page ? "active" : ""}`}
-                                    >
-                                        <Link
-                                            className="page-link bg-blue"
-                                            to={`/admin/orders/${index + 1}/${limit}`}
-                                        >
-                                            {index + 1}
-                                        </Link>
-                                    </li>
-                                ))}
-                                <li className="page-item">
-                                    <Link className="page-link" to={`/admin/orders/${page + 1}/${limit}`}>
-                                        Next
-                                    </Link>
-                                </li>
-                            </ul> */}
+                                                        <div className="pagination-container" style={{ display: 'flex', justifyContent: 'center' }}>
+                                    <ul className="pagination">
+                                        <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                                            <button className="page-link" onClick={() => setCurrentPage(currentPage - 1)}>Trước</button>
+                                        </li>
+                                        {[...Array(totalPages).keys()].map(number => (
+                                            <li key={number + 1} className={`page-item ${currentPage === number + 1 ? 'active' : ''}`}>
+                                                <button className="page-link" onClick={() => setCurrentPage(number + 1)}>{number + 1}</button>
+                                            </li>
+                                        ))}
+                                        <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                                            <button className="page-link" onClick={() => setCurrentPage(currentPage + 1)}>Sau</button>
+                                        </li>
+                                    </ul>
+                                </div>
+
                         </div>
                     </div>
                 </div>

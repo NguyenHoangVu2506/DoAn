@@ -4,10 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import {  useNavigate } from "react-router-dom";
 import { onSignup } from "../../../store/actions";
 import { toast } from "react-toastify";
-<<<<<<< HEAD
+// <<<<<<< HEAD
 import { Helmet } from 'react-helmet';
-=======
->>>>>>> origin/main
+// =======
+// >>>>>>> origin/main
 
 function Register() {
   const dispatch =useDispatch();
@@ -24,13 +24,10 @@ function Register() {
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
   const [nameError, setNameError] = useState('');
 
-<<<<<<< HEAD
-=======
   useEffect(() => {
     document.title = 'Đăng Kí Thành Viên';
   }, []);
 
->>>>>>> origin/main
   const onFinish = (values) => {
     console.log('Success:', values);
   };
@@ -127,12 +124,12 @@ function Register() {
 
   return (
     <section className="bg-image" style={{ backgroundColor: 'white',height: '125vh'}}>
-<<<<<<< HEAD
+{/* <<<<<<< HEAD
       <Helmet>
                         <title>Đăng ký tài khoản - HoangVu</title>
                     </Helmet>
 =======
->>>>>>> origin/main
+>>>>>>> origin/main */}
       <div className="mask d-flex align-items-center h-100 gradient-custom-3">
         <div className="container h-100">
           <div className="row d-flex justify-content-center align-items-center h-100">

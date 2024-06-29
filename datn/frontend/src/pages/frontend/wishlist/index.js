@@ -5,10 +5,7 @@ import { addFavoriteToLocalStorage, getFavoritesFromLocalStorage, removeFavorite
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ProductListItem from "../../../Components/product/productListItem";
-<<<<<<< HEAD
 import { Helmet } from 'react-helmet';
-=======
->>>>>>> origin/main
 
 export default function Wishlist() {
     const dispatch = useDispatch();
@@ -29,13 +26,13 @@ export default function Wishlist() {
     };
 
     useEffect(() => {
-<<<<<<< HEAD
-=======
-        document.title = 'Sản Phẩm Yêu Thích';
-      }, []);
+// <<<<<<< HEAD
+// =======
+//         document.title = 'Sản Phẩm Yêu Thích';
+//       }, []);
 
-    useEffect(() => {
->>>>>>> origin/main
+//     useEffect(() => {
+// >>>>>>> origin/main
         if (userInfo) {
             if (!wish_list) {
                 dispatch(getWishList({ userId: userInfo._id }));
@@ -70,12 +67,9 @@ export default function Wishlist() {
 
     return (
         <>
-<<<<<<< HEAD
         <Helmet>
         <title>Sản phẩm yêu thích - HoangVu</title>
       </Helmet>
-=======
->>>>>>> origin/main
             <div className="bg-primary">
                 <div className="bg-2" style={{ backgroundColor: 'white' }}>
                     <div className="container py-4">

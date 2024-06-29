@@ -7,11 +7,8 @@ import "./UserOrder.css";
 import { NumericFormat } from 'react-number-format';
 import StarRatingComponent from 'react-star-rating-component';
 import { addCommnetByProduct } from '../../../store/actions/comment_rating-actions';
-<<<<<<< HEAD
 import { Helmet } from 'react-helmet';
 
-=======
->>>>>>> origin/main
 export default function UserOrder() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -125,12 +122,9 @@ export default function UserOrder() {
   return (
     <>
       <div className="bg-primary">
-<<<<<<< HEAD
       <Helmet>
         <title>Đơn hàng của bạn - HoangVu</title>
       </Helmet>
-=======
->>>>>>> origin/main
         <div className="bg-2" style={{ backgroundColor: 'white' }}>
           <div className="container py-4">
             <nav className="d-flex" >

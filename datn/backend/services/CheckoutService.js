@@ -299,6 +299,12 @@ class CheckoutService {
         .lean()
         return Order
     }
+    async findOrderById({  order_id, select }) {
+        const Order = await order.findOne({
+            _id: order_id
+        })
+        return Order
+    }
     async findAllOrder() {
         const Order = await order.find()
         return Order

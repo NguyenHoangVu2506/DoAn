@@ -65,11 +65,10 @@ function CategoryList() {
                                 <table className="table ">
                                     <thead>
                                         <tr>
-                                            <th className="text-center" style={{ width: "200px" }}>Hình ảnh</th>
+                                            <th className="text-left" style={{ width: "200px" }}>Hình ảnh</th>
                                             <th style={{ width: "120px" }}>Tên danh mục</th>
-                                            <th style={{ width: "220px" }}>Mô tả</th>
-                                            <th className="text-center" style={{ width: "130px" }}>Danh mục cha</th>
-                                            <th className="text-center" style={{ width: "150px" }}>Chức năng</th>
+                                            <th className="text-left" style={{ width: "130px" }}>Danh mục cha</th>
+                                            <th className="text-left" style={{ width: "150px" }}>Chức năng</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -81,9 +80,7 @@ function CategoryList() {
                                                 <td>
                                                     <div className="name">{item.category_name}</div>
                                                 </td>
-                                                <td>
-                                                    <div className="name">{item.category_description}</div>
-                                                </td>
+                                               
                                                 <td>
                                                     {item.parent_id ? (
                                                         <div className="name">
