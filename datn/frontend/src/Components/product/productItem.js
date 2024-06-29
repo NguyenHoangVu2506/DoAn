@@ -108,8 +108,9 @@ export default function ProductItem({ product }) {
             set_selected_sku(product?.sku_list[0])
             setSelectedImage(product?.product_images[0]?.thumb_url)
             setProduct_image(product?.product_images[0]?.thumb_url)
+            const min_price = product.sku_list.flatMap((item) => item.sku_price);
             setStock(product.sku_list[0]?.sku_stock)
-            setPrice(product.sku_list[0]?.sku_price)
+            setPrice(Math.min(...min_price))
         } else {
             setSelectedImage(
                 product?.product_thumb
@@ -128,7 +129,6 @@ export default function ProductItem({ product }) {
                 if (spu.product_id.toString() === product._id.toString() && spu.sku_list?.length > 0) {
 
                     const min_price = spu.sku_list.flatMap((item) => item.price_sale);
-
                     setMin_price_sku(Math.min(...min_price))
                     const sku = spu.sku_list.find((item) => item?.sku_id == selected_sku?._id);
                     setSale(sku)
@@ -225,6 +225,7 @@ export default function ProductItem({ product }) {
                 <div className="card bg-image hover-zoom ripple rounded ripple-surface w-100 my-2 shadow-2-strong">
                     <Link to={`/product/${product.product_slug}-${product._id}`}><img src={product_image} className="card-img-top" alt="product" /></Link>
                     <div className="card-body d-flex flex-column">
+                        <h6 className="" style={{ color: '#f6831f' }}>{product.brand.brand_name}</h6>
                         <h6 className="text-dark">{product.product_name}</h6>
                         {/* rating */}
                         <div className="text-warning mb-1 me-2">
@@ -280,7 +281,7 @@ export default function ProductItem({ product }) {
                                                                         ))}
                                                                     </div>
                                                                 </aside>
-                                                                <main className="col-lg-7">
+                                                                <main className="col-lg-7 mr-1">
                                                                     <div className="ps-lg-2">
                                                                         <h4 className="title text-dark">
                                                                             {product.product_name}
@@ -334,32 +335,32 @@ export default function ProductItem({ product }) {
                                                                                     return (
                                                                                         <div className="col-12 mb-3" key={indexVariation}>
                                                                                             {/* <div className=""  style={{ flexWrap: 'wrap' }}> */}
-                                                                                                <label className="d-none d-md-block mb-1" style={{ cursor: 'pointer', color: '#f6831f' }}>{variation.name}</label>
-                                                                                                {/* <div className="d-flex flex-row align-items-center"> */}
-                                                                                                    {variation.options.map((option, indexOption) => (
-                                                                                                        // <div key={indexOption}>
-                                                                                                        <React.Fragment key={indexOption}>
-                                                                                                            <input
-                                                                                                                type="radio"
-                                                                                                                className="btn-check"
-                                                                                                                name={`variation_${indexVariation}`}
-                                                                                                                id={`${variation.name}_${option}`}
-                                                                                                                autoComplete="off"
-                                                                                                                value={option}
-                                                                                                                onChange={() => onChangeVariation(indexOption, indexVariation)}
-                                                                                                                style={{ display: 'none' }}
-                                                                                                            />
-                                                                                                            <label
-                                                                                                                className={`btn ${product.product_variations[indexVariation].options[sku_tier_idx.length === 1 ? sku_tier_idx[0] : `${sku_tier_idx[0]},${sku_tier_idx[1]}`] === option ? "btn-warning" : "btn-warning-outlined"}`}
-                                                                                                                htmlFor={`${variation.name}_${option}`}
-                                                                                                                style={{ cursor: 'pointer', marginBottom: '5px', marginRight: '5px' }}
-                                                                                                            >
-                                                                                                                {option}
-                                                                                                            </label>
-                                                                                                        {/* // </div> */}
-                                                                                                        </React.Fragment>
-                                                                                                    ))}
-                                                                                                {/* </div> */}
+                                                                                            <label className="d-none d-md-block mb-1" style={{ cursor: 'pointer', color: '#f6831f' }}>{variation.name}</label>
+                                                                                            {/* <div className="d-flex flex-row align-items-center"> */}
+                                                                                            {variation.options.map((option, indexOption) => (
+                                                                                                // <div key={indexOption}>
+                                                                                                <React.Fragment key={indexOption}>
+                                                                                                    <input
+                                                                                                        type="radio"
+                                                                                                        className="btn-check"
+                                                                                                        name={`variation_${indexVariation}`}
+                                                                                                        id={`${variation.name}_${option}`}
+                                                                                                        autoComplete="off"
+                                                                                                        value={option}
+                                                                                                        onChange={() => onChangeVariation(indexOption, indexVariation)}
+                                                                                                        style={{ display: 'none' }}
+                                                                                                    />
+                                                                                                    <label
+                                                                                                        className={`btn ${product.product_variations[indexVariation].options[sku_tier_idx.length === 1 ? sku_tier_idx[0] : `${sku_tier_idx[0]},${sku_tier_idx[1]}`] === option ? "btn-warning" : "btn-warning-outlined"}`}
+                                                                                                        htmlFor={`${variation.name}_${option}`}
+                                                                                                        style={{ cursor: 'pointer', marginBottom: '5px', marginRight: '5px' }}
+                                                                                                    >
+                                                                                                        {option}
+                                                                                                    </label>
+                                                                                                    {/* // </div> */}
+                                                                                                </React.Fragment>
+                                                                                            ))}
+                                                                                            {/* </div> */}
                                                                                             {/* </div> */}
                                                                                         </div>
 
@@ -391,19 +392,26 @@ export default function ProductItem({ product }) {
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        {product &&
-                                                                            <button className="btn btn-primary shadow-0 mt-1 px-2 py-2"
-                                                                                style={{ backgroundColor: '#f6831f', color: 'white' }}
-                                                                                onClick={() =>
-                                                                                    handleAddToCart(userInfo, {
-                                                                                        productId:
-                                                                                            product._id,
-                                                                                        sku_id: selected_sku?._id,
-                                                                                        quantity: quantity,
-                                                                                    })
-                                                                                }> <i className="me-1 fa fa-shopping-basket"></i> Thêm Vào Giỏ Hàng </button>
+                                                                        <div>
+                                                                            {product &&
+                                                                                <button className="btn btn-primary shadow-0 mt-1 px-2 py-2"
+                                                                                    style={{ backgroundColor: '#f6831f', color: 'white' }}
+                                                                                    onClick={() =>
+                                                                                        handleAddToCart(userInfo, {
+                                                                                            productId:
+                                                                                                product._id,
+                                                                                            sku_id: selected_sku?._id,
+                                                                                            quantity: quantity,
+                                                                                        })
+                                                                                    }>
+                                                                                    <i className="me-1 fa fa-shopping-basket"></i> Thêm Vào Giỏ Hàng </button>
+                                                                            }
+                                                                        </div>
+                                                                        <div>
+                                                                            <Link className="py-2 px-2" to={`/product/${product.product_slug}-${product._id}`}><p style={{ color: '#f6831f', textDecorationLine: 'inherit' }}>Xem chi tiet</p></Link>
 
-                                                                        }
+                                                                        </div>
+
                                                                     </div>
                                                                 </main>
                                                             </div>

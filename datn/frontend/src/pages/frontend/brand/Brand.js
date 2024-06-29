@@ -63,7 +63,7 @@ function Brand() {
     return (
         <body>
 
-            <div className="bg-" style={{ backgroundColor: 'white' }} >
+            <div className="bg" style={{ backgroundColor: 'white' }} >
                 <div className="container py-4 " >
                     <Helmet>
                         <title>Thương hiệu:{ } - HoangVu</title>
@@ -108,6 +108,7 @@ function Brand() {
                         </div>
 ======= */}
 
+{/* <<<<<<< HEAD
                         <div className="multi-carousel" data-mdb-carousel-init data-mdb-interval="3000" data-mdb-items="7">
                             <div class="d-flex justify-content-center m-2 mb-3">
                                 <button data-mdb-button-init class="carousel-control-prev btn btn-floating mx-3" style={{ backgroundColor: '#f6831f' }} type="button" tabindex="0" aria-current="true" data-mdb-slide="prev">
@@ -134,6 +135,20 @@ function Brand() {
 
 
                         </div>
+======= */}
+                        <div className="row">
+                            {all_brand && all_brand.map((brand, index) => {
+                                return (
+                                    <div className="col-1 border-0 me-3" >
+                                        <img onClick={() => onChangeBrand(brand._id)} key={index} data-mdb-ripple-init src={brand.brand_image}
+                                            className="rounded-circle" style={{ height: '100px', width: '100px' }} />
+                                    </div>
+                                )
+                            })}
+
+                        </div>
+
+
 
 
 
@@ -159,11 +174,7 @@ function Brand() {
                                     </li>
                                     {Array.from({ length: totalPages }, (_, index) => (
                                         <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
-                                            {/* <<<<<<< HEAD
-                                            <button className="page-link" onClick={() => setCurrentPage(index + 1)}>{index + 1}</button>
-======= */}
                                             <button style={{ color: '#f6831f' }} className="page-link" onClick={() => setCurrentPage(index + 1)}>{index + 1}</button>
-                                            {/* >>>>>>> origin/main */}
                                         </li>
                                     ))}
                                     <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>

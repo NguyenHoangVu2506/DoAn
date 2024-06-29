@@ -201,7 +201,7 @@ export default function Cart() {
 
 
     return (
-        <>
+        <body>
             <div className="bg-primary">
                 <div className="bg-2" style={{ backgroundColor: 'white' }}>
                     <div className="container py-4">
@@ -214,9 +214,9 @@ export default function Cart() {
                         {/* Breadcrumb */}
                         <nav className="d-flex">
                             <h6 className="mb-0">
-                                <Link to={'/'} className=" " style={{ color: '#f6831f' }}>Trang Chủ</Link>
+                                <Link to="/" className=" " style={{ color: '#f6831f' }}>Trang Chủ</Link>
                                 <span className=" mx-2" style={{ color: '#f6831f' }}> - </span>
-                                <Link to={'/gio-hang'} style={{ color: '#f6831f' }}><u>Giỏ hàng</u></Link>
+                                <Link to="/gio-hang" style={{ color: '#f6831f' }}><u>Giỏ hàng</u></Link>
                             </h6>
                         </nav>
                         {/* Breadcrumb */}
@@ -225,7 +225,7 @@ export default function Cart() {
             </div>
 
             {/* <!-- giỏ hàng + tóm tắt --> */}
-            <section className="bg-light my-5">
+            <section className="bg-light py-5">
                 <div className="container">
                     <div className="row">
                         {/* <!-- giỏ hàng --> */}
@@ -405,6 +405,6 @@ export default function Cart() {
                 </div>
             </section>
             {/* <!-- Sản phẩm đề xuất --> */}
-        </>
+        </body>
     );
 }
